@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Nihongo Puente — Japonés para Hispanohablantes Bilingües</title>
+
+  <!-- PWA & iPadOS Home Screen App -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1B6B72" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Nihongo Puente" />
+
+  <!-- Cognitive Learning Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #FAF8F3;
+      --surface: #FFFFFF;
+      --surface-alt: #F3EFE6;
+      --border: #E5DEC9;
+      --text: #222629;
+      --muted: #5C636A;
+      --teal: #1B6B72;
+      --teal-soft: #E6F2F3;
+      --amber: #C87D20;
+      --amber-soft: #FDF3E3;
+      --green: #2D6A4F;
+      --green-soft: #E8F3EE;
+      --coral: #C44D34;
+      --coral-soft: #FBECE8;
+      --radius: 14px;
+      --shadow: 0 2px 10px rgba(34, 38, 41, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      padding-bottom: 84px;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.25;
+    }
+
+    .jp {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    /* Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(250, 248, 243, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+
+    .topbar-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--teal);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand h1 { font-size: 1.05rem; }
+    .brand small { display: block; font-size: 0.74rem; color: var(--muted); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-btn:hover { border-color: var(--teal); }
+    .pill-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .pill-btn.amber { background: var(--amber-soft); color: #8A520E; border-color: #EBC896; }
+    .pill-btn.green { background: var(--green-soft); color: var(--green); border-color: #B7D9C8; }
+    .pill-btn.coral { background: var(--coral-soft); color: var(--coral); border-color: #EBB8AC; }
+
+    /* Study Timer Bar */
+    .timer-bar {
+      max-width: 1120px;
+      margin: 12px auto 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .timer-bar.overtime {
+      background: var(--coral-soft);
+      border-color: var(--coral);
+    }
+
+    .timer-readout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-clock {
+      font-family: 'Plus Jakarta Sans', monospace;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--teal);
+      min-width: 96px;
+    }
+
+    .timer-bar.overtime .timer-clock { color: var(--coral); }
+
+    .timer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    select, input[type="text"], input[type="password"] {
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: transform 0.1s ease, opacity 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-amber { background: var(--amber); color: #fff; }
+    .btn-coral { background: var(--coral); color: #fff; }
+    .btn-outline { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+
+    /* Desktop Tabs */
+    .desktop-nav {
+      max-width: 1120px;
+      margin: 14px auto 0;
+      padding: 0 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background: var(--surface-alt);
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .nav-tab.active {
+      background: var(--surface);
+      color: var(--teal);
+      border-color: var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1120px;
+      margin: 16px auto;
+      padding: 0 16px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 760px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .card-alt {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tag-teal { background: var(--teal-soft); color: var(--teal); }
+    .tag-amber { background: var(--amber-soft); color: #8A520E; }
+    .tag-green { background: var(--green-soft); color: var(--green); }
+    .tag-coral { background: var(--coral-soft); color: var(--coral); }
+
+    /* Progress Bar */
+    .progress-track {
+      height: 10px;
+      background: var(--surface-alt);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Strict Kana Blur */
+    body.strict-kana .romaji {
+      filter: blur(5px);
+      transition: filter 0.15s ease;
+      cursor: help;
+    }
+    body.strict-kana .romaji:hover,
+    body.strict-kana .romaji:active {
+      filter: blur(0);
+    }
+
+    /* Lesson Cards */
+    .lesson-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .lesson-item {
+      text-align: left;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 0.15s ease;
+    }
+
+    .lesson-item.active {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .lesson-item.done {
+      border-left: 4px solid var(--green);
+    }
+
+    /* Anatomy Blocks */
+    .anatomy-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .chunk {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+
+    .chunk:hover { transform: translateY(-2px); }
+    .chunk.topic { background: var(--teal-soft); border-color: #A9D3D6; }
+    .chunk.object { background: var(--amber-soft); border-color: #EBC896; }
+    .chunk.verb { background: var(--green-soft); border-color: #B7D9C8; }
+    .chunk.particle { background: var(--coral-soft); border-color: #EBB8AC; }
+
+    .chunk .jp-main { font-size: 1.25rem; font-weight: 700; display: block; }
+    .chunk .romaji { font-size: 0.78rem; color: var(--muted); display: block; }
+
+    /* Puzzle Builder */
+    .drop-zone {
+      min-height: 58px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      background: var(--surface-alt);
+      margin: 10px 0;
+    }
+
+    .tile {
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    /* Blind Listen Blur */
+    .blind-text.hidden-text {
+      filter: blur(8px);
+      user-select: none;
+    }
+
+    /* Canvas */
+    #drawCanvas {
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+      background: #FFFDF9;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      touch-action: none;
+      display: block;
+      margin: 0 auto;
+      cursor: crosshair;
+    }
+
+    /* Sticky Bottom Nav for Fold Cover Screen & Phones */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+      justify-content: space-around;
+    }
+
+    .mobile-nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+
+    .mobile-nav button.active {
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .mobile-nav span.ico { font-size: 1.15rem; margin-bottom: 2px; }
+
+    @media (max-width: 680px) {
+      .desktop-nav { display: none; }
+      .mobile-nav { display: flex; }
+      .timer-clock { font-size: 1.25rem; }
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(34, 38, 41, 0.55);
+      place-items: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: grid; }
+    .modal-box {
+      background: var(--surface);
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+    }
+
+    .alert-banner {
+      display: none;
+      max-width: 1120px;
+      margin: 10px auto 0;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: var(--coral);
+      color: #fff;
+      font-weight: 700;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .alert-banner.show { display: flex; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-badge jp">橋</div>
+        <div>
+          <h1>Nihongo Puente</h1>
+          <small id="syncStatusText">Local • Listo para Netlify Sync</small>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="pill-btn active" id="langToggle" onclick="toggleLang()">🇲🇽 Lente ES-MX</button>
+        <button class="pill-btn" id="kanaToggle" onclick="toggleStrictKana()">👁️ Kana Estricto: OFF</button>
+        <button class="pill-btn amber" onclick="openSyncModal()">☁️ Sync & Respaldo</button>
+      </div>
+    </div>
+
+    <!-- Start / Notify / Overtime Study Timer -->
+    <div class="timer-bar" id="timerBar">
+      <div class="timer-readout">
+        <div>
+          <span class="tag tag-teal" id="timerStateBadge">LISTO</span>
+          <div class="timer-clock" id="timerDisplay">30:00</div>
+        </div>
+        <div style="font-size:0.82rem; color:var(--muted);">
+          <div>Meta diaria: <strong id="loggedHoursLabel">0.0 / 600 h</strong></div>
+          <div id="overtimeNote">Tiempo real (preciso con pantalla bloqueada)</div>
+        </div>
+      </div>
+
+      <div class="timer-actions">
+        <select id="timerGoalSelect" onchange="updateTimerPreset()">
+          <option value="1800">30 min</option>
+          <option value="2700">45 min</option>
+          <option value="5400">90 min</option>
+          <option value="10">10s (Prueba Alerta)</option>
+        </select>
+        <button class="btn btn-primary" id="btnTimerStart" onclick="startOrPauseTimer()">▶ Iniciar</button>
+        <button class="btn btn-green" id="btnTimerFinish" onclick="finishAndLogTimer()" style="display:none;">✓ Guardar Sesión</button>
+      </div>
+    </div>
+
+    <div class="alert-banner" id="overtimeBanner">
+      <span>🔔 ¡Meta cumplida! Sigues sumando tiempo extra (Overtime).</span>
+      <button class="pill-btn" onclick="finishAndLogTimer()" style="color:var(--coral);">Guardar y terminar</button>
+    </div>
+  </header>
+
+  <!-- Desktop Navigation -->
+  <nav class="desktop-nav">
+    <button class="nav-tab active" data-tab="roadmap" onclick="switchTab('roadmap')">1. Ruta & Lecciones</button>
+    <button class="nav-tab" data-tab="reading" onclick="switchTab('reading')">2. Lectura & Escucha</button>
+    <button class="nav-tab" data-tab="writing" onclick="switchTab('writing')">3. Escritura & Clínica</button>
+    <button class="nav-tab" data-tab="srs" onclick="switchTab('srs')">4. Repaso SRS & Voz</button>
+    <button class="nav-tab" data-tab="explorer" onclick="switchTab('explorer')">5. Explorador en Vivo</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- TAB 1: ROADMAP & 3-STAGE LESSONS -->
+    <section id="tab-roadmap" class="panel active">
+      <div class="card">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+          <div>
+            <span class="tag tag-teal">Planificador 600 Horas</span>
+            <h2 style="margin-top:4px;">De Cero a Conversación Cotidiana</h2>
+          </div>
+          <div>
+            <label style="font-size:0.82rem; font-weight:700; margin-right:6px;">Ritmo diario:</label>
+            <select id="paceSelect" onchange="renderRoadmapStats()">
+              <option value="0.5">30 min/día (Relajado)</option>
+              <option value="1.5" selected>90 min/día (Constante)</option>
+              <option value="2.5">2.5 hrs/día (Intensivo)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="progress-track" style="margin-top:12px;">
+          <div class="progress-fill" id="hoursProgressBar" style="width:0%;"></div>
+        </div>
+        <div id="milestonesRow" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin-top:12px; font-size:0.84rem;"></div>
+      </div>
+
+      <h3 style="margin-bottom:10px;">Unidades Progresivas (Bucle de 3 Etapas)</h3>
+      <div class="lesson-list" id="lessonList"></div>
+
+      <!-- Active Lesson Workspace -->
+      <div class="card" id="lessonWorkspace"></div>
+    </section>
+
+    <!-- TAB 2: GRADED READING & LISTENING -->
+    <section id="tab-reading" class="panel">
+      <div class="card">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
+          <div>
+            <span class="tag tag-green">Input Comprensible i+1</span>
+            <h2 style="margin-top:4px;">Mini-Historias en Tokio</h2>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <select id="speedSelect">
+              <option value="0.7">0.70x Lento</option>
+              <option value="0.85" selected>0.85x Claro</option>
+              <option value="1.0">1.0x Nativo</option>
+            </select>
+            <button class="pill-btn" id="blindToggle" onclick="toggleBlindMode()">🙈 Escucha a Ciegas: OFF</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;" id="storySelector"></div>
+        <div id="storyContainer"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: WRITING CANVAS & LEECH CLINIC -->
+    <section id="tab-writing" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <span class="tag tag-teal">Apple Pencil & S-Pen Ready</span>
+          <h3 style="margin:6px 0 10px;">Práctica de Trazos (Kana & Kanji N5)</h3>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;" id="charButtons"></div>
+
+          <div style="position:relative; width:100%; max-width:320px; margin:0 auto;">
+            <div id="ghostChar" class="jp" style="position:absolute; inset:0; display:grid; place-items:center; font-size:210px; color:rgba(27,107,114,0.12); pointer-events:none; user-select:none;">あ</div>
+            <canvas id="drawCanvas" width="320" height="320"></canvas>
+          </div>
+
+          <div style="display:flex; justify-content:center; gap:8px; margin-top:12px; flex-wrap:wrap;">
+            <button class="btn btn-outline" onclick="clearCanvas()">Borrar</button>
+            <button class="btn btn-primary" onclick="speakJP(currentDrawChar.char)">🔊 Escuchar</button>
+            <button class="btn btn-green" onclick="markCharPracticed()">✓ Marcar Practicado</button>
+          </div>
+          <p id="drawHint" style="text-align:center; font-size:0.86rem; color:var(--muted); margin-top:10px;"></p>
+        </div>
+
+        <div class="card">
+          <span class="tag tag-coral">Clínica de Confusiones (Leeches)</span>
+          <h3 style="margin:6px 0 10px;">Trampas Clásicas para Hispanohablantes</h3>
+
+          <div class="card-alt" style="margin-bottom:10px;">
+            <strong>シ (shi) vs ツ (tsu) • ソ (so) vs ン (n)</strong>
+            <p style="font-size:0.88rem; margin-top:4px;">
+              <strong>シ / ン</strong> miran hacia arriba (trazos horizontales, de abajo hacia arriba).<br />
+              <strong>ツ / ソ</strong> miran hacia abajo (trazos verticales, de arriba hacia abajo).
+            </p>
+          </div>
+
+          <div class="card-alt" style="margin-bottom:10px;">
+            <strong>Acento de Tono (Pitch) vs Estrés en Español</strong>
+            <p style="font-size:0.88rem; margin-top:4px;">No subas el volumen como en <em>papá</em>; cambia la nota musical:</p>
+            <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+              <button class="pill-btn" onclick="speakJP('はし')">🔊 箸 (HA↓shi = palillos)</button>
+              <button class="pill-btn" onclick="speakJP('はし')">🔊 橋 (ha↑SHI = puente)</button>
+              <button class="pill-btn" onclick="speakJP('あめ')">🔊 雨 (A↓me = lluvia)</button>
+              <button class="pill-btn" onclick="speakJP('あめ')">🔊 飴 (a↑ME = dulce)</button>
+            </div>
+          </div>
+
+          <div class="card-alt">
+            <strong>Tus errores registrados (Auto-detectados):</strong>
+            <div id="leechList" style="margin-top:6px; font-size:0.86rem; color:var(--muted);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SM-2 SRS & SPEAKING DRILL -->
+    <section id="tab-srs" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <span class="tag tag-green">Repaso Espaciado (SM-2)</span>
+          <h3 style="margin:6px 0 10px;">Cola de Repaso Activo</h3>
+          <div id="srsContainer"></div>
+        </div>
+
+        <div class="card">
+          <span class="tag tag-amber">Producción Oral (5 Segundos)</span>
+          <h3 style="margin:6px 0 10px;">Reto de Respuesta Rápida</h3>
+          <p style="font-size:0.88rem; color:var(--muted); margin-bottom:12px;">
+            Di la frase en japonés en voz alta antes de que termine el contador de 5 segundos.
+          </p>
+          <div class="card-alt" style="text-align:center;">
+            <div id="speakPromptES" style="font-size:1.1rem; font-weight:700;">"Dos cafés, por favor."</div>
+            <div id="speakCountdown" style="font-size:2rem; font-weight:800; color:var(--amber); margin:8px 0;">5</div>
+            <div id="speakAnswer" class="jp" style="font-size:1.2rem; font-weight:700; color:var(--teal); min-height:32px;"></div>
+            <div style="display:flex; justify-content:center; gap:8px; margin-top:12px;">
+              <button class="btn btn-amber" onclick="startSpeakingDrill()">▶ Iniciar 5s</button>
+              <button class="btn btn-outline" onclick="nextSpeakingPrompt()">Siguiente →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: LIVE OPEN-SOURCE EXPLORER -->
+    <section id="tab-explorer" class="panel">
+      <div class="card">
+        <span class="tag tag-teal">Jisho / JMdict & Tatoeba (vía Netlify Function)</span>
+        <h2 style="margin:6px 0 10px;">Explorador en Vivo</h2>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+          <input type="text" id="lookupInput" placeholder="Busca en inglés, español o japonés (ej. coffee, taberu, taco)" style="flex:1; min-width:200px;" onkeydown="if(event.key==='Enter') runLookup('jisho')" />
+          <button class="btn btn-primary" onclick="runLookup('jisho')">Buscar Diccionario</button>
+          <button class="btn btn-amber" onclick="runLookup('tatoeba')">Buscar Oraciones</button>
+        </div>
+
+        <div id="lookupResults" style="font-size:0.92rem; color:var(--muted);">
+          Escribe una palabra para consultar JMdict o Tatoeba en vivo (con respaldo local si estás sin conexión).
+        </div>
+      </div>
+
+      <div class="card-alt" style="font-size:0.8rem; color:var(--muted);">
+        <strong>Atribución Open-Source:</strong> Diccionario impulsado por <strong>JMdict / Jisho.org</strong> (CC BY-SA 4.0), oraciones por <strong>Tatoeba</strong> (CC BY 2.0), gramática inspirada en <strong>Tae Kim's Guide</strong> (CC BY-NC-SA) y orden de trazos por <strong>KanjiVG</strong> (CC BY-SA 3.0).
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile / Samsung Fold Cover Sticky Bottom Nav -->
+  <nav class="mobile-nav">
+    <button class="active" data-tab="roadmap" onclick="switchTab('roadmap')"><span class="ico">🗺️</span>Ruta</button>
+    <button data-tab="reading" onclick="switchTab('reading')"><span class="ico">📖</span>Lectura</button>
+    <button data-tab="writing" onclick="switchTab('writing')"><span class="ico">✍️</span>Trazos</button>
+    <button data-tab="srs" onclick="switchTab('srs')"><span class="ico">🔁</span>SRS</button>
+    <button data-tab="explorer" onclick="switchTab('explorer')"><span class="ico">🔎</span>Vivo</button>
+  </nav>
+
+  <!-- Cloud Sync & Backup Modal -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3>☁️ Netlify Sync & Respaldo</h3>
+        <button onclick="closeSyncModal()" style="font-size:1.3rem;">✕</button>
+      </div>
+      <p style="font-size:0.86rem; color:var(--muted); margin-bottom:12px;">
+        Ingresa tu <strong>SYNC_PIN</strong> configurado en Netlify para sincronizar tu iPad y tu Samsung Fold automáticamente.
+      </p>
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <input type="password" id="pinInput" placeholder="Tu SYNC_PIN secreto" style="flex:1;" />
+        <button class="btn btn-primary" onclick="savePinAndSync()">Conectar</button>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+        <button class="btn btn-outline" onclick="pullFromNetlify()">⬇ Bajar de Nube</button>
+        <button class="btn btn-green" onclick="pushToNetlify()">⬆ Subir a Nube</button>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;" />
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:8px;">Respaldo manual en JSON (iCloud / Drive):</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="exportJSON()">💾 Exportar .json</button>
+        <label class="btn btn-outline" style="cursor:pointer;">
+          📂 Importar .json
+          <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)" />
+        </label>
+      </div>
+      <div id="syncModalMsg" style="margin-top:10px; font-size:0.82rem; font-weight:700; color:var(--teal);"></div>
+    </div>
+  </div>
+
+<script>
+/* ========================
+   1. STATE & PERSISTENCE
+======================== */
+const STORAGE_KEY = 'nihongo_puente_v4';
+const PIN_KEY = 'nihongo_puente_pin';
+
+let state = {
+  lang: 'es',
+  strictKana: false,
+  totalMinutes: 0,
+  completedLessons: [],
+  practicedChars: [],
+  leeches: [],
+  srs: [
+    { id: 's1', jp: '私はタコスを食べます', romaji: 'Watashi wa takosu o tabemasu', es: 'Yo como tacos', interval: 1, nextDue: 0 },
+    { id: 's2', jp: 'コーヒーを二つください', romaji: 'Kōhī o futatsu kudasai', es: 'Dos cafés, por favor', interval: 1, nextDue: 0 },
+    { id: 's3', jp: 'カフェで本を読みます', romaji: 'Kafe de hon o yomimasu', es: 'Leo un libro en la cafetería', interval: 1, nextDue: 0 }
+  ]
+};
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = { ...state, ...JSON.parse(raw) };
+  } catch (e) {}
+}
+
+function saveLocal(autoPush = true) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  if (autoPush && localStorage.getItem(PIN_KEY)) {
+    pushToNetlify(true);
+  }
+}
+
+/* ========================
+   2. CURRICULUM DATA
+======================== */
+const lessons = [
+  {
+    id: 'u1',
+    title: '1. Vocales Puras (あいうえお)',
+    tag: 'Ancla ES-MX',
+    ruleES: 'Las 5 vocales japonesas son idénticas al español mexicano (a, i, u, e, o), excepto la "u" (う): relaja los labios sin hacer trompita.',
+    ruleEN: 'Japanese has 5 crisp pure vowels (never English diphthongs). Keep "u" (う) unrounded—relax your lips flat.',
+    chunks: [
+      { jp: 'あい', romaji: 'ai', role: 'topic', noteES: 'Amor (a + i limpias)', noteEN: 'Love (pure a + i)' },
+      { jp: 'いえ', romaji: 'ie', role: 'object', noteES: 'Casa (i + e)', noteEN: 'House (i + e)' },
+      { jp: 'うえ', romaji: 'ue', role: 'verb', noteES: 'Arriba (u sin redondear + e)', noteEN: 'Up / Above' }
+    ],
+    puzzlePromptES: 'Forma la secuencia: "Amor" + "Casa"',
+    puzzlePromptEN: 'Build the sequence: "Love" + "House"',
+    puzzleAnswer: ['あい', 'いえ'],
+    puzzleDistractors: ['うえ', 'あお']
+  },
+  {
+    id: 'u2',
+    title: '2. La "R" Suave (らりるれろ)',
+    tag: 'Ancla ES-MX',
+    ruleES: 'La R japonesa es tu "r" suave de "pero" o "caro". Nunca la vibres como "perro" ni la pronuncies como la R inglesa.',
+    ruleEN: 'Japanese R is a single alveolar tap—identical to the soft Spanish R in "pero" or the "tt" in American "water".',
+    chunks: [
+      { jp: 'これ', romaji: 'kore', role: 'topic', noteES: 'Esto (ko + re suave)', noteEN: 'This (near speaker)' },
+      { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Marca el tema (se escribe ha, suena wa)', noteEN: 'Topic marker (written ha, read wa)' },
+      { jp: 'ラーメン', romaji: 'rāmen', role: 'object', noteES: 'Ramen (R suave + vocal larga)', noteEN: 'Ramen (soft R + long a)' },
+      { jp: 'です', romaji: 'desu', role: 'verb', noteES: 'Es (cortés, la u casi muda)', noteEN: 'Is (polite copula)' }
+    ],
+    puzzlePromptES: 'Arma: "Esto es ramen"',
+    puzzlePromptEN: 'Build: "This is ramen"',
+    puzzleAnswer: ['これ', 'は', 'ラーメン', 'です'],
+    puzzleDistractors: ['を', 'たべます']
+  },
+  {
+    id: 'u3',
+    title: '3. Fórmula Inglés → Katakana',
+    tag: 'Atajo EN',
+    ruleES: '4 reglas para decodificar miles de palabras del inglés: 1) Sin consonantes solas (añade u/o), 2) L→R, 3) V→B, 4) Finales mudos ganan u/o.',
+    ruleEN: '4 rules unlock thousands of loanwords: 1) Break consonant clusters with u/o, 2) L→R, 3) V→B, 4) End consonants take u/o.',
+    chunks: [
+      { jp: 'スマホ', romaji: 'sumaho', role: 'object', noteES: 'Smartphone → su-ma-ho', noteEN: 'Smartphone → su-ma-ho' },
+      { jp: 'テレビ', romaji: 'terebi', role: 'object', noteES: 'Television → te-re-bi (L→R, V→B)', noteEN: 'Television → te-re-bi' },
+      { jp: 'タコス', romaji: 'takosu', role: 'topic', noteES: 'Tacos → ta-ko-su (S final gana u)', noteEN: 'Tacos → ta-ko-su' }
+    ],
+    puzzlePromptES: 'Arma: "Esto es un smartphone"',
+    puzzlePromptEN: 'Build: "This is a smartphone"',
+    puzzleAnswer: ['これ', 'は', 'スマホ', 'です'],
+    puzzleDistractors: ['テレビ', 'を']
+  },
+  {
+    id: 'u4',
+    title: '4. Orden SOV y Partículas は / を',
+    tag: 'Muro Clave',
+    ruleES: 'En español dices "Yo como tacos" (SVO). En japonés el verbo SIEMPRE va al final (SOV): "Yo [は] tacos [を] como".',
+    ruleEN: 'Unlike English SVO ("I eat tacos"), Japanese is strictly Verb-Last (SOV): "I [は] tacos [を] eat".',
+    chunks: [
+      { jp: '私', romaji: 'watashi', role: 'topic', noteES: 'Yo', noteEN: 'I' },
+      { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Etiqueta de Tema', noteEN: 'Topic marker' },
+      { jp: 'タコス', romaji: 'takosu', role: 'object', noteES: 'Tacos (Objeto directo)', noteEN: 'Tacos (Direct object)' },
+      { jp: 'を', romaji: 'o', role: 'particle', noteES: 'Etiqueta de Objeto', noteEN: 'Object marker' },
+      { jp: '食べます', romaji: 'tabemasu', role: 'verb', noteES: 'Como (Verbo al final)', noteEN: 'Eat (Verb last)' }
+    ],
+    puzzlePromptES: 'Arma en orden SOV: "Yo como tacos"',
+    puzzlePromptEN: 'Build in SOV order: "I eat tacos"',
+    puzzleAnswer: ['私', 'は', 'タコス', 'を', '食べます'],
+    puzzleDistractors: ['で', 'です']
+  },
+  {
+    id: 'u5',
+    title: '5. Lugar Estático (に) vs Acción (で)',
+    tag: 'Muro Clave',
+    ruleES: 'En español ambos son "en". En japonés: usa に (ni) para existir/estar o destino, y で (de) donde OCURRE una acción activa.',
+    ruleEN: 'Use に (ni) for existence or destination, and で (de) for the location where an active verb takes place.',
+    chunks: [
+      { jp: 'カフェ', romaji: 'kafe', role: 'topic', noteES: 'Cafetería', noteEN: 'Cafe' },
+      { jp: 'で', romaji: 'de', role: 'particle', noteES: 'En (lugar de acción)', noteEN: 'At (action location)' },
+      { jp: 'コーヒー', romaji: 'kōhī', role: 'object', noteES: 'Café', noteEN: 'Coffee' },
+      { jp: 'を', romaji: 'o', role: 'particle', noteES: 'Objeto directo', noteEN: 'Object marker' },
+      { jp: '飲みます', romaji: 'nomimasu', role: 'verb', noteES: 'Bebo / Tomo', noteEN: 'Drink' }
+    ],
+    puzzlePromptES: 'Arma: "Tomo café en la cafetería"',
+    puzzlePromptEN: 'Build: "I drink coffee at the cafe"',
+    puzzleAnswer: ['カフェ', 'で', 'コーヒー', 'を', '飲みます'],
+    puzzleDistractors: ['に', 'は']
+  },
+  {
+    id: 'u6',
+    title: '6. Adjetivos -i que se Conjugan',
+    tag: 'Gramática N5',
+    ruleES: 'Los adjetivos terminados en -i (como 高い takai = caro) funcionan como verbos: quita la "i" y pon "kunai" para negar ("no es caro").',
+    ruleEN: 'i-adjectives conjugate for tense and negation without "to be": drop -i and add -kunai for negative.',
+    chunks: [
+      { jp: 'この', romaji: 'kono', role: 'topic', noteES: 'Este (+ sustantivo)', noteEN: 'This (+ noun)' },
+      { jp: 'ラーメン', romaji: 'rāmen', role: 'topic', noteES: 'Ramen', noteEN: 'Ramen' },
+      { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Tema', noteEN: 'Topic' },
+      { jp: '高くない', romaji: 'takakunai', role: 'verb', noteES: 'No es caro (takai → takakunai)', noteEN: 'Is not expensive' }
+    ],
+    puzzlePromptES: 'Arma: "Este ramen no es caro"',
+    puzzlePromptEN: 'Build: "This ramen is not expensive"',
+    puzzleAnswer: ['この', 'ラーメン', 'は', '高くない'],
+    puzzleDistractors: ['高い', 'を']
+  },
+  {
+    id: 'u7',
+    title: '7. Contadores y Pedir (ください)',
+    tag: 'Supervivencia',
+    ruleES: 'Los objetos se cuentan según su forma (-mai planos, -hon cilindros). Para pedir en restaurantes usa [Objeto] + を + [Cantidad] + ください.',
+    ruleEN: 'Japanese uses shape counters (-mai flat, -hon cylindrical). Order politely with [Item] + を + [Count] + ください.',
+    chunks: [
+      { jp: 'コーヒー', romaji: 'kōhī', role: 'object', noteES: 'Café', noteEN: 'Coffee' },
+      { jp: 'を', romaji: 'o', role: 'particle', noteES: 'Objeto', noteEN: 'Object' },
+      { jp: '二つ', romaji: 'futatsu', role: 'topic', noteES: 'Dos (contador general)', noteEN: 'Two (general counter)' },
+      { jp: 'ください', romaji: 'kudasai', role: 'verb', noteES: 'Por favor (dame)', noteEN: 'Please give me' }
+    ],
+    puzzlePromptES: 'Pide: "Dos cafés, por favor"',
+    puzzlePromptEN: 'Order: "Two coffees, please"',
+    puzzleAnswer: ['コーヒー', 'を', '二つ', 'ください'],
+    puzzleDistractors: ['は', 'で']
+  },
+  {
+    id: 'u8',
+    title: '8. Tú vs Usted y Omisión Natural',
+    tag: 'Puente Conversacional',
+    ruleES: 'Igual que en español mexicano dices "¿Vas a comer?" sin repetir "tú", en japonés omite el sujeto cuando el contexto ya es obvio.',
+    ruleEN: 'Just like Spanish pro-drop, Japanese omits obvious pronouns. Plain form (taberu) matches "tú"; -masu matches "usted".',
+    chunks: [
+      { jp: '明日', romaji: 'ashita', role: 'topic', noteES: 'Mañana', noteEN: 'Tomorrow' },
+      { jp: '東京', romaji: 'Tōkyō', role: 'object', noteES: 'Tokio', noteEN: 'Tokyo' },
+      { jp: 'に', romaji: 'ni', role: 'particle', noteES: 'Hacia / A (destino)', noteEN: 'To (destination)' },
+      { jp: '行きます', romaji: 'ikimasu', role: 'verb', noteES: 'Voy (cortés -masu)', noteEN: 'Go (polite)' }
+    ],
+    puzzlePromptES: 'Arma sin decir "yo": "Mañana voy a Tokio"',
+    puzzlePromptEN: 'Build dropping "I": "Tomorrow I go to Tokyo"',
+    puzzleAnswer: ['明日', '東京', 'に', '行きます'],
+    puzzleDistractors: ['で', 'を']
+  }
+];
+
+const stories = [
+  {
+    id: 'st1',
+    title: '☕ Cafetería en Tokio',
+    level: 'N5 Inicial',
+    lines: [
+      { jp: 'すみません、コーヒーを二つください。', romaji: 'Sumimasen, kōhī o futatsu kudasai.', es: 'Disculpe, dos cafés por favor.', en: 'Excuse me, two coffees please.' },
+      { jp: 'ホットですか、アイスですか。', romaji: 'Hotto desu ka, aisu desu ka.', es: '¿Caliente o frío?', en: 'Hot or iced?' },
+      { jp: 'アイスをください。ここで飲みます。', romaji: 'Aisu o kudasai. Koko de nomimasu.', es: 'Frío, por favor. Lo tomo aquí.', en: 'Iced please. I will drink it here.' }
+    ]
+  },
+  {
+    id: 'st2',
+    title: '🚆 Metro de Shinjuku',
+    level: 'N5 Medio',
+    lines: [
+      { jp: 'すみません、新宿駅はどこですか。', romaji: 'Sumimasen, Shinjuku-eki wa doko desu ka.', es: 'Disculpe, ¿dónde está la estación Shinjuku?', en: 'Excuse me, where is Shinjuku Station?' },
+      { jp: 'まっすぐ行って、右に曲がってください。', romaji: 'Massugu itte, migi ni magatte kudasai.', es: 'Siga derecho y dé vuelta a la derecha.', en: 'Go straight and turn right.' },
+      { jp: 'ありがとうございます！', romaji: 'Arigatō gozaimasu!', es: '¡Muchas gracias!', en: 'Thank you very much!' }
+    ]
+  },
+  {
+    id: 'st3',
+    title: '🌮 Charlando con un Compañero',
+    level: 'Puente Conversacional',
+    lines: [
+      { jp: 'メキシコから来ました。', romaji: 'Mekishiko kara kimashita.', es: 'Vine de México.', en: 'I came from Mexico.' },
+      { jp: 'すごい！タコスが好きですか。', romaji: 'Sugoi! Takosu ga suki desu ka.', es: '¡Qué padre! ¿Te gustan los tacos?', en: 'Awesome! Do you like tacos?' },
+      { jp: 'はい、とても好きです。ラーメンも好きです。', romaji: 'Hai, totemo suki desu. Rāmen mo suki desu.', es: 'Sí, me gustan mucho. También me gusta el ramen.', en: 'Yes, I like them a lot. I like ramen too.' }
+    ]
+  }
+];
+
+const drawChars = [
+  { char: 'あ', romaji: 'a', hint: '3 trazos: horizontal, curva vertical, lazo final.' },
+  { char: 'い', romaji: 'i', hint: '2 trazos: izquierdo más largo con gancho, derecho corto.' },
+  { char: 'ら', romaji: 'ra', hint: '2 trazos: pequeña tilde arriba, luego curva parecida a un 5.' },
+  { char: 'シ', romaji: 'shi', hint: '3 trazos: dos gotas horizontales + trazo que SUBE desde abajo.' },
+  { char: 'ツ', romaji: 'tsu', hint: '3 trazos: dos gotas verticales + trazo que BAJA desde arriba.' },
+  { char: '食', romaji: 'taberu', hint: 'Kanji de comer (9 trazos): techo arriba + bueno (良) abajo.' }
+];
+
+const speakingPrompts = [
+  { es: 'Dos cafés, por favor.', en: 'Two coffees, please.', jp: 'コーヒーを二つください (Kōhī o futatsu kudasai)' },
+  { es: 'Yo como tacos.', en: 'I eat tacos.', jp: '私はタコスを食べます (Watashi wa takosu o tabemasu)' },
+  { es: 'Tomo café en la cafetería.', en: 'I drink coffee at the cafe.', jp: 'カフェでコーヒーを飲みます (Kafe de kōhī o nomimasu)' },
+  { es: 'Mañana voy a Tokio.', en: 'Tomorrow I go to Tokyo.', jp: '明日東京に行きます (Ashita Tōkyō ni ikimasu)' }
+];
+
+/* ========================
+   3. AUDIO & TIMER (START / NOTIFY / OVERTIME)
+======================== */
+let audioCtx = null;
+function initAudio() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playChime() {
+  initAudio();
+  if (!audioCtx) return;
+  [523.25, 659.25, 783.99].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.18, audioCtx.currentTime + i * 0.16);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.16 + 0.5);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime + i * 0.16);
+    osc.stop(audioCtx.currentTime + i * 0.16 + 0.52);
+  });
+}
+
+function speakJP(text, rate = null) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ja-JP';
+  u.rate = rate || parseFloat(document.getElementById('speedSelect')?.value || '0.88');
+  window.speechSynthesis.speak(u);
+}
+
+let timerRunning = false;
+let timerStartTs = 0;
+let timerAccumMs = 0;
+let timerGoalSec = 1800;
+let timerInterval = null;
+let overtimeTriggered = false;
+
+function formatTime(totalSec) {
+  const abs = Math.abs(Math.floor(totalSec));
+  const m = String(Math.floor(abs / 60)).padStart(2, '0');
+  const s = String(abs % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function updateTimerPreset() {
+  if (timerRunning || timerAccumMs > 0) return;
+  timerGoalSec = parseInt(document.getElementById('timerGoalSelect').value, 10);
+  document.getElementById('timerDisplay').textContent = formatTime(timerGoalSec);
+}
+
+function startOrPauseTimer() {
+  initAudio();
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().catch(() => {});
+  }
+  // Unlock mobile speechSynthesis silently
+  if ('speechSynthesis' in window) {
+    const silent = new SpeechSynthesisUtterance('');
+    silent.volume = 0;
+    window.speechSynthesis.speak(silent);
+  }
+
+  if (!timerRunning) {
+    timerGoalSec = parseInt(document.getElementById('timerGoalSelect').value, 10);
+    timerStartTs = Date.now();
+    timerRunning = true;
+    document.getElementById('btnTimerStart').textContent = '⏸ Pausar';
+    document.getElementById('btnTimerFinish').style.display = 'inline-flex';
+    document.getElementById('timerGoalSelect').disabled = true;
+    tickTimer();
+    timerInterval = setInterval(tickTimer, 500);
+  } else {
+    timerAccumMs += Date.now() - timerStartTs;
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('btnTimerStart').textContent = '▶ Reanudar';
+    document.getElementById('timerStateBadge').textContent = 'PAUSADO';
+  }
+}
+
+function tickTimer() {
+  const elapsedMs = timerAccumMs + (timerRunning ? (Date.now() - timerStartTs) : 0);
+  const elapsedSec = elapsedMs / 1000;
+  const remaining = timerGoalSec - elapsedSec;
+  const bar = document.getElementById('timerBar');
+  const badge = document.getElementById('timerStateBadge');
+
+  if (remaining > 0) {
+    document.getElementById('timerDisplay').textContent = formatTime(Math.ceil(remaining));
+    badge.textContent = 'ESTUDIANDO';
+    badge.className = 'tag tag-teal';
+  } else {
+    const overtimeSec = Math.floor(-remaining);
+    document.getElementById('timerDisplay').textContent = `+${formatTime(overtimeSec)}`;
+    bar.classList.add('overtime');
+    badge.textContent = 'TIEMPO EXTRA';
+    badge.className = 'tag tag-coral';
+    document.getElementById('overtimeBanner').classList.add('show');
+
+    if (!overtimeTriggered) {
+      overtimeTriggered = true;
+      playChime();
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Nihongo Puente — ¡Meta cumplida!', {
+          body: 'Llegaste a tu meta de estudio. El reloj sigue contando tiempo extra.'
+        });
+      }
+    }
+  }
+}
+
+function finishAndLogTimer() {
+  const elapsedMs = timerAccumMs + (timerRunning ? (Date.now() - timerStartTs) : 0);
+  const mins = Math.max(1, Math.round(elapsedMs / 60000));
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerAccumMs = 0;
+  overtimeTriggered = false;
+
+  state.totalMinutes += mins;
+  saveLocal(true);
+
+  document.getElementById('timerBar').classList.remove('overtime');
+  document.getElementById('overtimeBanner').classList.remove('show');
+  document.getElementById('timerGoalSelect').disabled = false;
+  document.getElementById('btnTimerStart').textContent = '▶ Iniciar';
+  document.getElementById('btnTimerFinish').style.display = 'none';
+  document.getElementById('timerStateBadge').textContent = 'GUARDADO';
+  document.getElementById('timerStateBadge').className = 'tag tag-green';
+  updateTimerPreset();
+  renderRoadmapStats();
+}
+
+/* ========================
+   4. UI RENDERING
+======================== */
+let activeLessonId = 'u1';
+let puzzleSelected = [];
+let activeStoryId = 'st1';
+let blindMode = false;
+let currentDrawChar = drawChars[0];
+let speakIdx = 0;
+
+function switchTab(tabId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`tab-${tabId}`).classList.add('active');
+  document.querySelectorAll('.nav-tab, .mobile-nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tabId);
+  });
+}
+
+function toggleLang() {
+  state.lang = state.lang === 'es' ? 'en' : 'es';
+  saveLocal(false);
+  updateHeaderToggles();
+  renderLessonWorkspace();
+  renderStory();
+  renderSpeakingPrompt();
+}
+
+function toggleStrictKana() {
+  state.strictKana = !state.strictKana;
+  saveLocal(false);
+  updateHeaderToggles();
+}
+
+function updateHeaderToggles() {
+  document.getElementById('langToggle').textContent = state.lang === 'es' ? '🇲🇽 Lente ES-MX' : '🇺🇸 EN Lens';
+  document.getElementById('kanaToggle').textContent = state.strictKana ? '👁️ Kana Estricto: ON' : '👁️ Kana Estricto: OFF';
+  document.getElementById('kanaToggle').classList.toggle('active', state.strictKana);
+  document.body.classList.toggle('strict-kana', state.strictKana);
+}
+
+function renderRoadmapStats() {
+  const hours = state.totalMinutes / 60;
+  document.getElementById('loggedHoursLabel').textContent = `${hours.toFixed(1)} / 600 h`;
+  document.getElementById('hoursProgressBar').style.width = `${Math.min(100, (hours / 600) * 100)}%`;
+
+  const pace = parseFloat(document.getElementById('paceSelect').value);
+  const milestones = [
+    { name: 'Kana Completo', target: 15 },
+    { name: 'Supervivencia', target: 80 },
+    { name: 'JLPT N5', target: 350 },
+    { name: 'Conversación', target: 600 }
+  ];
+
+  document.getElementById('milestonesRow').innerHTML = milestones.map(m => {
+    const rem = Math.max(0, m.target - hours);
+    const days = Math.ceil(rem / pace);
+    const done = hours >= m.target;
+    return `<div class="card-alt">
+      <strong>${done ? '✅' : '🎯'} ${m.name} (${m.target}h)</strong>
+      <div style="color:var(--muted); margin-top:2px;">${done ? 'Completado' : `~${days} días a tu ritmo`}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderLessonList() {
+  document.getElementById('lessonList').innerHTML = lessons.map(l => {
+    const done = state.completedLessons.includes(l.id);
+    return `<button class="lesson-item ${l.id === activeLessonId ? 'active' : ''} ${done ? 'done' : ''}" onclick="selectLesson('${l.id}')">
+      <span class="tag tag-teal">${l.tag}</span>
+      <div style="font-weight:700; margin-top:6px;">${done ? '✓ ' : ''}${l.title}</div>
+    </button>`;
+  }).join('');
+}
+
+function selectLesson(id) {
+  activeLessonId = id;
+  puzzleSelected = [];
+  renderLessonList();
+  renderLessonWorkspace();
+}
+
+function renderLessonWorkspace() {
+  const l = lessons.find(x => x.id === activeLessonId);
+  const isES = state.lang === 'es';
+  const allTiles = [...l.puzzleAnswer, ...l.puzzleDistractors].sort();
+
+  document.getElementById('lessonWorkspace').innerHTML = `
+    <span class="tag tag-teal">Etapa 1 • Plano Conceptual (60s)</span>
+    <h2 style="margin:6px 0;">${l.title}</h2>
+    <p style="margin-bottom:14px;">${isES ? l.ruleES : l.ruleEN}</p>
+
+    <span class="tag tag-amber">Etapa 2 • Anatomía de Oración (Haz clic para escuchar)</span>
+    <div class="anatomy-row">
+      ${l.chunks.map((c, idx) => `
+        <div class="chunk ${c.role}" onclick="inspectChunk('${l.id}', ${idx})">
+          <span class="jp jp-main">${c.jp}</span>
+          <span class="romaji">${c.romaji}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div id="chunkDetail" class="card-alt" style="font-size:0.88rem; margin-bottom:16px; color:var(--muted);">
+      Toca cualquier bloque arriba para ver su función gramatical y escuchar la pronunciación.
+    </div>
+
+    <span class="tag tag-green">Etapa 3 • Construcción Activa SOV</span>
+    <p style="font-weight:700; margin-top:6px;">${isES ? l.puzzlePromptES : l.puzzlePromptEN}</p>
+
+    <div class="drop-zone" id="puzzleZone">
+      ${puzzleSelected.length === 0 ? '<span style="color:var(--muted); font-size:0.86rem;">Toca los bloques de abajo en orden japonés...</span>' :
+        puzzleSelected.map((t, i) => `<button class="tile jp" onclick="removeTile(${i})">${t}</button>`).join('')}
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+      ${allTiles.map(t => `<button class="tile jp" onclick="addTile('${t}')">${t}</button>`).join('')}
+    </div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-green" onclick="checkPuzzle('${l.id}')">Comprobar Orden</button>
+      <button class="btn btn-outline" onclick="puzzleSelected=[]; renderLessonWorkspace();">Limpiar</button>
+      <button class="btn btn-primary" onclick="speakJP('${l.puzzleAnswer.join('')}')">🔊 Escuchar Frase</button>
+    </div>
+    <div id="puzzleFeedback" style="margin-top:10px; font-weight:700;"></div>
+  `;
+}
+
+function inspectChunk(lessonId, idx) {
+  const l = lessons.find(x => x.id === lessonId);
+  const c = l.chunks[idx];
+  speakJP(c.jp);
+  document.getElementById('chunkDetail').innerHTML = `
+    <strong class="jp" style="font-size:1.05rem;">${c.jp}</strong> (<span class="romaji">${c.romaji}</span>) —
+    ${state.lang === 'es' ? c.noteES : c.noteEN}
+  `;
+}
+
+function addTile(t) { puzzleSelected.push(t); renderLessonWorkspace(); }
+function removeTile(i) { puzzleSelected.splice(i, 1); renderLessonWorkspace(); }
+
+function checkPuzzle(lessonId) {
+  const l = lessons.find(x => x.id === lessonId);
+  const ok = JSON.stringify(puzzleSelected) === JSON.stringify(l.puzzleAnswer);
+  const fb = document.getElementById('puzzleFeedback');
+
+  if (ok) {
+    fb.style.color = 'var(--green)';
+    fb.textContent = '✅ ¡Correcto! Dominaste esta estructura SOV.';
+    speakJP(l.puzzleAnswer.join(''));
+    if (!state.completedLessons.includes(lessonId)) {
+      state.completedLessons.push(lessonId);
+      saveLocal(true);
+      renderLessonList();
+    }
+  } else {
+    fb.style.color = 'var(--coral)';
+    fb.textContent = `❌ Casi. Orden esperado: ${l.puzzleAnswer.join(' ')} (se agregó a tu clínica de repaso).`;
+    if (!state.leeches.includes(l.title)) {
+      state.leeches.push(l.title);
+      saveLocal(true);
+      renderLeeches();
+    }
+  }
+}
+
+/* ========================
+   5. GRADED READING
+======================== */
+function toggleBlindMode() {
+  blindMode = !blindMode;
+  document.getElementById('blindToggle').textContent = blindMode ? '🙈 Escucha a Ciegas: ON' : '🙈 Escucha a Ciegas: OFF';
+  document.getElementById('blindToggle').classList.toggle('active', blindMode);
+  renderStory();
+}
+
+function renderStory() {
+  document.getElementById('storySelector').innerHTML = stories.map(s =>
+    `<button class="pill-btn ${s.id === activeStoryId ? 'active' : ''}" onclick="activeStoryId='${s.id}'; renderStory();">${s.title}</button>`
+  ).join('');
+
+  const st = stories.find(s => s.id === activeStoryId);
+  document.getElementById('storyContainer').innerHTML = st.lines.map((line, i) => `
+    <div class="card-alt" style="margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <div class="blind-text ${blindMode ? 'hidden-text' : ''}" onclick="this.classList.remove('hidden-text')">
+          <div class="jp" style="font-size:1.15rem; font-weight:700;">${line.jp}</div>
+          <div class="romaji" style="font-size:0.84rem; color:var(--muted);">${line.romaji}</div>
+          <div style="font-size:0.88rem; margin-top:4px;">${state.lang === 'es' ? line.es : line.en}</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <button class="pill-btn" onclick="speakJP('${line.jp}')">🔊</button>
+          <button class="pill-btn green" onclick="addToSRS('${line.jp}','${line.romaji}','${line.es}')">+SRS</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ========================
+   6. CANVAS (POINTER EVENTS) & LEECHES
+======================== */
+const canvas = document.getElementById('drawCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+
+function initCanvas() {
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1B6B72';
+
+  canvas.addEventListener('pointerdown', (e) => {
+    drawing = true;
+    canvas.setPointerCapture(e.pointerId);
+    const rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo((e.clientX - rect.left) * (canvas.width / rect.width), (e.clientY - rect.top) * (canvas.height / rect.height));
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo((e.clientX - rect.left) * (canvas.width / rect.width), (e.clientY - rect.top) * (canvas.height / rect.height));
+    ctx.stroke();
+  });
+
+  canvas.addEventListener('pointerup', () => { drawing = false; });
+  canvas.addEventListener('pointercancel', () => { drawing = false; });
+}
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function renderCharButtons() {
+  document.getElementById('charButtons').innerHTML = drawChars.map((c, i) => `
+    <button class="pill-btn jp ${c.char === currentDrawChar.char ? 'active' : ''}" onclick="selectDrawChar(${i})">
+      ${state.practicedChars.includes(c.char) ? '✓ ' : ''}${c.char}
+    </button>
+  `).join('');
+  document.getElementById('ghostChar').textContent = currentDrawChar.char;
+  document.getElementById('drawHint').textContent = `${currentDrawChar.char} (${currentDrawChar.romaji}): ${currentDrawChar.hint}`;
+}
+
+function selectDrawChar(i) {
+  currentDrawChar = drawChars[i];
+  clearCanvas();
+  renderCharButtons();
+}
+
+function markCharPracticed() {
+  if (!state.practicedChars.includes(currentDrawChar.char)) {
+    state.practicedChars.push(currentDrawChar.char);
+    saveLocal(true);
+    renderCharButtons();
+  }
+}
+
+function renderLeeches() {
+  const el = document.getElementById('leechList');
+  if (!state.leeches.length) {
+    el.textContent = 'Ningún error repetido todavía. ¡Buen trabajo!';
+    return;
+  }
+  el.innerHTML = state.leeches.map(l => `<span class="tag tag-coral" style="margin:3px;">${l}</span>`).join('');
+}
+
+/* ========================
+   7. SM-2 SRS & SPEAKING
+======================== */
+let srsRevealed = false;
+
+function addToSRS(jp, romaji, es) {
+  if (state.srs.some(c => c.jp === jp)) return alert('Ya está en tu mazo SRS.');
+  state.srs.push({ id: 'c' + Date.now(), jp, romaji, es, interval: 1, nextDue: 0 });
+  saveLocal(true);
+  renderSRS();
+}
+
+function renderSRS() {
+  const now = Date.now();
+  const due = state.srs.filter(c => (c.nextDue || 0) <= now);
+  const el = document.getElementById('srsContainer');
+
+  if (!due.length) {
+    el.innerHTML = `<div class="card-alt">🎉 ¡Todo al día! Tienes ${state.srs.length} tarjetas programadas para futuros días.</div>`;
+    return;
+  }
+
+  const card = due[0];
+  el.innerHTML = `
+    <div class="card-alt" style="text-align:center;">
+      <small style="color:var(--muted);">Pendientes hoy: ${due.length} • Intervalo actual: ${card.interval}d</small>
+      <div style="font-size:1.15rem; font-weight:700; margin:12px 0;">"${card.es}"</div>
+      ${srsRevealed ? `
+        <div class="jp" style="font-size:1.35rem; font-weight:700; color:var(--teal);">${card.jp}</div>
+        <div class="romaji" style="color:var(--muted); margin-bottom:12px;">${card.romaji}</div>
+        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-coral" onclick="rateSRS('${card.id}', 1)">Otra vez (1d)</button>
+          <button class="btn btn-amber" onclick="rateSRS('${card.id}', 3)">Bien (3d)</button>
+          <button class="btn btn-green" onclick="rateSRS('${card.id}', 7)">Fácil (7d)</button>
+        </div>
+      ` : `
+        <button class="btn btn-primary" onclick="srsRevealed=true; speakJP('${card.jp}'); renderSRS();">Mostrar Respuesta + Audio</button>
+      `}
+    </div>
+  `;
+}
+
+function rateSRS(id, days) {
+  const c = state.srs.find(x => x.id === id);
+  if (c) {
+    c.interval = days;
+    c.nextDue = Date.now() + days * 86400000;
+  }
+  srsRevealed = false;
+  saveLocal(true);
+  renderSRS();
+}
+
+let speakTimer = null;
+function renderSpeakingPrompt() {
+  const p = speakingPrompts[speakIdx];
+  document.getElementById('speakPromptES').textContent = `"${state.lang === 'es' ? p.es : p.en}"`;
+  document.getElementById('speakAnswer').textContent = '';
+  document.getElementById('speakCountdown').textContent = '5';
+}
+
+function startSpeakingDrill() {
+  clearInterval(speakTimer);
+  let sec = 5;
+  const p = speakingPrompts[speakIdx];
+  document.getElementById('speakAnswer').textContent = '';
+  document.getElementById('speakCountdown').textContent = sec;
+  speakTimer = setInterval(() => {
+    sec--;
+    document.getElementById('speakCountdown').textContent = sec;
+    if (sec <= 0) {
+      clearInterval(speakTimer);
+      document.getElementById('speakAnswer').textContent = p.jp;
+      speakJP(p.jp.split(' ')[0]);
+    }
+  }, 1000);
+}
+
+function nextSpeakingPrompt() {
+  clearInterval(speakTimer);
+  speakIdx = (speakIdx + 1) % speakingPrompts.length;
+  renderSpeakingPrompt();
+}
+
+/* ========================
+   8. LIVE LOOKUP (NETLIFY FUNCTION)
+======================== */
+async function runLookup(type) {
+  const q = document.getElementById('lookupInput').value.trim();
+  if (!q) return;
+  const out = document.getElementById('lookupResults');
+  out.innerHTML = 'Consultando API open-source...';
+
+  try {
+    const res = await fetch(`/.netlify/functions/lookup?type=${type}&q=${encodeURIComponent(q)}`);
+    if (!res.ok) throw new Error('Offline / local preview');
+    const data = await res.json();
+
+    if (type === 'jisho') {
+      const items = (data.data || []).slice(0, 5);
+      if (!items.length) { out.textContent = 'Sin resultados.'; return; }
+      out.innerHTML = items.map(item => {
+        const word = item.japanese?.[0]?.word || item.japanese?.[0]?.reading || '';
+        const reading = item.japanese?.[0]?.reading || '';
+        const defs = (item.senses?.[0]?.english_definitions || []).slice(0, 3).join(', ');
+        return `<div class="card-alt" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div>
+            <strong class="jp" style="font-size:1.15rem;">${word}</strong> <span style="color:var(--muted);">(${reading})</span>
+            <div>${defs}</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="pill-btn" onclick="speakJP('${reading || word}')">🔊</button>
+            <button class="pill-btn green" onclick="addToSRS('${word}','${reading}','${defs.replace(/'/g,'')}')">+SRS</button>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      const items = (data.results || []).slice(0, 5);
+      if (!items.length) { out.textContent = 'Sin oraciones encontradas.'; return; }
+      out.innerHTML = items.map(item => {
+        const jp = item.text || '';
+        const tr = item.translations?.[0]?.[0]?.text || '';
+        return `<div class="card-alt" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div>
+            <div class="jp" style="font-weight:700;">${jp}</div>
+            <div style="font-size:0.86rem; color:var(--muted);">${tr}</div>
+          </div>
+          <button class="pill-btn" onclick="speakJP('${jp.replace(/'/g,'')}')">🔊</button>
+        </div>`;
+      }).join('');
+    }
+  } catch (err) {
+    out.innerHTML = `<div class="card-alt">⚠️ Modo local detectado (la función <code>/.netlify/functions/lookup</code> se activará en cuanto subas el sitio a Netlify).</div>`;
+  }
+}
+
+/* ========================
+   9. NETLIFY SYNC & JSON BACKUP
+======================== */
+function openSyncModal() {
+  document.getElementById('pinInput').value = localStorage.getItem(PIN_KEY) || '';
+  document.getElementById('syncModalMsg').textContent = '';
+  document.getElementById('syncModal').classList.add('open');
+}
+
+function closeSyncModal() {
+  document.getElementById('syncModal').classList.remove('open');
+}
+
+function savePinAndSync() {
+  const pin = document.getElementById('pinInput').value.trim();
+  if (!pin) return;
+  localStorage.setItem(PIN_KEY, pin);
+  pullFromNetlify();
+}
+
+async function pullFromNetlify() {
+  const pin = localStorage.getItem(PIN_KEY);
+  const msg = document.getElementById('syncModalMsg');
+  if (!pin) { msg.textContent = 'Ingresa tu SYNC_PIN primero.'; return; }
+
+  try {
+    const res = await fetch('/.netlify/functions/sync', { headers: { 'x-sync-pin': pin } });
+    if (!res.ok) throw new Error('PIN inválido o sitio aún local');
+    const data = await res.json();
+    if (data && data.totalMinutes !== undefined) {
+      state = { ...state, ...data };
+      saveLocal(false);
+      refreshAll();
+    }
+    msg.textContent = '✅ Sincronizado desde Netlify Blobs.';
+    document.getElementById('syncStatusText').textContent = '☁️ Conectado a Netlify Sync';
+  } catch (e) {
+    msg.textContent = '⚠️ ' + e.message;
+  }
+}
+
+async function pushToNetlify(silent = false) {
+  const pin = localStorage.getItem(PIN_KEY);
+  const msg = document.getElementById('syncModalMsg');
+  if (!pin) return;
+
+  try {
+    const res = await fetch('/.netlify/functions/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-sync-pin': pin },
+      body: JSON.stringify(state)
+    });
+    if (!res.ok) throw new Error('Error al subir');
+    document.getElementById('syncStatusText').textContent = '☁️ Sincronizado ahora';
+    if (!silent) msg.textContent = '✅ Progreso guardado en la nube.';
+  } catch (e) {
+    if (!silent) msg.textContent = '⚠️ No se pudo conectar a /.netlify/functions/sync';
+  }
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nihongo-puente-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      state = { ...state, ...JSON.parse(reader.result) };
+      saveLocal(true);
+      refreshAll();
+      document.getElementById('syncModalMsg').textContent = '✅ Respaldo restaurado.';
+    } catch (err) {
+      document.getElementById('syncModalMsg').textContent = '❌ Archivo JSON inválido.';
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ========================
+   10. BOOTSTRAP
+======================== */
+function refreshAll() {
+  updateHeaderToggles();
+  renderRoadmapStats();
+  renderLessonList();
+  renderLessonWorkspace();
+  renderStory();
+  renderCharButtons();
+  renderLeeches();
+  renderSRS();
+  renderSpeakingPrompt();
+}
+
+loadLocal();
+initCanvas();
+refreshAll();
+if (localStorage.getItem(PIN_KEY)) {
+  pullFromNetlify();
+}
+</script>
+</body>
+</html>
