@@ -16,12 +16,47 @@ export default async (req) => {
   }
 
   const hasJapanese = (str) => /[\u3040-\u30ff\u3400-\u9fff]/.test(str);
+  const fetchHeaders = {
+    "User-Agent": "NihongoPuente/1.0",
+    "Accept": "application/json"
+  };
+
+  async function queryTatoeba(term, transLang) {
+    // Primary: Tatoeba api_v0
+    try {
+      const v0Url = `https://tatoeba.org/en/api_v0/search?from=jpn&query=${encodeURIComponent(term)}&trans_filter=limit&trans_to=${transLang}`;
+      const res = await fetch(v0Url, { headers: fetchHeaders });
+      if (res.ok && (res.headers.get("content-type") || "").includes("json")) {
+        const data = await res.json();
+        if (Array.isArray(data.results) && data.results.length > 0) {
+          return data.results;
+        }
+      }
+    } catch (_) {}
+
+    // Fallback: Tatoeba unstable API
+    try {
+      const v1Url = `https://api.tatoeba.org/unstable/sentences?lang=jpn&q=${encodeURIComponent(term)}&trans:lang=${transLang}&limit=6`;
+      const res = await fetch(v1Url, { headers: fetchHeaders });
+      if (res.ok && (res.headers.get("content-type") || "").includes("json")) {
+        const data = await res.json();
+        if (Array.isArray(data.data) && data.data.length > 0) {
+          return data.data.map((s) => ({
+            text: s.text,
+            translations: [(s.translations || []).flat().map((t) => ({ lang: t.lang, text: t.text }))]
+          }));
+        }
+      }
+    } catch (_) {}
+
+    return [];
+  }
 
   try {
     if (type === "jisho") {
       const upstream = await fetch(
         `https://jisho.org/api/v1/search/words?keyword=${encodeURIComponent(q)}`,
-        { headers: { "User-Agent": "NihongoPuente/1.0" } }
+        { headers: fetchHeaders }
       );
       if (!upstream.ok) {
         return new Response(JSON.stringify({ error: `Jisho returned ${upstream.status}` }), {
@@ -34,44 +69,57 @@ export default async (req) => {
     }
 
     if (type === "tatoeba") {
-      let jpQuery = q;
+      const candidates = [];
 
-      // If user typed English or romaji, resolve to Japanese via Jisho first
-      if (!hasJapanese(q)) {
+      if (hasJapanese(q)) {
+        candidates.push(q);
+      } else {
         const jishoRes = await fetch(
           `https://jisho.org/api/v1/search/words?keyword=${encodeURIComponent(q)}`,
-          { headers: { "User-Agent": "NihongoPuente/1.0" } }
+          { headers: fetchHeaders }
         );
         if (jishoRes.ok) {
           const jishoData = await jishoRes.json();
-          const first = jishoData?.data?.[0]?.japanese?.[0];
+          const entry = jishoData?.data?.[0];
+          const first = entry?.japanese?.[0];
+          const usuallyKana = (entry?.senses?.[0]?.tags || []).some((t) =>
+            t.toLowerCase().includes("kana alone")
+          );
+
           if (first) {
-            jpQuery = first.word || first.reading || q;
+            if (usuallyKana && first.reading) {
+              candidates.push(first.reading);
+              if (first.word) candidates.push(first.word);
+            } else {
+              if (first.word) candidates.push(first.word);
+              if (first.reading && first.reading !== first.word) candidates.push(first.reading);
+            }
           }
         }
+        if (candidates.length === 0) candidates.push(q);
       }
 
-      // 1st attempt: Japanese sentences with Spanish translations
-      let tatRes = await fetch(
-        `https://tatoeba.org/en/api_v0/search?from=jpn&query=${encodeURIComponent(jpQuery)}&trans_to=spa&sort=relevance`,
-        { headers: { "User-Agent": "NihongoPuente/1.0" } }
-      );
-      let tatData = tatRes.ok ? await tatRes.json() : { results: [] };
+      let results = [];
+      let resolvedQuery = candidates[0];
 
-      // 2nd attempt: fallback to English translations if no Spanish matches
-      if (!tatData.results || tatData.results.length === 0) {
-        tatRes = await fetch(
-          `https://tatoeba.org/en/api_v0/search?from=jpn&query=${encodeURIComponent(jpQuery)}&trans_to=eng&sort=relevance`,
-          { headers: { "User-Agent": "NihongoPuente/1.0" } }
-        );
-        tatData = tatRes.ok ? await tatRes.json() : { results: [] };
+      for (const term of candidates) {
+        results = await queryTatoeba(term, "spa");
+        if (results.length > 0) {
+          resolvedQuery = term;
+          break;
+        }
+        results = await queryTatoeba(term, "eng");
+        if (results.length > 0) {
+          resolvedQuery = term;
+          break;
+        }
       }
 
       return new Response(
         JSON.stringify({
           originalQuery: q,
-          resolvedQuery: jpQuery,
-          results: tatData.results || []
+          resolvedQuery,
+          results
         }),
         { status: 200, headers }
       );
