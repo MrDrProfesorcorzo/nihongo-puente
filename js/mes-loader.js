@@ -1,7 +1,4 @@
 (function initPedagogicalEngine() {
-  /* =========================================================
-     FIX 1: UNREGISTER STALE SERVICE WORKERS & INIT STATE SYNC
-  ========================================================= */
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then((regs) => {
       regs.forEach((r) => r.unregister());
@@ -12,7 +9,7 @@
   const hasDone = (reqId) => !reqId || state.completedLessons.includes(reqId);
 
   /* =========================================================
-     FIX 9: AUDIO WARM-UP, KANA-ONLY TTS & LIVE-REGION CLEANUP
+     AUDIO LIVE-REGION CLEAN ON LOAD + KANA-ONLY TTS
   ========================================================= */
   let currentAudioEl = null;
   let audioSafetyTimer = null;
@@ -27,6 +24,7 @@
       t.textContent = '';
     }
   }
+  clearAudioIndicator();
 
   function warmUpAudioOnce() {
     if (audioWarmedUp) return;
@@ -64,7 +62,8 @@
   window.speakJP = function (text, rate = null, displayLabel = null) {
     if (!text) return;
     warmUpAudioOnce();
-    const cleanText = String(text).trim();
+    let cleanText = String(text).trim();
+    if (/^ai(\s+ai)?$/i.test(cleanText)) cleanText = 'あい';
     const speed = rate || parseFloat(document.getElementById('speedSelect')?.value || '0.92');
     const label = `🔊 Reproduciendo: ${displayLabel || cleanText}`;
     try {
@@ -83,8 +82,7 @@
   };
 
   /* =========================================================
-     FIX 4 & 5: FULL 27-UNIT CURRICULUM (SYNCHRONOUS — ATOMIC SWAP)
-     Hiragana (46 + 25 dakuten) + Katakana (46 + 25 dakuten) + Grammar + Kanji Track
+     MONTH 1 CURRICULUM (33 UNITS: KANA + GRAMMAR + KJ1–KJ8)
   ========================================================= */
   const mkKana = (pairs, role = 'topic') =>
     pairs.map(([jp, romaji, noteES]) => ({ jp, romaji, role, noteES, noteEN: noteES }));
@@ -112,11 +110,7 @@
       ruleES: 'La R japonesa es tu "r" suave de "pero" o "caro" (nunca "perro"). Combínala con las 5 vocales que ya aprendiste.',
       ruleEN: 'Japanese R is a single soft tap like Spanish "pero". Combine it with the 5 vowels.',
       chunks: mkKana([
-        ['ら','ra','r suave + a. Gancho: un 5 con gorrito.'],
-        ['り','ri','r suave + i. Gancho: dos cañas de río.'],
-        ['る','ru','r suave + u. Gancho: un 3 con rizo abajo.'],
-        ['れ','re','r suave + e. Gancho: línea que rebota afuera.'],
-        ['ろ','ro','r suave + o. Gancho: como る pero sin rizo.']
+        ['ら','ra','r suave + a.'],['り','ri','r suave + i.'],['る','ru','r suave + u.'],['れ','re','r suave + e.'],['ろ','ro','r suave + o.']
       ]),
       puzzlePromptES: 'Usa solo letras que ya conoces para escribir "iro" (color):',
       puzzlePromptEN: 'Spell "iro" (color):',
@@ -152,10 +146,10 @@
       id: 'h5', isScript: true, title: 'H5. Filas T y D (たちつてと・だぢづでど)', tag: 'Hiragana 5/7',
       stage1Label: 'Etapa 1 • Sonidos T y D (Completo)', stage2Label: 'Etapa 2 • Escucha y Repite (T / D)', stage3Label: 'Etapa 3 • Escribe una Palabra',
       ruleES: 'Fila T: ta, chi, tsu, te, to. Con comillas (゛) se vuelve D: da, ji (ぢ), zu (づ), de, do.',
-      ruleEN: 'T-row (chi, tsu) and full dakuten D-row (da, ji, zu, de, do).',
+      ruleEN: 'T-row (chi, tsu) and full dakuten D-row.',
       chunks: mkKana([
         ['た','ta','t+a'],['ち','chi','ch+i'],['つ','tsu','ts+u'],['て','te','t+e'],['と','to','t+o'],
-        ['だ','da','た+゛'],['ぢ','ji','ち+゛ (poco común)'],['づ','zu','つ+゛ (poco común)'],['で','de','て+゛'],['ど','do','と+゛']
+        ['だ','da','た+゛'],['ぢ','ji','ち+゛'],['づ','zu','つ+゛'],['で','de','て+゛'],['ど','do','と+゛']
       ]),
       puzzlePromptES: 'Escribe "desu" (です = es/soy):',
       puzzlePromptEN: 'Spell "desu":',
@@ -164,7 +158,7 @@
     {
       id: 'h6', isScript: true, title: 'H6. Filas N y H/B/P (なにぬねの・はばぱ)', tag: 'Hiragana 6/7',
       stage1Label: 'Etapa 1 • Filas N, H, B y P (Completo)', stage2Label: 'Etapa 2 • Escucha y Repite', stage3Label: 'Etapa 3 • Escribe una Palabra',
-      ruleES: 'Fila N (na–no) y Fila H (ha–ho). En la fila H: comillas (゛) da B completa (ba, bi, bu, be, bo) y circulito (゜) da P completa (pa, pi, pu, pe, po).',
+      ruleES: 'Fila N (na–no) y Fila H (ha–ho). Comillas (゛) da B completa (ba–bo) y circulito (゜) da P completa (pa–po).',
       ruleEN: 'N-row and full H/B/P rows.',
       chunks: mkKana([
         ['な','na','n+a'],['に','ni','n+i'],['ぬ','nu','n+u'],['ね','ne','n+e'],['の','no','n+o'],
@@ -179,8 +173,8 @@
     {
       id: 'h7', isScript: true, title: 'H7. Filas M, Y, W y N (ま–ん)', tag: 'Hiragana 7/7',
       stage1Label: 'Etapa 1 • Cierre de Hiragana (46 + 25 dakuten)', stage2Label: 'Etapa 2 • Escucha y Repite', stage3Label: 'Etapa 3 • Escribe una Palabra',
-      ruleES: '¡Últimas letras de Hiragana! Filas M, Y, W y ん (n). Con esto completaste los 46 hiragana básicos y los 25 dakuten/handakuten.',
-      ruleEN: 'Final Hiragana rows: M, Y, W, and N (46 basic + 25 dakuten complete).',
+      ruleES: '¡Últimas letras de Hiragana! Filas M, Y, W y ん (n). Completaste los 46 hiragana básicos y los 25 dakuten/handakuten.',
+      ruleEN: 'Final Hiragana rows: M, Y, W, and N.',
       chunks: mkKana([
         ['ま','ma','m+a'],['み','mi','m+i'],['む','mu','m+u'],['め','me','m+e'],['も','mo','m+o'],
         ['や','ya','y+a'],['ゆ','yu','y+u'],['よ','yo','y+o'],
@@ -207,13 +201,12 @@
     {
       id: 'k2', isScript: true, title: 'K2. Katakana: T, N y H (タ–ホ)', tag: 'Katakana 2/4',
       stage1Label: 'Etapa 1 • Katakana T, N y H', stage2Label: 'Etapa 2 • Escucha y Repite (タ–ホ)', stage3Label: 'Etapa 3 • Lee Katakana',
-      ruleES: 'Domina las filas T, N y H en Katakana. Con esto ya puedes leer "タコス" (tacos) y "コーヒー" (café).',
+      ruleES: 'Domina las filas T, N y H en Katakana. Ya puedes leer "タコス" (tacos) y "コーヒー" (café).',
       ruleEN: 'Katakana T, N, and H rows.',
       chunks: mkKana([
         ['タ','ta','ta'],['チ','chi','chi'],['ツ','tsu','tsu (mira abajo)'],['テ','te','te'],['ト','to','to'],
         ['ナ','na','na'],['ニ','ni','ni'],['ヌ','nu','nu'],['ネ','ne','ne'],['ノ','no','no'],
-        ['ハ','ha','ha'],['ヒ','hi','hi'],['フ','fu','fu'],['ヘ','he','he'],['ホ','ho','ho'],
-        ['フェ','fe','フ+ェ = fe']
+        ['ハ','ha','ha'],['ヒ','hi','hi'],['フ','fu','fu'],['ヘ','he','he'],['ホ','ho','ho'],['フェ','fe','フ+ェ']
       ], 'object'),
       puzzlePromptES: 'Escribe "takosu" (タコス = tacos):',
       puzzlePromptEN: 'Spell "takosu" (tacos):',
@@ -223,12 +216,12 @@
       id: 'k3', isScript: true, title: 'K3. Katakana: M, Y, R, W, N (マ–ン)', tag: 'Katakana 3/4',
       stage1Label: 'Etapa 1 • 46 Katakana Básicos Completos', stage2Label: 'Etapa 2 • Escucha y Repite (マ–ン)', stage3Label: 'Etapa 3 • Lee Katakana',
       ruleES: 'Últimas letras básicas de Katakana: M, Y, R, W (incluyendo ヲ) y ン (n).',
-      ruleEN: 'Final basic Katakana rows including ヲ and ン (46/46 basic complete).',
+      ruleEN: 'Final basic Katakana rows including ヲ and ン.',
       chunks: mkKana([
         ['マ','ma','ma'],['ミ','mi','mi'],['ム','mu','mu'],['メ','me','me'],['モ','mo','mo'],
         ['ヤ','ya','ya'],['ユ','yu','yu'],['ヨ','yo','yo'],
         ['ラ','ra','ra'],['リ','ri','ri'],['ル','ru','ru'],['レ','re','re'],['ロ','ro','ro'],
-        ['ワ','wa','wa'],['ヲ','o','wo/o (poco común)'],['ン','n','n final'],['ー','—','alarga vocal']
+        ['ワ','wa','wa'],['ヲ','o','wo/o'],['ン','n','n final'],['ー','—','alarga vocal']
       ], 'object'),
       puzzlePromptES: 'Escribe "ramen" (ラーメン):',
       puzzlePromptEN: 'Spell "rāmen":',
@@ -237,8 +230,8 @@
     {
       id: 'k4', isScript: true, title: 'K4. Katakana Dakuten (ガ–ポ)', tag: 'Katakana 4/4',
       stage1Label: 'Etapa 1 • Cierre de Katakana (46 + 25 dakuten)', stage2Label: 'Etapa 2 • Escucha y Repite (G, Z, D, B, P)', stage3Label: 'Etapa 3 • Lee Katakana con Dakuten',
-      ruleES: 'Igual que en Hiragana: comillas (゛) convierte K→G, S→Z, T→D, H→B; y circulito (゜) convierte H→P. ¡Con esto dominas todo Katakana!',
-      ruleEN: 'All 25 Katakana dakuten/handakuten (G, Z, D, B, P rows).',
+      ruleES: 'Comillas (゛) convierte K→G, S→Z, T→D, H→B; y circulito (゜) convierte H→P. ¡Dominas todo Katakana!',
+      ruleEN: 'All 25 Katakana dakuten/handakuten.',
       chunks: mkKana([
         ['ガ','ga','カ+゛'],['ギ','gi','キ+゛'],['グ','gu','ク+゛'],['ゲ','ge','ケ+゛'],['ゴ','go','コ+゛'],
         ['ザ','za','サ+゛'],['ジ','ji','シ+゛'],['ズ','zu','ス+゛'],['ゼ','ze','セ+゛'],['ゾ','zo','ソ+゛'],
@@ -250,17 +243,15 @@
       puzzlePromptEN: 'Spell "terebi" (television):',
       puzzleAnswer: ['テ','レ','ビ'], puzzleDistractors: ['ピ','ペ','デ']
     },
-
-    // --- GRAMMAR LESSONS (FIX 7: Etapa 2 = "Escucha y Repite"; FIX 9: M1-2 kana-by-kana) ---
     {
       id: 'u3', title: '3. Fórmula Inglés → Katakana', tag: 'Katakana Aplicado',
       stage1Label: 'Etapa 1 • Fórmula de 4 Reglas (60s)', stage2Label: 'Etapa 2 • Escucha y Repite', stage3Label: 'Etapa 3 • Reconocimiento Katakana',
-      ruleES: 'Ahora que ya lees todo Katakana, usa estas 4 reglas para decodificar miles de palabras: 1) Sin consonantes solas (añade u/o), 2) L→R, 3) V→B, 4) Finales mudos ganan u/o.',
-      ruleEN: '4 rules unlock Katakana loanwords: break clusters with u/o, L→R, V→B.',
+      ruleES: 'Usa estas 4 reglas para decodificar miles de palabras: 1) Sin consonantes solas (añade u/o), 2) L→R, 3) V→B, 4) Finales mudos ganan u/o.',
+      ruleEN: '4 rules unlock Katakana loanwords.',
       chunks: [
         { jp: 'スマホ', romaji: 'sumaho', role: 'object', noteES: 'Smartphone → su-ma-ho', noteEN: 'Smartphone' },
-        { jp: 'テレビ', romaji: 'terebi', role: 'object', noteES: 'Television → te-re-bi (L→R, V→B)', noteEN: 'Television' },
-        { jp: 'タコス', romaji: 'takosu', role: 'topic', noteES: 'Tacos → ta-ko-su (S final gana u)', noteEN: 'Tacos' }
+        { jp: 'テレビ', romaji: 'terebi', role: 'object', noteES: 'Television → te-re-bi', noteEN: 'Television' },
+        { jp: 'タコス', romaji: 'takosu', role: 'topic', noteES: 'Tacos → ta-ko-su', noteEN: 'Tacos' }
       ],
       puzzlePromptES: 'Selecciona en orden: "Tacos" + "Smartphone"',
       puzzlePromptEN: 'Select in order: "Tacos" + "Smartphone"',
@@ -275,7 +266,7 @@
         { jp: 'わたし', romaji: 'watashi', role: 'topic', noteES: 'Yo', noteEN: 'I' },
         { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Se escribe ha, suena "wa"', noteEN: 'Topic (wa)' },
         { jp: 'がくせい', romaji: 'gakusei', role: 'object', noteES: 'Estudiante', noteEN: 'Student' },
-        { jp: 'です', romaji: 'desu', role: 'verb', noteES: 'Soy / Es (forma respetuosa)', noteEN: 'Am / Is' }
+        { jp: 'です', romaji: 'desu', role: 'verb', noteES: 'Soy / Es', noteEN: 'Am / Is' }
       ],
       puzzlePromptES: 'Arma: "Yo soy estudiante"', puzzlePromptEN: 'Build: "I am a student"',
       puzzleAnswer: ['わたし','は','がくせい','です'], puzzleDistractors: ['せんせい']
@@ -284,12 +275,12 @@
       id: 'm1_g2', title: 'M1-2. Negación: じゃありません', tag: 'Gramática 2',
       stage1Label: 'Etapa 1 • Cómo Negar (60s)', stage2Label: 'Etapa 2 • Escucha y Repite (Kana por Kana)', stage3Label: 'Etapa 3 • Arma la Negación',
       ruleES: 'Para decir "no soy / no es", reemplaza です por じゃありません (ja + a + ri + ma + se + n).',
-      ruleEN: 'Replace です with じゃありません (ja + a + ri + ma + se + n).',
+      ruleEN: 'Replace です with じゃありません.',
       chunks: [
         { jp: 'わたし', romaji: 'watashi', role: 'topic', noteES: 'Yo', noteEN: 'I' },
         { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Suena "wa"', noteEN: 'Topic' },
         { jp: 'せんせい', romaji: 'sensei', role: 'object', noteES: 'Profesor', noteEN: 'Teacher' },
-        { jp: 'じゃ', romaji: 'ja', role: 'verb', noteES: 'じ + ゃ = ja', noteEN: 'ja' },
+        { jp: 'じゃ', romaji: 'ja', role: 'verb', noteES: 'ja', noteEN: 'ja' },
         { jp: 'あ', romaji: 'a', role: 'verb', noteES: 'a', noteEN: 'a' },
         { jp: 'り', romaji: 'ri', role: 'verb', noteES: 'ri', noteEN: 'ri' },
         { jp: 'ま', romaji: 'ma', role: 'verb', noteES: 'ma', noteEN: 'ma' },
@@ -302,13 +293,13 @@
     {
       id: 'u4', title: '4. El Verbo Va Al Final y は / を', tag: 'Gramática 3',
       stage1Label: 'Etapa 1 • Regla de Oro (60s)', stage2Label: 'Etapa 2 • Escucha y Repite', stage3Label: 'Etapa 3 • Arma la Oración',
-      ruleES: 'En japonés el verbo va SIEMPRE al final: "Yo [は] tacos [を] como". Trampas: は suena "wa", y を suena "o". Verbo: たべる (comer) → たべます (como).',
+      ruleES: 'El verbo va SIEMPRE al final: "Yo [は] tacos [を] como". Trampas: は suena "wa", y を suena "o". Verbo: たべる → たべます.',
       ruleEN: 'Verb always goes last. は="wa", を="o". たべる → たべます.',
       chunks: [
         { jp: 'わたし', romaji: 'watashi', role: 'topic', noteES: 'Yo', noteEN: 'I' },
-        { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Suena "wa"', noteEN: 'Topic (wa)' },
+        { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Suena "wa"', noteEN: 'Topic' },
         { jp: 'タコス', romaji: 'takosu', role: 'object', noteES: 'Tacos', noteEN: 'Tacos' },
-        { jp: 'を', romaji: 'o', role: 'particle', noteES: 'Suena "o" (objeto)', noteEN: 'Object (o)' },
+        { jp: 'を', romaji: 'o', role: 'particle', noteES: 'Suena "o"', noteEN: 'Object' },
         { jp: 'たべます', romaji: 'tabemasu', role: 'verb', noteES: 'De たべる → たべます', noteEN: 'Eat' }
       ],
       puzzlePromptES: 'Arma poniendo el verbo al final: "Yo como tacos"', puzzlePromptEN: 'Build: "I eat tacos"',
@@ -317,8 +308,8 @@
     {
       id: 'u5', title: '5. Lugar Estático (に) vs Acción (で)', tag: 'Gramática 4',
       stage1Label: 'Etapa 1 • に vs で (60s)', stage2Label: 'Etapa 2 • Escucha y Repite', stage3Label: 'Etapa 3 • Arma la Oración',
-      ruleES: 'Usa に para estar en un lugar, y で donde OCURRE una acción. Verbo: のむ (beber) → のみます (bebo).',
-      ruleEN: 'Use に for static location and で for actions. のむ → のみます.',
+      ruleES: 'Usa に para estar en un lugar, y で donde OCURRE una acción. Verbo: のむ → のみます.',
+      ruleEN: 'Use に for static location and で for actions.',
       chunks: [
         { jp: 'わたし', romaji: 'watashi', role: 'topic', noteES: 'Yo', noteEN: 'I' },
         { jp: 'は', romaji: 'wa', role: 'particle', noteES: 'Suena "wa"', noteEN: 'Topic' },
@@ -464,62 +455,129 @@
       puzzlePromptES: 'Arma: "Hay niños en el parque"', puzzlePromptEN: 'Build: "There are children in the park"',
       puzzleAnswer: ['こうえん','に','こども','が','います'], puzzleDistractors: ['あります','で']
     },
-
-    // --- FIX 5: REAL MONTH-1 KANJI TRACK (WITH FADING FURIGANA) ---
-    {
-      id: 'kj1', isScript: true, title: 'KJ1. Kanji Mes 1 (1–4): 一 二 三 百', tag: 'Kanji 1/2',
-      stage1Label: 'Etapa 1 • Tus Primeros 4 Kanji (60s)', stage2Label: 'Etapa 2 • Escucha y Repite (con Furigana)', stage3Label: 'Etapa 3 • Reconoce los Kanji',
-      ruleES: 'Ahora que ya lees sus sonidos en hiragana, aprende tus primeros 4 kanji. El furigana arriba desaparecerá automáticamente cuando los domines 3 veces.',
-      ruleEN: 'Learn your first 4 kanji with furigana that fades after 3 correct answers.',
-      chunks: [
-        { jp: '一', furigana: 'いち', romaji: 'ichi', role: 'topic', noteES: 'Uno (いち / ひとつ). 1 trazo horizontal.', noteEN: 'One' },
-        { jp: '二', furigana: 'に', romaji: 'ni', role: 'topic', noteES: 'Dos (に / ふたつ). 2 trazos horizontales.', noteEN: 'Two' },
-        { jp: '三', furigana: 'さん', romaji: 'san', role: 'topic', noteES: 'Tres (さん / みっつ). 3 trazos horizontales.', noteEN: 'Three' },
-        { jp: '百', furigana: 'ひゃく', romaji: 'hyaku', role: 'object', noteES: 'Cien (ひゃく). Ej: 百円 = 100 yenes.', noteEN: 'Hundred' }
-      ],
-      puzzlePromptES: 'Selecciona en orden: "Dos" + "Cien"',
-      puzzlePromptEN: 'Select in order: "Two" + "Hundred"',
-      puzzleAnswer: ['二','百'], puzzleDistractors: ['一','三']
-    },
-    {
-      id: 'kj2', isScript: true, title: 'KJ2. Kanji Mes 1 (5–8): 円 本 日 人', tag: 'Kanji 2/2',
-      stage1Label: 'Etapa 1 • Kanji Esenciales (60s)', stage2Label: 'Etapa 2 • Escucha y Repite (con Furigana)', stage3Label: 'Etapa 3 • Forma "Japón" (日本)',
-      ruleES: 'Aprende 4 kanji que verás todos los días: 円 (yen), 本 (libro/origen), 日 (sol/día) y 人 (persona).',
-      ruleEN: 'Learn 4 daily kanji: yen, book, sun/day, person.',
-      chunks: [
-        { jp: '円', furigana: 'えん', romaji: 'en', role: 'object', noteES: 'Yen (えん). Ej: 百円.', noteEN: 'Yen' },
-        { jp: '本', furigana: 'ほん', romaji: 'hon', role: 'object', noteES: 'Libro / origen (ほん). Ej: わたしの本.', noteEN: 'Book' },
-        { jp: '日', furigana: 'に', romaji: 'ni / hi', role: 'topic', noteES: 'Sol / día (に・ひ).', noteEN: 'Sun / day' },
-        { jp: '人', furigana: 'ひと', romaji: 'hito / jin', role: 'topic', noteES: 'Persona (ひと・じん).', noteEN: 'Person' }
-      ],
-      puzzlePromptES: 'Forma la palabra "Nihon" (Japón = Sol + Origen):',
-      puzzlePromptEN: 'Build "Nihon" (Japan):',
-      puzzleAnswer: ['日','本'], puzzleDistractors: ['円','人']
-    }
+    ...[
+      ['kj1', 'KJ1. Kanji 1/8: 一 (uno)', '一', 'いち', 'ichi', 'Uno (いち / ひとつ). 1 trazo horizontal.', ['いち']],
+      ['kj2', 'KJ2. Kanji 2/8: 二 (dos)', '二', 'に', 'ni', 'Dos (に / ふたつ). 2 trazos horizontales.', ['一']],
+      ['kj3', 'KJ3. Kanji 3/8: 三 (tres)', '三', 'さん', 'san', 'Tres (さん / みっつ). 3 trazos horizontales.', ['一', '二']],
+      ['kj4', 'KJ4. Kanji 4/8: 百 (cien)', '百', 'ひゃく', 'hyaku', 'Cien (ひゃく). Ej: 百円 = 100 yenes.', ['一', '三']],
+      ['kj5', 'KJ5. Kanji 5/8: 円 (yen)', '円', 'えん', 'en', 'Yen (えん). Ej: 百円.', ['百', '二']],
+      ['kj6', 'KJ6. Kanji 6/8: 本 (libro)', '本', 'ほん', 'hon', 'Libro / origen (ほん). Ej: わたしの本.', ['円', '一']],
+      ['kj7', 'KJ7. Kanji 7/8: 日 (sol / día)', '日', 'に', 'ni / hi', 'Sol / día (に・ひ). Ej: 日本 = Japón.', ['本', '円']],
+      ['kj8', 'KJ8. Kanji 8/8: 人 (persona)', '人', 'ひと', 'hito / jin', 'Persona (ひと・じん). Ej: メキシコ人.', ['日', '本']]
+    ].map(([id, title, k, furi, rom, note, dist]) => ({
+      id, isScript: true, title, tag: 'Kanji N5',
+      stage1Label: 'Etapa 1 • Un Kanji a la Vez (60s)', stage2Label: 'Etapa 2 • Escucha y Repite (con Furigana)', stage3Label: 'Etapa 3 • Reconoce el Kanji',
+      ruleES: `Ya conoces su lectura en hiragana (${furi}). El furigana arriba desaparecerá automáticamente tras dominarlo 3 veces.`,
+      ruleEN: `You already know its kana reading (${furi}). Furigana fades after 3 correct answers.`,
+      chunks: [{ jp: k, furigana: furi, romaji: rom, role: 'topic', noteES: note, noteEN: note }],
+      puzzlePromptES: `Selecciona el kanji que se lee "${furi}":`,
+      puzzlePromptEN: `Select the kanji read "${furi}":`,
+      puzzleAnswer: [k], puzzleDistractors: dist
+    }))
   ];
 
-  // ATOMIC SYNCHRONOUS SWAP (prevents old 8-lesson course from ever rendering)
   lessons.length = 0;
   fullCurriculum.forEach((l) => lessons.push(l));
   if (!lessons.some((l) => l.id === activeLessonId)) activeLessonId = lessons[0].id;
 
-  // HONEST 6-MONTH ROADMAP (FIX 7 & 8: no "SOV", honest 2 stories count)
   sixMonthOutline.length = 0;
   sixMonthOutline.push(
     { label: 'Mes 1 • Semanas 1–4 (ACTIVO)', title: 'Hiragana, Katakana, Bases N5 y 8 Kanji', detail: '46+25 Hiragana • 46+25 Katakana • 13 gramática • 8 Kanji • 2 historias i+1', minH: 0, maxH: 30 },
-    { label: 'Mes 2 • Semanas 5–8 (Próximamente)', title: 'Verbos, Tiempo y Rutina (El Verbo Va Al Final)', detail: 'Próxima carga: verbos -masu, horas, rutina diaria y +16 kanji N5', minH: 30, maxH: 65 },
+    { label: 'Mes 2 • Semanas 5–8 (Próximamente)', title: 'Verbos, Tiempo y Rutina (El Verbo Va Al Final)', detail: 'Próxima carga: verbos -masu, horas, rutina diaria y +10 kanji N5', minH: 30, maxH: 65 },
     { label: 'Mes 3 • Semanas 9–12 (Próximamente)', title: 'Adjetivos, Pasado y Forma -te', detail: 'Próxima carga: pasado, forma -te y nuevas historias i+1', minH: 65, maxH: 110 },
     { label: 'Mes 4 • Semanas 13–16 (Próximamente)', title: 'Peticiones, Permisos y Planes', detail: 'Próxima carga: permisos, planes y kanji N5', minH: 110, maxH: 165 },
     { label: 'Mes 5 • Semanas 17–20 (Próximamente)', title: 'Comparaciones y Opiniones', detail: 'Próxima carga: comparaciones, opiniones y lectura guiada', minH: 165, maxH: 225 },
     { label: 'Mes 6 • Semanas 21–24 (Próximamente)', title: 'Integración JLPT N5', detail: 'Próxima carga: repaso integral y simulacro N5', minH: 225, maxH: 9999 }
   );
 
-  // PURGE LEGACY / UNGATED SRS CARDS IMMEDIATELY (FIX 2)
+  /* =========================================================
+     IMMEDIATE SCRIPT SRS CARDS (UNLOCK FROM LESSON 1)
+  ========================================================= */
+  const baseScriptSrs = [
+    { id: 's_a', reqLesson: 'u1', jp: 'あ', romaji: 'a', es: 'Vocal "a" (Hiragana)' },
+    { id: 's_i', reqLesson: 'u1', jp: 'い', romaji: 'i', es: 'Vocal "i" (Hiragana)' },
+    { id: 's_u', reqLesson: 'u1', jp: 'う', romaji: 'u', es: 'Vocal "u" (Hiragana)' },
+    { id: 's_e', reqLesson: 'u1', jp: 'え', romaji: 'e', es: 'Vocal "e" (Hiragana)' },
+    { id: 's_o', reqLesson: 'u1', jp: 'お', romaji: 'o', es: 'Vocal "o" (Hiragana)' },
+    { id: 's_ai', reqLesson: 'u1', jp: 'あい', romaji: 'ai', es: 'Amor (palabra con vocales)' },
+    { id: 's_ra', reqLesson: 'u2', jp: 'ら', romaji: 'ra', es: 'Sílaba "ra" (r suave)' },
+    { id: 's_ro', reqLesson: 'u2', jp: 'ろ', romaji: 'ro', es: 'Sílaba "ro" (r suave)' },
+    { id: 's_iro', reqLesson: 'u2', jp: 'いろ', romaji: 'iro', es: 'Color' },
+    { id: 's_kore', reqLesson: 'h3', jp: 'これ', romaji: 'kore', es: 'Esto' },
+    { id: 's_sushi', reqLesson: 'h4', jp: 'すし', romaji: 'sushi', es: 'Sushi' },
+    { id: 's_desu', reqLesson: 'h5', jp: 'です', romaji: 'desu', es: 'Es / Soy (cortés)' },
+    { id: 's_taberu', reqLesson: 'h6', jp: 'たべる', romaji: 'taberu', es: 'Comer (forma diccionario)' },
+    { id: 's_watashi', reqLesson: 'h7', jp: 'わたし', romaji: 'watashi', es: 'Yo' },
+    { id: 's_takosu', reqLesson: 'k2', jp: 'タコス', romaji: 'takosu', es: 'Tacos (Katakana)' },
+    { id: 's_ramen', reqLesson: 'k3', jp: 'ラーメン', romaji: 'rāmen', es: 'Ramen (Katakana)' },
+    { id: 's_terebi', reqLesson: 'k4', jp: 'テレビ', romaji: 'terebi', es: 'Televisión (Katakana)' }
+  ];
+
   state.srs = (state.srs || []).filter((c) => c.reqLesson && c.jp !== 'カフェで本を読みます');
+  baseScriptSrs.forEach((sc) => {
+    if (!state.srs.some((c) => c.id === sc.id)) state.srs.push({ ...sc, interval: 1, nextDue: 0 });
+  });
   if (typeof saveLocal === 'function') saveLocal(false);
 
   /* =========================================================
-     RENDER WORKSPACE (WITH FURIGANA FADING & ROMAJI FADING)
+     SYNCHRONOUS 2 MONTH 1 STORIES
+  ========================================================= */
+  const mes1Stories = [
+    {
+      id: 'm1_st1', reqLesson: 'm1_g7', title: '🏫 Mes 1 • En clase (i+1)',
+      level: 'Mes 1 • Nuevo: どうぞ (por favor / adelante)',
+      lines: [
+        { jp: 'こんにちは。わたし は カルロス です。', romaji: 'Konnichiwa. Watashi wa Karurosu desu.', es: 'Hola. Yo soy Carlos.', en: 'Hello. I am Carlos.' },
+        { jp: 'わたし は メキシコじん です。がくせい です。', romaji: 'Watashi wa Mekishikojin desu. Gakusei desu.', es: 'Soy mexicano. Soy estudiante.', en: 'I am Mexican. I am a student.' },
+        { jp: 'わたし は すし が すき です。ラーメン も すき です。', romaji: 'Watashi wa sushi ga suki desu. Rāmen mo suki desu.', es: 'Me gusta el sushi. También me gusta el ramen.', en: 'I like sushi. I like ramen too.' },
+        { jp: 'これ は わたし の ほん です。どうぞ。', romaji: 'Kore wa watashi no hon desu. Dōzo.', es: 'Este es mi libro. Adelante (nueva: どうぞ = adelante).', en: 'This is my book. Here you go.' }
+      ]
+    },
+    {
+      id: 'm1_st2', reqLesson: 'm1_g8', title: '☕ Mes 1 • En el Café (i+1)',
+      level: 'Mes 1 • Nuevo: いくら (¿cuánto cuesta?)',
+      lines: [
+        { jp: 'すみません、この コーヒー は いくら です か。', romaji: 'Sumimasen, kono kōhī wa ikura desu ka.', es: 'Disculpe, ¿cuánto cuesta este café? (nueva: いくら = cuánto).', en: 'How much is this coffee?' },
+        { jp: 'それ は ひゃくえん です。', romaji: 'Sore wa hyakuen desu.', es: 'Ese cuesta 100 yenes.', en: 'That is 100 yen.' },
+        { jp: 'わたし は コーヒー を ふたつ ください。', romaji: 'Watashi wa kōhī o futatsu kudasai.', es: 'Deme dos cafés por favor.', en: 'Two coffees please.' },
+        { jp: 'カフェ に ともだち が います。カフェ で コーヒー を のみます。', romaji: 'Kafe ni tomodachi ga imasu. Kafe de kōhī o nomimasu.', es: 'Mi amigo está en el café. Tomo café en el café.', en: 'My friend is at the cafe. I drink coffee at the cafe.' }
+      ]
+    }
+  ];
+
+  stories.length = 0;
+  mes1Stories.forEach((s) => stories.push(s));
+  activeStoryId = stories[0].id;
+
+  window.renderStory = function () {
+    const sel = document.getElementById('storySelector');
+    const cont = document.getElementById('storyContainer');
+    if (!sel || !cont) return;
+    sel.innerHTML = stories.map((s) => `
+      <button class="pill-btn ${s.id === activeStoryId ? 'active' : ''}" onclick="activeStoryId='${s.id}'; renderStory();">
+        ${hasDone(s.reqLesson) ? '' : '🔒 '}${s.title}
+      </button>`).join('');
+    const st = stories.find((s) => s.id === activeStoryId) || stories[0];
+    if (!st) return;
+    if (!hasDone(st.reqLesson)) {
+      const reqL = lessons.find((l) => l.id === st.reqLesson);
+      cont.innerHTML = `<div class="card-alt">🔒 Completa primero <strong>${reqL ? reqL.title : st.reqLesson}</strong> en la Pestaña 1 para desbloquear esta historia.</div>`;
+      return;
+    }
+    cont.innerHTML = `<div style="font-size:0.82rem;color:var(--teal);font-weight:700;margin-bottom:8px;">${st.level}</div>` +
+      st.lines.map((line) => `
+        <div class="card-alt" style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div class="blind-text ${blindMode ? 'hidden-text' : ''}" style="flex:1;" onclick="this.classList.remove('hidden-text')">
+            <div class="jp" style="font-size:1.1rem;font-weight:700;">${line.jp}</div>
+            <div class="romaji" style="font-size:0.84rem;color:var(--muted);">${line.romaji}</div>
+            <div style="font-size:0.88rem;margin-top:4px;">${state.lang === 'es' ? line.es : line.en}</div>
+          </div>
+          <button class="pill-btn" onclick="speakJP('${line.jp}')">🔊</button>
+        </div>`).join('');
+  };
+
+  /* =========================================================
+     WORKSPACE RENDERER (FURIGANA & ROMAJI FADING)
   ========================================================= */
   const romajiMap = {};
   const furiganaMap = {};
@@ -607,9 +665,9 @@
   };
 
   /* =========================================================
-     FIX 3: GATE TAB 3 (STROKE PRACTICE & CLINIC)
+     GATED TAB 3 (STROKE PRACTICE & CLINIC)
   ========================================================= */
-  let gatedDrawPool = [
+  const gatedDrawPool = [
     { char: 'あ', reqLesson: 'u1', romaji: 'a', hint: '3 trazos: horizontal, curva vertical, lazo final.' },
     { char: 'い', reqLesson: 'u1', romaji: 'i', hint: '2 trazos: izquierdo más largo con gancho, derecho corto.' },
     { char: 'う', reqLesson: 'u1', romaji: 'u', hint: '2 trazos: tilde arriba + curva derecha.' },
@@ -617,7 +675,15 @@
     { char: 'お', reqLesson: 'u1', romaji: 'o', hint: '3 trazos: horizontal, lazo vertical, punto derecho.' },
     { char: 'ら', reqLesson: 'u2', romaji: 'ra', hint: '2 trazos: tilde arriba + curva como un 5.' },
     { char: 'シ', reqLesson: 'k1', romaji: 'shi', hint: '3 trazos: dos gotas horizontales + trazo que SUBE.' },
-    { char: 'ツ', reqLesson: 'k2', romaji: 'tsu', hint: '3 trazos: dos gotas verticales + trazo que BAJA.' }
+    { char: 'ツ', reqLesson: 'k2', romaji: 'tsu', hint: '3 trazos: dos gotas verticales + trazo que BAJA.' },
+    { char: '一', reqLesson: 'kj1', romaji: 'ichi • uno', hint: '1 trazo horizontal.' },
+    { char: '二', reqLesson: 'kj2', romaji: 'ni • dos', hint: '2 trazos horizontales.' },
+    { char: '三', reqLesson: 'kj3', romaji: 'san • tres', hint: '3 trazos horizontales.' },
+    { char: '百', reqLesson: 'kj4', romaji: 'hyaku • cien', hint: '6 trazos.' },
+    { char: '円', reqLesson: 'kj5', romaji: 'en • yen', hint: '4 trazos.' },
+    { char: '本', reqLesson: 'kj6', romaji: 'hon • libro', hint: '5 trazos.' },
+    { char: '日', reqLesson: 'kj7', romaji: 'nichi • sol/día', hint: '4 trazos.' },
+    { char: '人', reqLesson: 'kj8', romaji: 'hito • persona', hint: '2 trazos.' }
   ];
 
   function gateTab3Clinic() {
@@ -629,17 +695,13 @@
         if (!hasDone('k3')) {
           card.dataset.origHtml = card.dataset.origHtml || card.innerHTML;
           card.innerHTML = `<span class="tag tag-amber">Clínica Katakana (Bloqueada)</span><p style="margin-top:8px;">🔒 Completa <strong>K3. Katakana</strong> en la Pestaña 1 para desbloquear la clínica シ/ツ/ソ/ン.</p>`;
-        } else if (card.dataset.origHtml) {
-          card.innerHTML = card.dataset.origHtml;
-        }
+        } else if (card.dataset.origHtml) card.innerHTML = card.dataset.origHtml;
       }
       if (txt.includes('箸') || txt.includes('Pitch') || txt.includes('Acento')) {
-        if (!hasDone('kj2')) {
+        if (!hasDone('kj8')) {
           card.dataset.origHtml = card.dataset.origHtml || card.innerHTML;
-          card.innerHTML = `<span class="tag tag-amber">Clínica de Acento (Bloqueada)</span><p style="margin-top:8px;">🔒 Completa <strong>KJ2. Kanji Mes 1</strong> en la Pestaña 1 para desbloquear la clínica de acento tonal.</p>`;
-        } else if (card.dataset.origHtml) {
-          card.innerHTML = card.dataset.origHtml;
-        }
+          card.innerHTML = `<span class="tag tag-amber">Clínica de Acento (Bloqueada)</span><p style="margin-top:8px;">🔒 Completa <strong>KJ8. Kanji</strong> en la Pestaña 1 para desbloquear la clínica de acento tonal.</p>`;
+        } else if (card.dataset.origHtml) card.innerHTML = card.dataset.origHtml;
       }
     });
   }
@@ -652,15 +714,13 @@
       el.innerHTML = `<div class="card-alt" style="width:100%;font-size:0.86rem;">🔒 Completa la <strong>Lección 1 (Vocales Puras)</strong> para desbloquear tus primeros trazos.</div>`;
       const g = document.getElementById('ghostChar'); if (g) g.textContent = '🔒';
       const h = document.getElementById('drawHint'); if (h) h.textContent = 'Los trazos se desbloquean al completar cada lección.';
-      gateTab3Clinic();
-      return;
+      gateTab3Clinic(); return;
     }
     if (!unlocked.some((u) => u.char === currentDrawChar?.char)) currentDrawChar = unlocked[0];
     el.innerHTML = unlocked.map((c) => `
       <button class="pill-btn jp ${c.char === currentDrawChar.char ? 'active' : ''}" onclick="selectGatedChar('${c.char}')">
         ${state.practicedChars.includes(c.char) ? '✓ ' : ''}${c.char}
-      </button>
-    `).join('');
+      </button>`).join('');
     document.getElementById('ghostChar').textContent = currentDrawChar.char;
     document.getElementById('drawHint').textContent = `${currentDrawChar.char} (${currentDrawChar.romaji}): ${currentDrawChar.hint}`;
     gateTab3Clinic();
@@ -673,7 +733,7 @@
   };
 
   /* =========================================================
-     FIX 2 & 6: GATED SRS, WORKING "SIGUIENTE →" SHADOWING & 5s CHALLENGE
+     GATED SRS + TAB 4 SHADOWING
   ========================================================= */
   window.updateSrsBadges = function () {
     const unlockedCount = state.srs.filter((c) => hasDone(c.reqLesson)).length;
@@ -714,7 +774,7 @@
     const el = document.getElementById('srsContainer');
     if (el) {
       if (!unlocked.length) {
-        el.innerHTML = `<div class="card-alt">🔒 Completa tus primeras lecciones en la Pestaña 1 para desbloquear tarjetas SRS (solo repasas lo ya enseñado).</div>`;
+        el.innerHTML = `<div class="card-alt">🔒 Completa la Lección 1 en la Pestaña 1 para desbloquear tus primeras tarjetas SRS.</div>`;
       } else if (!due.length) {
         el.innerHTML = `<div class="card-alt">🎉 ¡Todo al día! Tienes ${unlocked.length} tarjetas desbloqueadas.</div>`;
       } else {
@@ -744,34 +804,10 @@
     { reqLesson: 'u1', jp: 'うえ', romaji: 'ue', es: 'Arriba' },
     { reqLesson: 'u1', jp: 'あお', romaji: 'ao', es: 'Azul' },
     { reqLesson: 'm1_g1', jp: 'わたし は がくせい です。', romaji: 'Watashi wa gakusei desu.', es: 'Yo soy estudiante.' },
-    { reqLesson: 'u4', jp: 'わたし は タコス を たべます。', romaji: 'Watashi wa takosu o tabemasu.', es: 'Yo como tacos.' },
-    { reqLesson: 'u7', jp: 'わたし は コーヒー を ふたつ ください。', romaji: 'Watashi wa kōhī o futatsu kudasai.', es: 'Dos cafés, por favor.' }
+    { reqLesson: 'u4', jp: 'わたし は タコス を たべます。', romaji: 'Watashi wa takosu o tabemasu.', es: 'Yo como tacos.' }
   ];
   window._shadowIdx = 0;
-  window.nextShadowingLine = function () {
-    window._shadowIdx++;
-    renderTab4LowerSections();
-  };
-
-  // Fix 6: Working 5-second challenge Next button
-  const gatedChallenges = [
-    { reqLesson: 'u1', es: 'Amor', jp: 'あい', romaji: 'ai' },
-    { reqLesson: 'u1', es: 'Casa', jp: 'いえ', romaji: 'ie' },
-    { reqLesson: 'm1_g1', es: 'Yo soy estudiante.', jp: 'わたし は がくせい です。', romaji: 'Watashi wa gakusei desu.' },
-    { reqLesson: 'u4', es: 'Yo como tacos.', jp: 'わたし は タコス を たべます。', romaji: 'Watashi wa takosu o tabemasu.' },
-    { reqLesson: 'u7', es: 'Dos cafés, por favor.', jp: 'わたし は コーヒー を ふたつ ください。', romaji: 'Watashi wa kōhī o futatsu kudasai.' }
-  ];
-  window._challengeIdx = 0;
-  window.nextChallenge = function () {
-    const avail = gatedChallenges.filter((c) => hasDone(c.reqLesson));
-    if (!avail.length) return;
-    window._challengeIdx = (window._challengeIdx + 1) % avail.length;
-    const item = avail[window._challengeIdx];
-    const pEl = document.getElementById('challengePrompt');
-    const aEl = document.getElementById('challengeAnswer');
-    if (pEl) pEl.textContent = `"${item.es}"`;
-    if (aEl) aEl.innerHTML = `<span class="jp">${item.jp}</span> <span class="romaji">(${item.romaji})</span>`;
-  };
+  window.nextShadowingLine = function () { window._shadowIdx++; renderTab4LowerSections(); };
 
   window.renderTab4LowerSections = function () {
     const tabSrs = document.getElementById('tab-srs');
@@ -797,7 +833,7 @@
           ${s ? `
             <div class="card-alt"><div class="jp" style="font-size:1.2rem;font-weight:700;">${s.jp}</div><div class="romaji" style="font-size:0.84rem;color:var(--muted);">${s.romaji}</div><div style="font-size:0.88rem;margin-top:4px;">${s.es}</div></div>
             <div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary" onclick="speakJP('${s.jp}', 0.8)">🔊 Escuchar</button><button class="btn btn-outline" onclick="nextShadowingLine()">Siguiente →</button></div>
-          ` : `<div class="card-alt">🔒 Completa la Lección 1 para desbloquear tu primera frase de Shadowing.</div>`}
+          ` : `<div class="card-alt">🔒 Completa la Lección 1 para desbloquear Shadowing.</div>`}
         </div>
         <div class="card">
           <span class="tag tag-amber">Prueba de Voz • Tu turno</span>
@@ -811,8 +847,76 @@
   };
 
   /* =========================================================
-     FIX 7: REMOVE MISLEADING "INPUT COMPRENSIBLE I+1" TAG ON TAB 2
+     WEEKLY VOCABULARY BROWSER (BOTTOM OF TAB 1)
   ========================================================= */
+  const allVocab = {
+    'Semana 1 — Saludos y Personas': [
+      ['わたし', 'watashi', 'yo', 'わたし は がくせい です。'],
+      ['せんせい', 'sensei', 'profesor / maestro', 'たなかさん は せんせい です。'],
+      ['がくせい', 'gakusei', 'estudiante', 'わたし は がくせい です。'],
+      ['にほん', 'Nihon', 'Japón', 'わたし は にほん が すき です。'],
+      ['メキシコ', 'Mekishiko', 'México', 'わたし は メキシコじん です。']
+    ],
+    'Semana 2 — Números y Objetos': [
+      ['ひゃく', 'hyaku', 'cien', 'これ は ひゃくえん です。'],
+      ['ほん', 'hon', 'libro', 'これ は わたし の ほん です。'],
+      ['スマホ', 'sumaho', 'smartphone', 'これ は わたし の スマホ です。']
+    ],
+    'Semana 3 — Comida y Bebida': [
+      ['コーヒー', 'kōhī', 'café', 'わたし は コーヒー を のみます。'],
+      ['タコス', 'takosu', 'tacos', 'わたし は タコス を たべます。'],
+      ['すし', 'sushi', 'sushi', 'わたし は すし が すき です。']
+    ],
+    'Semana 4 — Tiempo y Lugares': [
+      ['あした', 'ashita', 'mañana', 'あした とうきょう に いきます。'],
+      ['えき', 'eki', 'estación', 'あれ は えき です。'],
+      ['こうえん', 'kōen', 'parque', 'こうえん に こども が います。']
+    ]
+  };
+
+  function mountVocabBrowser() {
+    const tabRoadmap = document.getElementById('tab-roadmap');
+    if (!tabRoadmap) return;
+    let card = document.getElementById('mes1VocabCard');
+    if (!card) {
+      card = document.createElement('div');
+      card.id = 'mes1VocabCard';
+      card.className = 'card';
+      tabRoadmap.appendChild(card);
+    }
+    const weeks = Object.keys(allVocab);
+    const prevIdx = parseInt(document.getElementById('vocabWeekSelect')?.value || '0', 10);
+    card.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+        <div>
+          <span class="tag tag-amber">Vocabulario por Semana (Solo Gramática Enseñada)</span>
+          <h3 style="margin-top:4px;">Vocabulario por Semana</h3>
+        </div>
+        <select id="vocabWeekSelect">
+          ${weeks.map((w, i) => `<option value="${i}" ${i === prevIdx ? 'selected' : ''}>${w} (${allVocab[w].length})</option>`).join('')}
+        </select>
+      </div>
+      <div id="vocabWeekGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;"></div>
+    `;
+    const renderWeek = (idx) => {
+      const list = allVocab[weeks[idx]] || [];
+      document.getElementById('vocabWeekGrid').innerHTML = list.map(([jp, romaji, es, ex]) => `
+        <div class="card-alt" style="padding:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
+            <strong class="jp" style="font-size:1.05rem;">${jp}</strong>
+            <button class="pill-btn" onclick="speakJP('${jp}')">🔊</button>
+          </div>
+          <div class="romaji" style="font-size:0.78rem;color:var(--muted);">${romaji}</div>
+          <div style="font-weight:700;font-size:0.86rem;margin-top:2px;">${es}</div>
+          <div class="jp" style="font-size:0.78rem;color:var(--muted);margin-top:4px;cursor:pointer;" onclick="speakJP('${ex}')">🔊 ${ex}</div>
+        </div>`).join('');
+    };
+    document.getElementById('vocabWeekSelect').addEventListener('change', (e) => renderWeek(parseInt(e.target.value, 10)));
+    renderWeek(Math.min(prevIdx, weeks.length - 1));
+  }
+
+  mountVocabBrowser();
+
   const tabReading = document.getElementById('tab-reading');
   if (tabReading) {
     tabReading.querySelectorAll('.tag').forEach((t) => {
@@ -826,67 +930,23 @@
   window.switchTab = function (tabId) {
     if (typeof origSwitchTab === 'function') origSwitchTab(tabId);
     if (tabId === 'srs') renderTab4LowerSections();
-    if (tabId === 'reading' && typeof renderStory === 'function') renderStory();
+    if (tabId === 'reading') renderStory();
     if (tabId === 'writing') renderCharButtons();
   };
 
-  // Initial synchronous paint with new 27-unit course
   if (typeof refreshAll === 'function') refreshAll();
 
   /* =========================================================
-     ASYNC LOAD OF /data/mes1.json (STORIES, KANJI & WEEKLY VOCAB)
+     ASYNC LOAD: /data/mes1.json
   ========================================================= */
-  fetch('/data/mes1.json?v=20261125')
+  fetch('/data/mes1.json?v=20261127')
     .then((r) => (r.ok ? r.json() : null))
     .then((mes1) => {
-      if (!mes1) return;
-
-      // Add Kanji to gated stroke pool
-      (mes1.kanji || []).forEach((k) => {
-        const req = ['一','二','三','百'].includes(k.char) ? 'kj1' : 'kj2';
-        if (!gatedDrawPool.some((d) => d.char === k.char)) {
-          gatedDrawPool.push({
-            char: k.char, reqLesson: req, romaji: `${k.romaji} • ${k.es}`,
-            hint: `On: ${k.on} | Kun: ${k.kun} — Ej: ${k.words.join(' / ')} — ${k.hint}`
-          });
-        }
-      });
-
-      // Stories (Tab 2)
-      stories.length = 0;
-      (mes1.stories || []).forEach((s) => stories.push(s));
-      if (stories.length) activeStoryId = stories[0].id;
-
-      window.renderStory = function () {
-        const sel = document.getElementById('storySelector');
-        const cont = document.getElementById('storyContainer');
-        if (!sel || !cont) return;
-        sel.innerHTML = stories.map((s) => `
-          <button class="pill-btn ${s.id === activeStoryId ? 'active' : ''}" onclick="activeStoryId='${s.id}'; renderStory();">
-            ${hasDone(s.reqLesson) ? '' : '🔒 '}${s.title}
-          </button>`).join('');
-        const st = stories.find((s) => s.id === activeStoryId) || stories[0];
-        if (!st) return;
-        if (!hasDone(st.reqLesson)) {
-          const reqL = lessons.find((l) => l.id === st.reqLesson);
-          cont.innerHTML = `<div class="card-alt">🔒 Completa primero <strong>${reqL ? reqL.title : st.reqLesson}</strong> en la Pestaña 1 para desbloquear esta historia.</div>`;
-          return;
-        }
-        cont.innerHTML = `<div style="font-size:0.82rem;color:var(--teal);font-weight:700;margin-bottom:8px;">${st.level}</div>` +
-          st.lines.map((line) => `
-            <div class="card-alt" style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-              <div class="blind-text ${blindMode ? 'hidden-text' : ''}" style="flex:1;" onclick="this.classList.remove('hidden-text')">
-                <div class="jp" style="font-size:1.1rem;font-weight:700;">${line.jp}</div>
-                <div class="romaji" style="font-size:0.84rem;color:var(--muted);">${line.romaji}</div>
-                <div style="font-size:0.88rem;margin-top:4px;">${state.lang === 'es' ? line.es : line.en}</div>
-              </div>
-              <button class="pill-btn" onclick="speakJP('${line.jp}')">🔊</button>
-            </div>`).join('');
-      };
-
-      // Gate Mes 1 Vocab into SRS
-      const weekReqs = ['m1_g2', 'm1_g3', 'u4', 'm1_g8'];
-      Object.entries(mes1.vocab || {}).forEach(([weekLabel, words], idx) => {
+      if (!mes1 || !mes1.vocab) return;
+      Object.entries(mes1.vocab).forEach(([w, list]) => { allVocab[w] = list; });
+      mountVocabBrowser();
+      const weekReqs = ['m1_g1', 'm1_g3', 'u4', 'm1_g8'];
+      Object.entries(mes1.vocab).forEach(([weekLabel, words], idx) => {
         const reqLesson = weekReqs[idx] || 'm1_g8';
         words.forEach(([jp, romaji, es, example]) => {
           if (!state.srs.some((c) => c.jp === jp)) {
@@ -895,80 +955,47 @@
         });
       });
       if (typeof saveLocal === 'function') saveLocal(false);
-
-      // FIX 8: Restore Weekly Vocabulary Browser in Tab 1
-      const tabRoadmap = document.getElementById('tab-roadmap');
-      if (tabRoadmap && !document.getElementById('mes1VocabCard') && mes1.vocab) {
-        const weeks = Object.keys(mes1.vocab);
-        const card = document.createElement('div');
-        card.id = 'mes1VocabCard';
-        card.className = 'card';
-        card.innerHTML = `
-          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
-            <div>
-              <span class="tag tag-amber">Mes 1 • Vocabulario por Semana (Solo Gramática Enseñada)</span>
-              <h3 style="margin-top:4px;">Vocabulario por Semana</h3>
-            </div>
-            <select id="vocabWeekSelect">
-              ${weeks.map((w, i) => `<option value="${i}">${w} (${mes1.vocab[w].length})</option>`).join('')}
-            </select>
-          </div>
-          <div id="vocabWeekGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;"></div>
-        `;
-        tabRoadmap.appendChild(card);
-
-        const renderVocabWeek = (idx) => {
-          const list = mes1.vocab[weeks[idx]] || [];
-          document.getElementById('vocabWeekGrid').innerHTML = list.map(([jp, romaji, es, ex]) => `
-            <div class="card-alt" style="padding:10px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
-                <strong class="jp" style="font-size:1.05rem;">${jp}</strong>
-                <button class="pill-btn" onclick="speakJP('${jp}')">🔊</button>
-              </div>
-              <div class="romaji" style="font-size:0.78rem;color:var(--muted);">${romaji}</div>
-              <div style="font-weight:700;font-size:0.86rem;margin-top:2px;">${es}</div>
-              <div class="jp" style="font-size:0.78rem;color:var(--muted);margin-top:4px;cursor:pointer;" onclick="speakJP('${ex}')">🔊 ${ex}</div>
-            </div>`).join('');
-        };
-        document.getElementById('vocabWeekSelect').addEventListener('change', (e) => renderVocabWeek(parseInt(e.target.value, 10)));
-        renderVocabWeek(0);
-      }
-
       if (typeof refreshAll === 'function') refreshAll();
     })
-    .catch(() => {});
-/* =========================================================
-     LOAD MONTH 2 (/data/mes2.json) — MODULAR EXPANSION
+    .catch((err) => console.error('[mes-loader] Error loading mes1.json:', err));
+
+  /* =========================================================
+     ASYNC LOAD: /data/mes2.json (DEFENSIVE KANJI + VISIBLE ERRORS)
   ========================================================= */
-  fetch('/data/mes2.json?v=20261126')
+  fetch('/data/mes2.json?v=20261127')
     .then((r) => (r.ok ? r.json() : null))
     .then((mes2) => {
       if (!mes2) return;
 
-      // 1. Append Month 2 grammar & single-kanji units + register romaji/furigana
-      (mes2.grammar || []).forEach((g) => {
-        if (!lessons.some((l) => l.id === g.id)) {
-          lessons.push(g);
-          (g.chunks || []).forEach((c) => {
-            romajiMap[c.jp] = c.romaji;
-            if (c.furigana) furiganaMap[c.jp] = c.furigana;
-          });
-        }
-      });
+      const registerUnit = (u) => {
+        if (!u || !u.id) return;
+        if (!lessons.some((l) => l.id === u.id)) lessons.push(u);
+        (u.chunks || []).forEach((c) => {
+          if (c.jp) romajiMap[c.jp] = c.romaji || '';
+          if (c.jp && c.furigana) furiganaMap[c.jp] = c.furigana;
+        });
+      };
 
-      // 2. Append Month 2 gated kanji to Tab 3 stroke practice
+      // Step 1: Append Month 2 grammar AND any lesson-unit kanji records into lessons
+      (mes2.grammar || []).forEach(registerUnit);
       (mes2.kanji || []).forEach((k) => {
-        if (!gatedDrawPool.some((d) => d.char === k.char)) {
-          gatedDrawPool.push({
-            char: k.char,
-            reqLesson: k.reqLesson,
-            romaji: k.romaji,
-            hint: `On: ${k.on} | Kun: ${k.kun} — Ej: ${k.words.join(' / ')} — ${k.hint}`
-          });
-        }
+        if (k && k.id && Array.isArray(k.chunks)) registerUnit(k);
       });
 
-      // 3. Append Month 2 gated stories & update Tab 2 header count to 4
+      // Step 2: Build Tab 3 draw-pool entries defensively from EITHER kanji shape
+      (mes2.kanji || []).forEach((k) => {
+        const ch = k.char || k.chunks?.[0]?.jp;
+        if (!ch || gatedDrawPool.some((d) => d.char === ch)) return;
+        const reqLesson = k.reqLesson || k.id || 'm2_kj1';
+        const romaji = k.romaji || k.chunks?.[0]?.romaji || '';
+        const wordsStr = Array.isArray(k.words) && k.words.length ? ` — Ej: ${k.words.join(' / ')}` : '';
+        const readingsStr = (k.on || k.kun) ? `On: ${k.on || '—'} | Kun: ${k.kun || '—'}` : '';
+        const baseHint = k.hint || k.chunks?.[0]?.noteES || k.ruleES || '';
+        const hint = [readingsStr, wordsStr, baseHint].filter(Boolean).join(' ').trim();
+        gatedDrawPool.push({ char: ch, reqLesson, romaji, hint });
+      });
+
+      // Step 3: Append Month 2 gated stories & update Tab 2 count to 4
       (mes2.stories || []).forEach((st) => {
         if (!stories.some((s) => s.id === st.id)) stories.push(st);
       });
@@ -981,9 +1008,10 @@
         });
       }
 
-      // 4. Gate Month 2 Weeks 5–8 vocab into SRS & merge into Tab 1 Vocab Browser
+      // Step 4: Gate Month 2 Weeks 5–8 vocab into SRS & merge into Tab 1 Vocab Browser
       const m2WeekReqs = ['m2_g3', 'm2_g6', 'm2_g9', 'm2_g10'];
       Object.entries(mes2.vocab || {}).forEach(([weekLabel, words], idx) => {
+        allVocab[weekLabel] = words;
         const reqLesson = m2WeekReqs[idx] || 'm2_g10';
         words.forEach(([jp, romaji, es, example]) => {
           if (!state.srs.some((c) => c.jp === jp)) {
@@ -991,23 +1019,9 @@
           }
         });
       });
+      mountVocabBrowser();
 
-      if (mes2.vocab) {
-        const sel = document.getElementById('vocabWeekSelect');
-        if (sel) {
-          Object.entries(mes2.vocab).forEach(([weekLabel, words]) => {
-            if (!fallbackVocab[weekLabel]) {
-              fallbackVocab[weekLabel] = words;
-              const opt = document.createElement('option');
-              opt.value = Object.keys(fallbackVocab).length - 1;
-              opt.textContent = `${weekLabel} (${words.length})`;
-              sel.appendChild(opt);
-            }
-          });
-        }
-      }
-
-      // 5. Mark Month 2 as ACTIVE in the 6-Month Plan
+      // Step 5: Mark Month 2 as ACTIVE in 6-Month Plan
       if (sixMonthOutline[1]) {
         sixMonthOutline[1].label = 'Mes 2 • Semanas 5–8 (ACTIVO)';
         sixMonthOutline[1].detail = 'Preguntas • 10 verbos • Pasado y Negación • Hora/Días • 10 Kanji • 2 historias i+1';
@@ -1016,5 +1030,291 @@
       if (typeof saveLocal === 'function') saveLocal(false);
       if (typeof refreshAll === 'function') refreshAll();
     })
-    .catch(() => {});
+    .catch((err) => console.error('[mes-loader] Error loading mes2.json:', err));
+/* =========================================================
+     ETAPA 3 MULTI-EXERCISE MINI-QUEUE (MONTH 1 DRILLS)
+  ========================================================= */
+  const month1Drills = {
+    u1: [
+      { promptES: 'Escribe "ai" (amor):', answer: ['あ','い'], distractors: ['う','え','お'] },
+      { promptES: 'Escribe "ie" (casa):', answer: ['い','え'], distractors: ['あ','う','お'] },
+      { promptES: 'Escribe "ue" (arriba):', answer: ['う','え'], distractors: ['あ','い','お'] },
+      { promptES: 'Escribe "ao" (azul):', answer: ['あ','お'], distractors: ['い','う','え'] },
+      { promptES: 'Escribe "au" (encontrarse):', answer: ['あ','う'], distractors: ['い','え','お'] },
+      { promptES: 'Escribe "oi" (oye / sobrino):', answer: ['お','い'], distractors: ['あ','う','え'] }
+    ],
+    u2: [
+      { promptES: 'Escribe "iro" (color):', answer: ['い','ろ'], distractors: ['ら','る','あ'] },
+      { promptES: 'Escribe "aru" (haber / existir):', answer: ['あ','る'], distractors: ['ら','れ','ろ'] },
+      { promptES: 'Escribe "ura" (parte trasera):', answer: ['う','ら'], distractors: ['り','る','ろ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['る'], distractors: ['ら','り','れ','ろ'] }
+    ],
+    h3: [
+      { promptES: 'Escribe "kore" (esto):', answer: ['こ','れ'], distractors: ['か','き','ろ'] },
+      { promptES: 'Escribe "kao" (cara):', answer: ['か','お'], distractors: ['き','く','け'] },
+      { promptES: 'Escribe "ike" (estanque):', answer: ['い','け'], distractors: ['か','く','こ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぎ'], distractors: ['が','ぐ','げ','ご'] }
+    ],
+    h4: [
+      { promptES: 'Escribe "sushi" (すし):', answer: ['す','し'], distractors: ['さ','せ','そ'] },
+      { promptES: 'Escribe "kasa" (paraguas):', answer: ['か','さ'], distractors: ['し','す','せ'] },
+      { promptES: 'Escribe "kaze" (viento):', answer: ['か','ぜ'], distractors: ['ざ','じ','ず'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぞ'], distractors: ['ざ','じ','ず','ぜ'] }
+    ],
+    h5: [
+      { promptES: 'Escribe "desu" (es / soy):', answer: ['で','す'], distractors: ['て','た','と'] },
+      { promptES: 'Escribe "chizu" (mapa):', answer: ['ち','ず'], distractors: ['た','つ','て'] },
+      { promptES: 'Escribe "soto" (afuera):', answer: ['そ','と'], distractors: ['た','て','ど'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['つ'], distractors: ['た','ち','て','と'] }
+    ],
+    h6: [
+      { promptES: 'Escribe "taberu" (comer):', answer: ['た','べ','る'], distractors: ['は','に','の'] },
+      { promptES: 'Escribe "hana" (flor):', answer: ['は','な'], distractors: ['ひ','ぬ','ね'] },
+      { promptES: 'Escribe "neko" (gato):', answer: ['ね','こ'], distractors: ['な','ぬ','の'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぴ'], distractors: ['ぱ','ぷ','ぺ','ぽ'] }
+    ],
+    h7: [
+      { promptES: 'Escribe "watashi" (yo):', answer: ['わ','た','し'], distractors: ['ま','も','ん'] },
+      { promptES: 'Escribe "yama" (montaña):', answer: ['や','ま'], distractors: ['ゆ','よ','み'] },
+      { promptES: 'Escribe "hon" (libro):', answer: ['ほ','ん'], distractors: ['わ','を','も'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ん'], distractors: ['わ','を','ま','も'] }
+    ],
+    k1: [
+      { promptES: 'Escribe "aisu" (helado / frío):', answer: ['ア','イ','ス'], distractors: ['カ','コ','シ'] },
+      { promptES: 'Escribe "kokoa" (cocoa):', answer: ['コ','コ','ア'], distractors: ['カ','ク','ケ'] },
+      { promptES: 'Escribe "kisu" (beso):', answer: ['キ','ス'], distractors: ['シ','セ','ソ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['シ'], distractors: ['サ','ス','セ','ソ'] }
+    ],
+    k2: [
+      { promptES: 'Escribe "takosu" (tacos):', answer: ['タ','コ','ス'], distractors: ['テ','ト','ホ'] },
+      { promptES: 'Escribe "kafe" (cafetería):', answer: ['カ','フェ'], distractors: ['ハ','ヒ','フ'] },
+      { promptES: 'Escribe "kōhī" (café):', answer: ['コ','ー','ヒ','ー'], distractors: ['ハ','ヘ','ホ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ツ'], distractors: ['タ','チ','テ','ト'] }
+    ],
+    k3: [
+      { promptES: 'Escribe "rāmen" (ramen):', answer: ['ラ','ー','メ','ン'], distractors: ['マ','レ','ロ'] },
+      { promptES: 'Escribe "kamera" (cámara):', answer: ['カ','メ','ラ'], distractors: ['マ','ミ','ム'] },
+      { promptES: 'Escribe "memo" (nota):', answer: ['メ','モ'], distractors: ['マ','ミ','ム'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ン'], distractors: ['ワ','ヲ','ラ','ロ'] }
+    ],
+    k4: [
+      { promptES: 'Escribe "terebi" (televisión):', answer: ['テ','レ','ビ'], distractors: ['ピ','ペ','デ'] },
+      { promptES: 'Escribe "pan" (pan):', answer: ['パ','ン'], distractors: ['バ','ビ','ブ'] },
+      { promptES: 'Escribe "basu" (autobús):', answer: ['バ','ス'], distractors: ['パ','ダ','ザ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ポ'], distractors: ['パ','ピ','プ','ペ'] }
+    ],
+    u3: [
+      { promptES: 'Selecciona en orden: "Tacos" + "Smartphone"', answer: ['タコス','スマホ'], distractors: ['テレビ'] },
+      { promptES: 'Selecciona en orden: "Televisión" + "Tacos"', answer: ['テレビ','タコス'], distractors: ['スマホ'] },
+      { promptES: 'Selecciona en orden: "Smartphone" + "Televisión"', answer: ['スマホ','テレビ'], distractors: ['タコス'] }
+    ],
+    m1_g1: [
+      { promptES: 'Arma: "Yo soy estudiante"', answer: ['わたし','は','がくせい','です'], distractors: ['せんせい'] },
+      { promptES: 'Arma: "Esto es café"', answer: ['これ','は','コーヒー','です'], distractors: ['がくせい'] },
+      { promptES: 'Arma: "Esto es ramen"', answer: ['これ','は','ラーメン','です'], distractors: ['わたし'] }
+    ],
+    m1_g2: [
+      { promptES: 'Arma: "Yo no soy profesor" (deletreando じゃありません):', answer: ['わたし','は','せんせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo no soy estudiante":', answer: ['わたし','は','がくせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
+      { promptES: 'Arma: "Esto no es café":', answer: ['これ','は','コーヒー','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] }
+    ],
+    u4: [
+      { promptES: 'Arma (verbo al final): "Yo como tacos"', answer: ['わたし','は','タコス','を','たべます'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo como ramen"', answer: ['わたし','は','ラーメン','を','たべます'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo como sushi"', answer: ['わたし','は','すし','を','たべます'], distractors: ['です'] }
+    ],
+    u5: [
+      { promptES: 'Acción en un lugar (に vs で): "Yo tomo café en la cafetería"', answer: ['わたし','は','カフェ','で','コーヒー','を','のみます'], distractors: ['に'] },
+      { promptES: 'Cambia la acción: "Yo como tacos en la cafetería"', answer: ['わたし','は','カフェ','で','タコス','を','たべます'], distractors: ['に'] },
+      { promptES: 'Cambia el lugar: "Yo como ramen en casa"', answer: ['わたし','は','いえ','で','ラーメン','を','たべます'], distractors: ['に'] }
+    ],
+    u6: [
+      { promptES: 'Arma: "Este ramen no es caro"', answer: ['この','ラーメン','は','たかくない'], distractors: ['たかい','これ'] },
+      { promptES: 'Arma: "Este café es caro"', answer: ['この','コーヒー','は','たかい'], distractors: ['たかくない','これ'] },
+      { promptES: 'Contraste これ vs この: "Esto no es caro"', answer: ['これ','は','たかくない'], distractors: ['この','たかい'] }
+    ],
+    u7: [
+      { promptES: 'Pide: "Yo quiero dos cafés, por favor"', answer: ['わたし','は','コーヒー','を','ふたつ','ください'], distractors: ['ひとつ'] },
+      { promptES: 'Cambia cantidad: "Yo quiero un ramen, por favor"', answer: ['わたし','は','ラーメン','を','ひとつ','ください'], distractors: ['ふたつ'] },
+      { promptES: 'Cambia comida: "Yo quiero dos tacos, por favor"', answer: ['わたし','は','タコス','を','ふたつ','ください'], distractors: ['ひとつ'] }
+    ],
+    u8: [
+      { promptES: 'Omite "yo": "Mañana voy a Tokio"', answer: ['あした','とうきょう','に','いきます'], distractors: ['で','を'] },
+      { promptES: 'Cambia destino: "Mañana voy a la cafetería"', answer: ['あした','カフェ','に','いきます'], distractors: ['で','を'] },
+      { promptES: 'Contraste に vs で: "En Tokio como ramen"', answer: ['とうきょう','で','ラーメン','を','たべます'], distractors: ['に'] }
+    ],
+    m1_g3: [
+      { promptES: 'Pregunta: "¿Esto cuesta 100 yenes?"', answer: ['これ','は','ひゃくえん','です','か'], distractors: ['この'] },
+      { promptES: 'Pregunta: "¿Esto es café?"', answer: ['これ','は','コーヒー','です','か'], distractors: ['この'] },
+      { promptES: 'Pregunta: "¿Mañana vas a Tokio?"', answer: ['あした','とうきょう','に','いきます','か'], distractors: ['で'] }
+    ],
+    m1_g4: [
+      { promptES: 'Arma: "Esto es mi libro"', answer: ['これ','は','わたし','の','ほん','です'], distractors: ['を','か'] },
+      { promptES: 'Cambia objeto: "Esto es mi smartphone"', answer: ['これ','は','わたし','の','スマホ','です'], distractors: ['を'] },
+      { promptES: 'Cambia dueño: "Esto es el libro del profesor"', answer: ['これ','は','せんせい','の','ほん','です'], distractors: ['を'] }
+    ],
+    m1_g5: [
+      { promptES: 'Arma: "Aquello es la estación"', answer: ['あれ','は','えき','です'], distractors: ['これ','それ'] },
+      { promptES: 'Cambia distancia: "Eso es mi libro"', answer: ['それ','は','わたし','の','ほん','です'], distractors: ['これ','あれ'] },
+      { promptES: 'Cambia distancia: "Esto es mi café"', answer: ['これ','は','わたし','の','コーヒー','です'], distractors: ['それ','あれ'] }
+    ],
+    m1_g6: [
+      { promptES: 'Arma: "Yo también soy mexicano"', answer: ['わたし','も','メキシコじん','です'], distractors: ['は','を'] },
+      { promptES: 'Cambia profesión: "Yo también soy estudiante"', answer: ['わたし','も','がくせい','です'], distractors: ['は'] },
+      { promptES: 'も reemplaza を: "También como ramen"', answer: ['ラーメン','も','たべます'], distractors: ['を','は'] }
+    ],
+    m1_g7: [
+      { promptES: 'Arma: "Me gusta el sushi"', answer: ['わたし','は','すし','が','すき です'], distractors: ['を','も'] },
+      { promptES: 'Cambia comida: "Me gusta el café"', answer: ['わたし','は','コーヒー','が','すき です'], distractors: ['を'] },
+      { promptES: 'Combina con も: "También me gusta el ramen"', answer: ['わたし','は','ラーメン','も','すき です'], distractors: ['を'] }
+    ],
+    m1_g8: [
+      { promptES: 'Seres vivos (います): "Hay niños en el parque"', answer: ['こうえん','に','こども','が','います'], distractors: ['あります','で'] },
+      { promptES: 'Objetos/lugares (あります): "Hay una cafetería en la estación"', answer: ['えき','に','カフェ','が','あります'], distractors: ['います','で'] },
+      { promptES: 'Seres vivos (います): "Hay un profesor en la cafetería"', answer: ['カフェ','に','せんせい','が','います'], distractors: ['あります','で'] }
+    ],
+    kj1: [
+      { promptES: '1/3 Reconoce el kanji de "uno":', answer: ['一'], distractors: ['二','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 一:', answer: ['いち'], distractors: ['に','さん'] },
+      { promptES: '3/3 Forma "una cosa" (ひとつ):', answer: ['一','つ'], distractors: ['二','えん'] }
+    ],
+    kj2: [
+      { promptES: '1/3 Reconoce el kanji de "dos":', answer: ['二'], distractors: ['一','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 二:', answer: ['に'], distractors: ['いち','さん'] },
+      { promptES: '3/3 Forma "dos cosas" (ふたつ):', answer: ['二','つ'], distractors: ['一','三'] }
+    ],
+    kj3: [
+      { promptES: '1/3 Reconoce el kanji de "tres":', answer: ['三'], distractors: ['一','二'] },
+      { promptES: '2/3 Elige la lectura correcta de 三:', answer: ['さん'], distractors: ['いち','に'] },
+      { promptES: '3/3 Forma "tres cosas" (みっつ):', answer: ['三','つ'], distractors: ['一','二'] }
+    ],
+    kj4: [
+      { promptES: '1/3 Reconoce el kanji de "cien":', answer: ['百'], distractors: ['一','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 百:', answer: ['ひゃく'], distractors: ['いち','えん'] },
+      { promptES: '3/3 Forma "100 yenes" (ひゃくえん):', answer: ['百','えん'], distractors: ['一','つ'] }
+    ],
+    kj5: [
+      { promptES: '1/3 Reconoce el kanji de "yen":', answer: ['円'], distractors: ['百','二'] },
+      { promptES: '2/3 Elige la lectura correcta de 円:', answer: ['えん'], distractors: ['ひゃく','ほん'] },
+      { promptES: '3/3 Forma "100 yenes" en kanji (百円):', answer: ['百','円'], distractors: ['一','二'] }
+    ],
+    kj6: [
+      { promptES: '1/3 Reconoce el kanji de "libro":', answer: ['本'], distractors: ['円','一'] },
+      { promptES: '2/3 Elige la lectura correcta de 本:', answer: ['ほん'], distractors: ['えん','に'] },
+      { promptES: '3/3 Forma "mi libro" (わたし の 本):', answer: ['わたし','の','本'], distractors: ['円','を'] }
+    ],
+    kj7: [
+      { promptES: '1/3 Reconoce el kanji de "sol / día":', answer: ['日'], distractors: ['本','円'] },
+      { promptES: '2/3 Elige la lectura de 日 en 日本:', answer: ['に'], distractors: ['ほん','ひと'] },
+      { promptES: '3/3 Forma "Japón" (日本):', answer: ['日','本'], distractors: ['円','一'] }
+    ],
+    kj8: [
+      { promptES: '1/3 Reconoce el kanji de "persona":', answer: ['人'], distractors: ['日','本'] },
+      { promptES: '2/3 Elige la lectura correcta de 人:', answer: ['ひと'], distractors: ['ほん','に'] },
+      { promptES: '3/3 Forma "mexicano/a" (メキシコ人):', answer: ['メキシコ','人'], distractors: ['日','本'] }
+    ]
+  };
+
+  window._drillLessonId = null;
+  window._drillIdx = 0;
+
+  function getLessonQueue(l) {
+    if (month1Drills[l.id]) return month1Drills[l.id];
+    return [{ promptES: l.puzzlePromptES, promptEN: l.puzzlePromptEN, answer: l.puzzleAnswer, distractors: l.puzzleDistractors }];
+  }
+
+  window.renderLessonWorkspace = function () {
+    const l = lessons.find((x) => x.id === activeLessonId) || lessons[0];
+    if (window._drillLessonId !== l.id) {
+      window._drillLessonId = l.id;
+      window._drillIdx = 0;
+      puzzleSelected = [];
+    }
+    const queue = getLessonQueue(l);
+    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
+    const isES = state.lang === 'es';
+    const allTiles = [...new Set([...step.answer, ...step.distractors])].sort();
+    const s1 = l.stage1Label || 'Etapa 1 • Concepto (60s)';
+    const s2 = l.stage2Label || 'Etapa 2 • Escucha y Repite';
+    const s3 = `${l.stage3Label || 'Etapa 3 • Práctica'} • Ejercicio ${window._drillIdx + 1}/${queue.length}`;
+    const tapHint = 'Toca cada bloque arriba para escuchar y repetir.';
+    const zoneHint = step.audioOnly ? 'Escucha el audio y toca la sílaba correcta...' : (l.isScript ? 'Toca las letras de abajo...' : 'Toca los bloques de abajo para armar la oración...');
+
+    const renderTileLabel = (t) => {
+      const rom = romajiMap[t] || '';
+      const mastered = (state.blockMastery[t] || 0) >= 3;
+      const showRom = !step.audioOnly && rom && !mastered;
+      return `<span class="jp" style="display:block;">${renderRuby(t)}</span>${showRom ? `<span class="romaji" style="display:block;font-size:0.72rem;color:var(--muted);">${rom}</span>` : ''}`;
+    };
+
+    document.getElementById('lessonWorkspace').innerHTML = `
+      <span class="tag tag-teal">${s1}</span>
+      <h2 style="margin:6px 0;">${l.title}</h2>
+      <p style="margin-bottom:14px;">${isES ? l.ruleES : l.ruleEN}</p>
+
+      <span class="tag tag-amber">${s2}</span>
+      <div class="anatomy-row">
+        ${l.chunks.map((c, idx) => `
+          <div class="chunk ${c.role}" onclick="inspectChunk('${l.id}', ${idx})">
+            <span class="jp jp-main">${renderRuby(c.jp)}</span>
+            <span class="romaji">${c.romaji}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div id="chunkDetail" class="card-alt" style="font-size:0.88rem; margin-bottom:16px; color:var(--muted);">${tapHint}</div>
+
+      <span class="tag tag-green">${s3}</span>
+      <p style="font-weight:700; margin-top:6px;">${step.promptES}</p>
+
+      <div class="drop-zone" id="puzzleZone">
+        ${puzzleSelected.length === 0 ? `<span style="color:var(--muted); font-size:0.86rem;">${zoneHint}</span>` :
+          puzzleSelected.map((t, i) => `<button class="tile" onclick="removeTile(${i})">${renderTileLabel(t)}</button>`).join('')}
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        ${allTiles.map((t) => `<button class="tile" onclick="addTile('${t}')">${renderTileLabel(t)}</button>`).join('')}
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-green" onclick="checkPuzzle('${l.id}')">Comprobar Orden</button>
+        <button class="btn btn-outline" onclick="puzzleSelected=[]; renderLessonWorkspace();">Limpiar</button>
+        <button class="btn btn-primary" onclick="speakJP('${step.answer.join('')}')">🔊 ${step.audioOnly ? 'Escuchar Sílaba' : 'Escuchar Frase'}</button>
+      </div>
+      <div id="puzzleFeedback" style="margin-top:10px; font-weight:700;"></div>
+    `;
+  };
+
+  window.checkPuzzle = function (lessonId) {
+    const l = lessons.find((x) => x.id === lessonId);
+    const queue = getLessonQueue(l);
+    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
+    const ok = JSON.stringify(puzzleSelected) === JSON.stringify(step.answer);
+    const fb = document.getElementById('puzzleFeedback');
+    if (ok) {
+      speakJP(step.answer.join(''));
+      step.answer.forEach((t) => { state.blockMastery[t] = (state.blockMastery[t] || 0) + 1; });
+      if (window._drillIdx < queue.length - 1) {
+        fb.style.color = 'var(--green)';
+        fb.textContent = `✅ ¡Correcto! (${window._drillIdx + 1}/${queue.length}) Siguiente ejercicio...`;
+        setTimeout(() => {
+          window._drillIdx++;
+          puzzleSelected = [];
+          renderLessonWorkspace();
+          const nextStep = queue[window._drillIdx];
+          if (nextStep && nextStep.audioOnly) speakJP(nextStep.answer.join(''));
+        }, 850);
+      } else {
+        fb.style.color = 'var(--green)';
+        fb.textContent = `🎉 ¡Set completo (${queue.length}/${queue.length})! Dominaste esta lección.`;
+        if (!state.completedLessons.includes(lessonId)) state.completedLessons.push(lessonId);
+        saveLocal(true);
+        refreshAll();
+      }
+    } else {
+      fb.style.color = 'var(--coral)';
+      fb.textContent = `❌ Casi. Respuesta esperada: ${step.answer.join(' ')}`;
+    }
+  };
+
+  if (typeof renderLessonWorkspace === 'function') renderLessonWorkspace();
 })();
