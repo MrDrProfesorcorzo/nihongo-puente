@@ -937,4 +937,84 @@
       if (typeof refreshAll === 'function') refreshAll();
     })
     .catch(() => {});
+/* =========================================================
+     LOAD MONTH 2 (/data/mes2.json) — MODULAR EXPANSION
+  ========================================================= */
+  fetch('/data/mes2.json?v=20261126')
+    .then((r) => (r.ok ? r.json() : null))
+    .then((mes2) => {
+      if (!mes2) return;
+
+      // 1. Append Month 2 grammar & single-kanji units + register romaji/furigana
+      (mes2.grammar || []).forEach((g) => {
+        if (!lessons.some((l) => l.id === g.id)) {
+          lessons.push(g);
+          (g.chunks || []).forEach((c) => {
+            romajiMap[c.jp] = c.romaji;
+            if (c.furigana) furiganaMap[c.jp] = c.furigana;
+          });
+        }
+      });
+
+      // 2. Append Month 2 gated kanji to Tab 3 stroke practice
+      (mes2.kanji || []).forEach((k) => {
+        if (!gatedDrawPool.some((d) => d.char === k.char)) {
+          gatedDrawPool.push({
+            char: k.char,
+            reqLesson: k.reqLesson,
+            romaji: k.romaji,
+            hint: `On: ${k.on} | Kun: ${k.kun} — Ej: ${k.words.join(' / ')} — ${k.hint}`
+          });
+        }
+      });
+
+      // 3. Append Month 2 gated stories & update Tab 2 header count to 4
+      (mes2.stories || []).forEach((st) => {
+        if (!stories.some((s) => s.id === st.id)) stories.push(st);
+      });
+      const tabR = document.getElementById('tab-reading');
+      if (tabR) {
+        tabR.querySelectorAll('.tag').forEach((t) => {
+          if (t.textContent.includes('HISTORIAS')) {
+            t.textContent = `LECTURA Y ESCUCHA PROGRESIVA (${stories.length} HISTORIAS)`;
+          }
+        });
+      }
+
+      // 4. Gate Month 2 Weeks 5–8 vocab into SRS & merge into Tab 1 Vocab Browser
+      const m2WeekReqs = ['m2_g3', 'm2_g6', 'm2_g9', 'm2_g10'];
+      Object.entries(mes2.vocab || {}).forEach(([weekLabel, words], idx) => {
+        const reqLesson = m2WeekReqs[idx] || 'm2_g10';
+        words.forEach(([jp, romaji, es, example]) => {
+          if (!state.srs.some((c) => c.jp === jp)) {
+            state.srs.push({ id: 'm2_' + jp, jp, romaji, es: `${es} — Ej: ${example}`, interval: 1, nextDue: 0, reqLesson });
+          }
+        });
+      });
+
+      if (mes2.vocab) {
+        const sel = document.getElementById('vocabWeekSelect');
+        if (sel) {
+          Object.entries(mes2.vocab).forEach(([weekLabel, words]) => {
+            if (!fallbackVocab[weekLabel]) {
+              fallbackVocab[weekLabel] = words;
+              const opt = document.createElement('option');
+              opt.value = Object.keys(fallbackVocab).length - 1;
+              opt.textContent = `${weekLabel} (${words.length})`;
+              sel.appendChild(opt);
+            }
+          });
+        }
+      }
+
+      // 5. Mark Month 2 as ACTIVE in the 6-Month Plan
+      if (sixMonthOutline[1]) {
+        sixMonthOutline[1].label = 'Mes 2 • Semanas 5–8 (ACTIVO)';
+        sixMonthOutline[1].detail = 'Preguntas • 10 verbos • Pasado y Negación • Hora/Días • 10 Kanji • 2 historias i+1';
+      }
+
+      if (typeof saveLocal === 'function') saveLocal(false);
+      if (typeof refreshAll === 'function') refreshAll();
+    })
+    .catch(() => {});
 })();

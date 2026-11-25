@@ -1,0 +1,328 @@
+{
+  "month": 2,
+  "title": "Mes 2: Tiempo, Rutina y Pasado",
+  "grammar": [
+    {
+      "id": "m2_g1",
+      "title": "M2-1. Preguntas: なに・だれ・いつ・いくら",
+      "tag": "Mes 2 • Gramática 1",
+      "stage1Label": "Etapa 1 • Palabras Interrogativas (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma la Pregunta",
+      "ruleES": "Aprende 4 palabras para preguntar: なに (qué), だれ (quién), いつ (cuándo) y いくら (cuánto cuesta). Regla de なに vs なん: usa なん antes de です/ですか y antes de contadores (なんじ = qué hora); usa なに en todo lo demás.",
+      "ruleEN": "Learn なに (what), だれ (who), いつ (when), いくら (how much). Use なん before です/counters, なに elsewhere.",
+      "chunks": [
+        { "jp": "これ", "romaji": "kore", "role": "topic", "noteES": "Esto (Mes 1)", "noteEN": "This" },
+        { "jp": "は", "romaji": "wa", "role": "particle", "noteES": "Suena 'wa'", "noteEN": "Topic" },
+        { "jp": "いくら", "romaji": "ikura", "role": "object", "noteES": "¿Cuánto cuesta?", "noteEN": "How much?" },
+        { "jp": "です", "romaji": "desu", "role": "verb", "noteES": "Es / cuesta", "noteEN": "Is" },
+        { "jp": "か", "romaji": "ka", "role": "particle", "noteES": "Pregunta", "noteEN": "Question" },
+        { "jp": "なん", "romaji": "nan", "role": "object", "noteES": "¿Qué? (antes de です/contadores)", "noteEN": "What (before desu)" },
+        { "jp": "だれ", "romaji": "dare", "role": "object", "noteES": "¿Quién?", "noteEN": "Who?" },
+        { "jp": "いつ", "romaji": "itsu", "role": "object", "noteES": "¿Cuándo?", "noteEN": "When?" }
+      ],
+      "puzzlePromptES": "Pregunta: '¿Cuánto cuesta esto?'",
+      "puzzlePromptEN": "Ask: 'How much is this?'",
+      "puzzleAnswer": ["これ", "は", "いくら", "です", "か"],
+      "puzzleDistractors": ["だれ", "いつ"]
+    },
+    {
+      "id": "m2_g2",
+      "title": "M2-2. Lugares: どこ に vs どこ で",
+      "tag": "Mes 2 • Gramática 2",
+      "stage1Label": "Etapa 1 • どこ con に y で (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma la Pregunta",
+      "ruleES": "どこ significa '¿dónde?'. Reutiliza la regla del Mes 1: usa どこ に para ubicación estática (どこ に あります か = ¿dónde está?) y どこ で donde ocurre una acción (どこ で たべます か = ¿dónde comes?).",
+      "ruleEN": "どこ (where): use に for static location and で for actions.",
+      "chunks": [
+        { "jp": "どこ", "romaji": "doko", "role": "topic", "noteES": "¿Dónde?", "noteEN": "Where?" },
+        { "jp": "で", "romaji": "de", "role": "particle", "noteES": "En (donde ocurre una acción)", "noteEN": "At (action)" },
+        { "jp": "たべます", "romaji": "tabemasu", "role": "verb", "noteES": "Comer (Mes 1)", "noteEN": "Eat" },
+        { "jp": "か", "romaji": "ka", "role": "particle", "noteES": "Pregunta", "noteEN": "Question" }
+      ],
+      "puzzlePromptES": "Pregunta: '¿Dónde comes?'",
+      "puzzlePromptEN": "Ask: 'Where do you eat?'",
+      "puzzleAnswer": ["どこ", "で", "たべます", "か"],
+      "puzzleDistractors": ["に", "だれ"]
+    },
+    {
+      "id": "m2_g3",
+      "title": "M2-3. Verbos Diarios (1–5): みる・よむ・かく・かう・きく",
+      "tag": "Mes 2 • Gramática 3",
+      "stage1Label": "Etapa 1 • 5 Verbos de Acción (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite (Diccionario → ます)",
+      "stage3Label": "Etapa 3 • Arma la Oración",
+      "ruleES": "5 verbos esenciales descompuestos: みる→みます (ver), よむ→よみます (leer), かく→かきます (escribir), かう→かいます (comprar), きく→ききます (escuchar). Todos llevan を para su objeto.",
+      "ruleEN": "5 core verbs: みる→みます, よむ→よみます, かく→かきます, かう→かいます, きく→ききます.",
+      "chunks": [
+        { "jp": "わたし", "romaji": "watashi", "role": "topic", "noteES": "Yo", "noteEN": "I" },
+        { "jp": "は", "romaji": "wa", "role": "particle", "noteES": "Suena 'wa'", "noteEN": "Topic" },
+        { "jp": "ほん", "romaji": "hon", "role": "object", "noteES": "Libro", "noteEN": "Book" },
+        { "jp": "を", "romaji": "o", "role": "particle", "noteES": "Suena 'o' (objeto)", "noteEN": "Object" },
+        { "jp": "よみます", "romaji": "yomimasu", "role": "verb", "noteES": "De よむ (leer) → よみます", "noteEN": "Read" },
+        { "jp": "みます", "romaji": "mimasu", "role": "verb", "noteES": "De みる (ver) → みます", "noteEN": "See/watch" },
+        { "jp": "かきます", "romaji": "kakimasu", "role": "verb", "noteES": "De かく (escribir) → かきます", "noteEN": "Write" },
+        { "jp": "かいます", "romaji": "kaimasu", "role": "verb", "noteES": "De かう (comprar) → かいます", "noteEN": "Buy" },
+        { "jp": "ききます", "romaji": "kikimasu", "role": "verb", "noteES": "De きく (escuchar) → ききます", "noteEN": "Listen" }
+      ],
+      "puzzlePromptES": "Arma: 'Yo leo un libro'",
+      "puzzlePromptEN": "Build: 'I read a book'",
+      "puzzleAnswer": ["わたし", "は", "ほん", "を", "よみます"],
+      "puzzleDistractors": ["かきます", "みます"]
+    },
+    {
+      "id": "m2_g4",
+      "title": "M2-4. Verbos Diarios (6–10) y Verbos する",
+      "tag": "Mes 2 • Gramática 4",
+      "stage1Label": "Etapa 1 • 5 Verbos de Rutina (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma la Oración",
+      "ruleES": "5 verbos más: おきる→おきます (despertar), ねる→ねます (dormir), かえる→かえります (volver a casa), はなす→はなします (hablar). Ojo con べんきょうする→べんきょうします (estudiar): es un verbo compuesto con する (hacer), por eso siempre cambia する→します.",
+      "ruleEN": "おきる→おきます, ねる→ねます, かえる→かえります, はなす→はなします, and する-verb べんきょうする→べんきょうします.",
+      "chunks": [
+        { "jp": "わたし", "romaji": "watashi", "role": "topic", "noteES": "Yo", "noteEN": "I" },
+        { "jp": "は", "romaji": "wa", "role": "particle", "noteES": "Suena 'wa'", "noteEN": "Topic" },
+        { "jp": "にほんご", "romaji": "Nihongo", "role": "object", "noteES": "Japonés (idioma)", "noteEN": "Japanese" },
+        { "jp": "を", "romaji": "o", "role": "particle", "noteES": "Suena 'o'", "noteEN": "Object" },
+        { "jp": "べんきょうします", "romaji": "benkyō shimasu", "role": "verb", "noteES": "Verbo する: べんきょうする → べんきょうします", "noteEN": "Study" },
+        { "jp": "おきます", "romaji": "okimasu", "role": "verb", "noteES": "De おきる → おきます (despertar)", "noteEN": "Wake up" },
+        { "jp": "ねます", "romaji": "nemasu", "role": "verb", "noteES": "De ねる → ねます (dormir)", "noteEN": "Sleep" },
+        { "jp": "かえります", "romaji": "kaerimasu", "role": "verb", "noteES": "De かえる → かえります (volver)", "noteEN": "Return home" },
+        { "jp": "はなします", "romaji": "hanashimasu", "role": "verb", "noteES": "De はなす → はなします (hablar)", "noteEN": "Speak" }
+      ],
+      "puzzlePromptES": "Arma: 'Yo estudio japonés'",
+      "puzzlePromptEN": "Build: 'I study Japanese'",
+      "puzzleAnswer": ["わたし", "は", "にほんご", "を", "べんきょうします"],
+      "puzzleDistractors": ["ねます", "おきます"]
+    },
+    {
+      "id": "m2_g5",
+      "title": "M2-5. Negación de Verbos: 〜ません",
+      "tag": "Mes 2 • Gramática 5",
+      "stage1Label": "Etapa 1 • Caja Verbal 2/4: No Hago (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma la Negación",
+      "ruleES": "Para negar cualquier verbo en presente, cambia 〜ます por 〜ません. Funciona igual con todos los verbos que ya conoces: のみます → のみません (no tomo), たべます → たべません (no como).",
+      "ruleEN": "Change 〜ます to 〜ません to negate any verb in present tense.",
+      "chunks": [
+        { "jp": "わたし", "romaji": "watashi", "role": "topic", "noteES": "Yo", "noteEN": "I" },
+        { "jp": "は", "romaji": "wa", "role": "particle", "noteES": "Suena 'wa'", "noteEN": "Topic" },
+        { "jp": "コーヒー", "romaji": "kōhī", "role": "object", "noteES": "Café", "noteEN": "Coffee" },
+        { "jp": "を", "romaji": "o", "role": "particle", "noteES": "Suena 'o'", "noteEN": "Object" },
+        { "jp": "のみません", "romaji": "nomimasen", "role": "verb", "noteES": "De のみます → のみません (no tomo)", "noteEN": "Do not drink" }
+      ],
+      "puzzlePromptES": "Arma: 'Yo no tomo café'",
+      "puzzlePromptEN": "Build: 'I do not drink coffee'",
+      "puzzleAnswer": ["わたし", "は", "コーヒー", "を", "のみません"],
+      "puzzleDistractors": ["のみます", "たべます"]
+    },
+    {
+      "id": "m2_g6",
+      "title": "M2-6. Pasado Afirmativo: 〜ました y でした",
+      "tag": "Mes 2 • Gramática 6",
+      "stage1Label": "Etapa 1 • Caja Verbal 3/4: Hice / Fue (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma en Pasado",
+      "ruleES": "Para hablar del pasado: cambia 〜ます por 〜ました (たべます → たべました = comí). Para sustantivos y clima, cambia です por でした (きのう は あめ でした = ayer llovió / fue lluvia).",
+      "ruleEN": "Past tense: 〜ます → 〜ました, and です → でした.",
+      "chunks": [
+        { "jp": "きのう", "romaji": "kinō", "role": "topic", "noteES": "Ayer", "noteEN": "Yesterday" },
+        { "jp": "ラーメン", "romaji": "rāmen", "role": "object", "noteES": "Ramen", "noteEN": "Ramen" },
+        { "jp": "を", "romaji": "o", "role": "particle", "noteES": "Suena 'o'", "noteEN": "Object" },
+        { "jp": "たべました", "romaji": "tabemashita", "role": "verb", "noteES": "De たべます → たべました (comí)", "noteEN": "Ate" },
+        { "jp": "でした", "romaji": "deshita", "role": "verb", "noteES": "Pasado de です (fue/era)", "noteEN": "Was" }
+      ],
+      "puzzlePromptES": "Arma: 'Ayer comí ramen'",
+      "puzzlePromptEN": "Build: 'Yesterday I ate ramen'",
+      "puzzleAnswer": ["きのう", "ラーメン", "を", "たべました"],
+      "puzzleDistractors": ["たべます", "たべません"]
+    },
+    {
+      "id": "m2_g7",
+      "title": "M2-7. Pasado Negativo: 〜ませんでした",
+      "tag": "Mes 2 • Gramática 7",
+      "stage1Label": "Etapa 1 • Caja Verbal 4/4: No Hice (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma en Pasado Negativo",
+      "ruleES": "Ya dominas 〜ません (no) y でした (pasado). Júntalos para el pasado negativo: 〜ませんでした. Ej: いきます → いきませんでした (no fui). ¡Caja de 4 tiempos completa!",
+      "ruleEN": "Combine 〜ません + でした = 〜ませんでした (did not).",
+      "chunks": [
+        { "jp": "きのう", "romaji": "kinō", "role": "topic", "noteES": "Ayer", "noteEN": "Yesterday" },
+        { "jp": "がっこう", "romaji": "gakkō", "role": "object", "noteES": "Escuela", "noteEN": "School" },
+        { "jp": "に", "romaji": "ni", "role": "particle", "noteES": "A (destino)", "noteEN": "To" },
+        { "jp": "いきませんでした", "romaji": "ikimasen deshita", "role": "verb", "noteES": "De いきます → いきませんでした (no fui)", "noteEN": "Did not go" }
+      ],
+      "puzzlePromptES": "Arma: 'Ayer no fui a la escuela'",
+      "puzzlePromptEN": "Build: 'Yesterday I did not go to school'",
+      "puzzleAnswer": ["きのう", "がっこう", "に", "いきませんでした"],
+      "puzzleDistractors": ["いきました", "いきません"]
+    },
+    {
+      "id": "m2_g8",
+      "title": "M2-8. La Hora (〜じ・〜はん・ごろ) y に de Tiempo",
+      "tag": "Mes 2 • Gramática 8",
+      "stage1Label": "Etapa 1 • Horas e Irregulares (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma tu Horario",
+      "ruleES": "Agrega じ para la hora y はん para 'y media' (ごろ = alrededor de, ej. しちじごろ). ¡3 irregulares!: 4じ = よじ, 7じ = しちじ, 9じ = くじ. Usa に para horas exactas (しちじ に おきます). Diferencia clara: en el Mes 1 に marcó lugar estático y destino; aquí marca la hora exacta.",
+      "ruleEN": "Hours: 〜じ, 〜はん (half past), ごろ (around). Irregulars: よじ (4), しちじ (7), くじ (9). Use に for exact time.",
+      "chunks": [
+        { "jp": "しちじ", "romaji": "shichiji", "role": "topic", "noteES": "7:00 (irregular: 7 = しちじ)", "noteEN": "7 o'clock" },
+        { "jp": "に", "romaji": "ni", "role": "particle", "noteES": "A las (hora exacta)", "noteEN": "At (time)" },
+        { "jp": "おきます", "romaji": "okimasu", "role": "verb", "noteES": "Despierto", "noteEN": "Wake up" },
+        { "jp": "よじ", "romaji": "yoji", "role": "topic", "noteES": "4:00 (irregular)", "noteEN": "4 o'clock" },
+        { "jp": "くじ", "romaji": "kuji", "role": "topic", "noteES": "9:00 (irregular)", "noteEN": "9 o'clock" },
+        { "jp": "はん", "romaji": "han", "role": "object", "noteES": "Y media (30 min)", "noteEN": "Half past" },
+        { "jp": "ごろ", "romaji": "goro", "role": "particle", "noteES": "Alrededor de (しちじごろ)", "noteEN": "Around" }
+      ],
+      "puzzlePromptES": "Arma: 'Me despierto a las 7'",
+      "puzzlePromptEN": "Build: 'I wake up at 7'",
+      "puzzleAnswer": ["しちじ", "に", "おきます"],
+      "puzzleDistractors": ["で", "を"]
+    },
+    {
+      "id": "m2_g9",
+      "title": "M2-9. Minutos (〜ふん/ぷん) y Días de la Semana",
+      "tag": "Mes 2 • Gramática 9",
+      "stage1Label": "Etapa 1 • Patrón de Minutos y Días (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma con Días",
+      "ruleES": "Patrón de minutos (1–10): 1=いっぷん, 2=にふん, 3=さんぷん, 4=よんぷん, 5=ごふん, 6=ろっぷん, 7=ななふん, 8=はっぷん, 9=きゅうふん, 10=じゅっぷん. Días (solo hiragana en Mes 2): げつようび (lun), かようび (mar), すいようび (mié), もくようび (jue), きんようび (vie), どようび (sáb), にちようび (dom).",
+      "ruleEN": "Minutes pattern (いっぷん–じゅっぷん) and days of the week in hiragana.",
+      "chunks": [
+        { "jp": "げつようび", "romaji": "getsuyōbi", "role": "topic", "noteES": "Lunes", "noteEN": "Monday" },
+        { "jp": "かようび", "romaji": "kayōbi", "role": "topic", "noteES": "Martes", "noteEN": "Tuesday" },
+        { "jp": "すいようび", "romaji": "suiyōbi", "role": "topic", "noteES": "Miércoles", "noteEN": "Wednesday" },
+        { "jp": "もくようび", "romaji": "mokuyōbi", "role": "topic", "noteES": "Jueves", "noteEN": "Thursday" },
+        { "jp": "きんようび", "romaji": "kinyōbi", "role": "topic", "noteES": "Viernes", "noteEN": "Friday" },
+        { "jp": "どようび", "romaji": "doyōbi", "role": "topic", "noteES": "Sábado", "noteEN": "Saturday" },
+        { "jp": "にちようび", "romaji": "nichiyōbi", "role": "topic", "noteES": "Domingo", "noteEN": "Sunday" },
+        { "jp": "に", "romaji": "ni", "role": "particle", "noteES": "El (día específico)", "noteEN": "On" },
+        { "jp": "べんきょうします", "romaji": "benkyō shimasu", "role": "verb", "noteES": "Estudio", "noteEN": "Study" }
+      ],
+      "puzzlePromptES": "Arma: 'Estudio el lunes'",
+      "puzzlePromptEN": "Build: 'I study on Monday'",
+      "puzzleAnswer": ["げつようび", "に", "べんきょうします"],
+      "puzzleDistractors": ["で", "を"]
+    },
+    {
+      "id": "m2_g10",
+      "title": "M2-10. Conectores: から / まで y と",
+      "tag": "Mes 2 • Gramática 10",
+      "stage1Label": "Etapa 1 • Desde/Hasta y Con/Y (60s)",
+      "stage2Label": "Etapa 2 • Escucha y Repite",
+      "stage3Label": "Etapa 3 • Arma la Oración",
+      "ruleES": "から (desde) y まで (hasta) funcionan con horas y lugares (くじ から よじ まで = de 9 a 4; いえ から えき まで = de casa a la estación). と tiene 2 usos: listar sustantivos (コーヒー と パン = café y pan) y 'con una persona' (ともだち と = con un amigo).",
+      "ruleEN": "から (from) / まで (until) for time & place; と for 'and' (nouns) and 'with' (person).",
+      "chunks": [
+        { "jp": "ともだち", "romaji": "tomodachi", "role": "topic", "noteES": "Amigo", "noteEN": "Friend" },
+        { "jp": "と", "romaji": "to", "role": "particle", "noteES": "Con (persona) / Y (sustantivos)", "noteEN": "With / And" },
+        { "jp": "カフェ", "romaji": "kafe", "role": "object", "noteES": "Cafetería", "noteEN": "Cafe" },
+        { "jp": "に", "romaji": "ni", "role": "particle", "noteES": "A (destino)", "noteEN": "To" },
+        { "jp": "いきます", "romaji": "ikimasu", "role": "verb", "noteES": "Voy", "noteEN": "Go" },
+        { "jp": "から", "romaji": "kara", "role": "particle", "noteES": "Desde", "noteEN": "From" },
+        { "jp": "まで", "romaji": "made", "role": "particle", "noteES": "Hasta", "noteEN": "Until" }
+      ],
+      "puzzlePromptES": "Arma: 'Voy a la cafetería con un amigo'",
+      "puzzlePromptEN": "Build: 'I go to the cafe with a friend'",
+      "puzzleAnswer": ["ともだち", "と", "カフェ", "に", "いきます"],
+      "puzzleDistractors": ["から", "まで"]
+    },
+    { "id": "m2_kj1", "isScript": true, "title": "M2-KJ1. Kanji 1/10: 四 (4)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 4: よん (y よ en 四時 = よじ, las 4:00). El furigana desaparece tras dominarlo 3 veces.", "ruleEN": "Kanji 四 (4): よん (よ in 四時 よじ).", "chunks": [{ "jp": "四", "furigana": "よん", "romaji": "yon", "role": "topic", "noteES": "Cuatro (よん / よじ = 4:00)", "noteEN": "Four" }], "puzzlePromptES": "Selecciona el kanji de 4 (よん):", "puzzlePromptEN": "Select 4:", "puzzleAnswer": ["四"], "puzzleDistractors": ["三", "一"] },
+    { "id": "m2_kj2", "isScript": true, "title": "M2-KJ2. Kanji 2/10: 五 (5)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 5: ご (Ej: 五時 = ごじ, las 5:00).", "ruleEN": "Kanji 五 (5): ご.", "chunks": [{ "jp": "五", "furigana": "ご", "romaji": "go", "role": "topic", "noteES": "Cinco (ご / ごふん = 5 min)", "noteEN": "Five" }], "puzzlePromptES": "Selecciona el kanji de 5 (ご):", "puzzlePromptEN": "Select 5:", "puzzleAnswer": ["五"], "puzzleDistractors": ["四", "二"] },
+    { "id": "m2_kj3", "isScript": true, "title": "M2-KJ3. Kanji 3/10: 六 (6)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 6: ろく (Ej: 六時 = ろくじ, las 6:00).", "ruleEN": "Kanji 六 (6): ろく.", "chunks": [{ "jp": "六", "furigana": "ろく", "romaji": "roku", "role": "topic", "noteES": "Seis (ろく / ろっぷん = 6 min)", "noteEN": "Six" }], "puzzlePromptES": "Selecciona el kanji de 6 (ろく):", "puzzlePromptEN": "Select 6:", "puzzleAnswer": ["六"], "puzzleDistractors": ["五", "四"] },
+    { "id": "m2_kj4", "isScript": true, "title": "M2-KJ4. Kanji 4/10: 七 (7)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 7: なな. ¡Nota de hora!: en 七時 se lee しちじ (las 7:00).", "ruleEN": "Kanji 七 (7): なな (しち in 七時 しちじ).", "chunks": [{ "jp": "七", "furigana": "なな", "romaji": "nana / shichi", "role": "topic", "noteES": "Siete (なな; en hora: 七時 = しちじ)", "noteEN": "Seven" }], "puzzlePromptES": "Selecciona el kanji de 7 (なな / しち):", "puzzlePromptEN": "Select 7:", "puzzleAnswer": ["七"], "puzzleDistractors": ["六", "五"] },
+    { "id": "m2_kj5", "isScript": true, "title": "M2-KJ5. Kanji 5/10: 八 (8)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 8: はち (Ej: 八時 = はちじ, las 8:00).", "ruleEN": "Kanji 八 (8): はち.", "chunks": [{ "jp": "八", "furigana": "はち", "romaji": "hachi", "role": "topic", "noteES": "Ocho (はち / はっぷん = 8 min)", "noteEN": "Eight" }], "puzzlePromptES": "Selecciona el kanji de 8 (はち):", "puzzlePromptEN": "Select 8:", "puzzleAnswer": ["八"], "puzzleDistractors": ["七", "六"] },
+    { "id": "m2_kj6", "isScript": true, "title": "M2-KJ6. Kanji 6/10: 九 (9)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 9: きゅう. ¡Nota de hora!: en 九時 se lee くじ (las 9:00).", "ruleEN": "Kanji 九 (9): きゅう (く in 九時 くじ).", "chunks": [{ "jp": "九", "furigana": "きゅう", "romaji": "kyū / ku", "role": "topic", "noteES": "Nueve (きゅう; en hora: 九時 = くじ)", "noteEN": "Nine" }], "puzzlePromptES": "Selecciona el kanji de 9 (きゅう / く):", "puzzlePromptEN": "Select 9:", "puzzleAnswer": ["九"], "puzzleDistractors": ["八", "七"] },
+    { "id": "m2_kj7", "isScript": true, "title": "M2-KJ7. Kanji 7/10: 十 (10)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Número 10: じゅう (Ej: 十時 = じゅうじ, las 10:00).", "ruleEN": "Kanji 十 (10): じゅう.", "chunks": [{ "jp": "十", "furigana": "じゅう", "romaji": "jū", "role": "topic", "noteES": "Diez (じゅう / じゅっぷん = 10 min)", "noteEN": "Ten" }], "puzzlePromptES": "Selecciona el kanji de 10 (じゅう):", "puzzlePromptEN": "Select 10:", "puzzleAnswer": ["十"], "puzzleDistractors": ["九", "七"] },
+    { "id": "m2_kj8", "isScript": true, "title": "M2-KJ8. Kanji 8/10: 時 (hora)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Hora / tiempo: じ (Ej: 七時 = しちじ, 九時 = くじ).", "ruleEN": "Kanji 時 (hour/time): じ.", "chunks": [{ "jp": "時", "furigana": "じ", "romaji": "ji", "role": "object", "noteES": "Hora (じ). Ej: 七時 (7:00)", "noteEN": "Hour/time" }], "puzzlePromptES": "Selecciona el kanji de hora (じ):", "puzzlePromptEN": "Select hour:", "puzzleAnswer": ["時"], "puzzleDistractors": ["日", "十"] },
+    { "id": "m2_kj9", "isScript": true, "title": "M2-KJ9. Kanji 9/10: 分 (minuto)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Minuto: ふん / ぷん (Ej: 五分 = ごふん, 十分 = じゅっぷん).", "ruleEN": "Kanji 分 (minute): ふん / ぷん.", "chunks": [{ "jp": "分", "furigana": "ふん", "romaji": "fun / pun", "role": "object", "noteES": "Minuto (ふん / ぷん)", "noteEN": "Minute" }], "puzzlePromptES": "Selecciona el kanji de minuto (ふん):", "puzzlePromptEN": "Select minute:", "puzzleAnswer": ["分"], "puzzleDistractors": ["八", "時"] },
+    { "id": "m2_kj10", "isScript": true, "title": "M2-KJ10. Kanji 10/10: 今 (ahora)", "tag": "Kanji Mes 2", "stage1Label": "Etapa 1 • Un Kanji a la Vez (60s)", "stage2Label": "Etapa 2 • Escucha y Repite (con Furigana)", "stage3Label": "Etapa 3 • Reconoce el Kanji", "ruleES": "Ahora: いま (Ej: 今、七時 です = Ahora son las 7).", "ruleEN": "Kanji 今 (now): いま.", "chunks": [{ "jp": "今", "furigana": "いま", "romaji": "ima", "role": "topic", "noteES": "Ahora (いま)", "noteEN": "Now" }], "puzzlePromptES": "Selecciona el kanji de ahora (いま):", "puzzlePromptEN": "Select now:", "puzzleAnswer": ["今"], "puzzleDistractors": ["人", "分"] }
+  ],
+  "vocab": {
+    "Semana 5 — Preguntas y Verbos 1": [
+      ["なに / なん", "nani / nan", "qué", "それ は なん です か。"],
+      ["どこ", "doko", "dónde", "えき は どこ に あります か。"],
+      ["だれ", "dare", "quién", "あの ひと は だれ です か。"],
+      ["いつ", "itsu", "cuándo", "いつ にほん に いきます か。"],
+      ["いくら", "ikura", "cuánto cuesta", "この コーヒー は いくら です か。"],
+      ["みる → みます", "miru → mimasu", "ver / mirar", "わたし は テレビ を みます。"],
+      ["よむ → よみます", "yomu → yomimasu", "leer", "カフェ で ほん を よみます。"],
+      ["かく → かきます", "kaku → kakimasu", "escribir", "ノート に ひらがな を かきます。"],
+      ["かう → かいます", "kau → kaimasu", "comprar", "コンビニ で パン を かいます。"],
+      ["きく → ききます", "kiku → kikimasu", "escuchar", "にほんご を ききます。"]
+    ],
+    "Semana 6 — Verbos 2 y Pasado": [
+      ["おきる → おきます", "okiru → okimasu", "despertar", "まいにち しちじ に おきます。"],
+      ["ねる → ねます", "neru → nemasu", "dormir", "よる じゅうじ に ねます。"],
+      ["かえる → かえります", "kaeru → kaerimasu", "volver a casa", "いえ に かえります。"],
+      ["はなす → はなします", "hanasu → hanashimasu", "hablar", "ともだち と にほんご を はなします。"],
+      ["べんきょうする → します", "benkyō suru", "estudiar (verbo する)", "まいにち にほんご を べんきょうします。"],
+      ["きのう", "kinō", "ayer", "きのう ラーメン を たべました。"],
+      ["あめ", "ame", "lluvia", "きのう は あめ でした。"],
+      ["のみません", "nomimasen", "no tomo", "よる コーヒー を のみません。"],
+      ["いきませんでした", "ikimasen deshita", "no fui", "きのう がっこう に いきませんでした。"]
+    ],
+    "Semana 7 — Hora, Minutos y Días": [
+      ["よじ", "yoji", "las 4:00 (irregular)", "よじ に いえ に かえります。"],
+      ["しちじ", "shichiji", "las 7:00 (irregular)", "しちじ に おきます。"],
+      ["くじ", "kuji", "las 9:00 (irregular)", "くじ から べんきょうします。"],
+      ["はん", "han", "y media (30 min)", "いま しちじ はん です。"],
+      ["ごろ", "goro", "alrededor de", "しちじ ごろ おきます。"],
+      ["げつようび", "getsuyōbi", "lunes", "げつようび に がっこう に いきます。"],
+      ["かようび", "kayōbi", "martes", "かようび に カフェ に いきます。"],
+      ["すいようび", "suiyōbi", "miércoles", "すいようび に ほん を よみます。"],
+      ["もくようび", "mokuyōbi", "jueves", "もくようび に にほんご を はなします。"],
+      ["きんようび", "kinyōbi", "viernes", "きんようび に すし を たべます。"],
+      ["どようび", "doyōbi", "sábado", "どようび に こうえん に いきます。"],
+      ["にちようび", "nichiyōbi", "domingo", "にちようび は いえ に います。"]
+    ],
+    "Semana 8 — Rutina, から/まで y と": [
+      ["から", "kara", "desde", "くじ から べんきょうします。"],
+      ["まで", "made", "hasta", "よじ まで カフェ に います。"],
+      ["と", "to", "y (sustantivos) / con (persona)", "ともだち と ラーメン を たべました。"],
+      ["いっぷん", "ippun", "1 minuto", "いま くじ いっぷん です。"],
+      ["ごふん", "gofun", "5 minutos", "いま くじ ごふん です。"],
+      ["じゅっぷん", "juppun", "10 minutos", "いま くじ じゅっぷん です。"]
+    ]
+  },
+  "kanji": [
+    { "char": "四", "reqLesson": "m2_kj1", "romaji": "yon • cuatro", "on": "シ", "kun": "よん", "es": "cuatro", "words": ["よん (4)", "よじ (4:00)"], "hint": "5 trazos: caja exterior y dos trazos internos." },
+    { "char": "五", "reqLesson": "m2_kj2", "romaji": "go • cinco", "on": "ゴ", "kun": "いつ(つ)", "es": "cinco", "words": ["ご (5)", "ごふん (5 min)"], "hint": "4 trazos." },
+    { "char": "六", "reqLesson": "m2_kj3", "romaji": "roku • seis", "on": "ロク", "kun": "むっ(つ)", "es": "seis", "words": ["ろく (6)", "ろっぷん (6 min)"], "hint": "4 trazos: techo arriba y dos piernas abajo." },
+    { "char": "七", "reqLesson": "m2_kj4", "romaji": "nana/shichi • siete", "on": "シチ", "kun": "なな", "es": "siete", "words": ["なな (7)", "しちじ (7:00)"], "hint": "2 trazos: horizontal inclinada + gancho." },
+    { "char": "八", "reqLesson": "m2_kj5", "romaji": "hachi • ocho", "on": "ハチ", "kun": "やっ(つ)", "es": "ocho", "words": ["はち (8)", "はっぷん (8 min)"], "hint": "2 trazos abiertos hacia abajo." },
+    { "char": "九", "reqLesson": "m2_kj6", "romaji": "kyū/ku • nueve", "on": "キュウ・ク", "kun": "ここの(つ)", "es": "nueve", "words": ["きゅう (9)", "くじ (9:00)"], "hint": "2 trazos." },
+    { "char": "十", "reqLesson": "m2_kj7", "romaji": "jū • diez", "on": "ジュウ", "kun": "とお", "es": "diez", "words": ["じゅう (10)", "じゅっぷん (10 min)"], "hint": "2 trazos en cruz." },
+    { "char": "時", "reqLesson": "m2_kj8", "romaji": "ji • hora", "on": "ジ", "kun": "とき", "es": "hora/tiempo", "words": ["しちじ (7:00)", "くじ (9:00)"], "hint": "10 trazos: 日 (sol) a la izquierda + 寺 a la derecha." },
+    { "char": "分", "reqLesson": "m2_kj9", "romaji": "fun/pun • minuto", "on": "フン・プン", "kun": "わ(ける)", "es": "minuto", "words": ["ごふん (5 min)", "じゅっぷん (10 min)"], "hint": "4 trazos: 八 arriba + 刀 abajo." },
+    { "char": "今", "reqLesson": "m2_kj10", "romaji": "ima • ahora", "on": "コン", "kun": "いま", "es": "ahora", "words": ["いま (ahora)"], "hint": "4 trazos: techo 人 arriba." }
+  ],
+  "stories": [
+    {
+      "id": "m2_st1",
+      "reqLesson": "m2_g10",
+      "title": "⏰ Mes 2 • Mi Rutina Diaria (i+1)",
+      "level": "Mes 2 • Nuevo: それから (después / luego)",
+      "lines": [
+        { "jp": "まいにち しちじ ごろ おきます。", "romaji": "Mainichi shichiji goro okimasu.", "es": "Todos los días me despierto alrededor de las 7.", "en": "Every day I wake up around 7." },
+        { "jp": "あさ コーヒー と パン を たべます。", "romaji": "Asa kōhī to pan o tabemasu.", "es": "En la mañana tomo café y como pan.", "en": "In the morning I have coffee and bread." },
+        { "jp": "くじ から よじ まで がっこう で にほんご を べんきょうします。", "romaji": "Kuji kara yoji made gakkō de Nihongo o benkyō shimasu.", "es": "De 9 a 4 estudio japonés en la escuela.", "en": "From 9 to 4 I study Japanese at school." },
+        { "jp": "それから いえ に かえります。よる じゅうじ はん に ねます。", "romaji": "Sorekara ie ni kaerimasu. Yoru jūji han ni nemasu.", "es": "Después vuelvo a casa (nueva: それから = después). A las 10:30 de la noche duermo.", "en": "Then I go home. At 10:30 PM I sleep." }
+      ]
+    },
+    {
+      "id": "m2_st2",
+      "reqLesson": "m2_g7",
+      "title": "🌧️ Mes 2 • ¿Qué hiciste ayer? (i+1)",
+      "level": "Mes 2 • Nuevo: えいが (película)",
+      "lines": [
+        { "jp": "きのう は あめ でした。がっこう に いきませんでした。", "romaji": "Kinō wa ame deshita. Gakkō ni ikimasen deshita.", "es": "Ayer llovió. No fui a la escuela.", "en": "Yesterday it rained. I didn't go to school." },
+        { "jp": "ともだち と カフェ に いきました。", "romaji": "Tomodachi to kafe ni ikimashita.", "es": "Fui a la cafetería con un amigo.", "en": "I went to the cafe with a friend." },
+        { "jp": "カフェ で コーヒー を のみました。ラーメン も たべました。", "romaji": "Kafe de kōhī o nomimashita. Rāmen mo tabemashita.", "es": "Tomé café en la cafetería. También comí ramen.", "en": "I drank coffee at the cafe. I also ate ramen." },
+        { "jp": "よる いえ で えいが を みました。", "romaji": "Yoru ie de eiga o mimashita.", "es": "En la noche vi una película en casa (nueva: えいが = película).", "en": "At night I watched a movie at home." }
+      ]
+    }
+  ]
+}
