@@ -1,6 +1,6 @@
 (async function initMonthlyExpansion() {
   /* =========================================================
-     FIX 4: Warm up voices on first user gesture + reliable toast cleanup
+     AUDIO WARM-UP + MP3 TTS WITH SPEECHSYNTHESIS FALLBACK
   ========================================================= */
   let currentAudioEl = null;
   let audioSafetyTimer = null;
@@ -113,6 +113,80 @@
   };
 
   /* =========================================================
+     TEACH-BEFORE-YOU-TEST AUDIT: FOUNDATION LESSONS 1–4
+  ========================================================= */
+  const auditedPatches = {
+    u1: {
+      stage1Label: 'Etapa 1 • El Sonido (60s)',
+      stage2Label: 'Etapa 2 • Conoce las 5 Vocales (Individuales)',
+      stage3Label: 'Etapa 3 • Decodifica tu Primera Palabra',
+      ruleES: 'Hoy no vas a memorizar gramática: vas a desbloquear 5 formas que suenan igual que en español mexicano (a, i, u, e, o). Único detalle: en la "u" (う) relaja los labios sin hacer trompita.',
+      ruleEN: 'Today you are not memorizing grammar—you are unlocking 5 shapes that sound just like Spanish vowels (a, i, u, e, o). Keep "u" (う) unrounded.',
+      chunks: [
+        { jp: 'あ', romaji: 'a', role: 'topic', noteES: 'Suena "a" limpia. Gancho: parece una "a" con una cruz arriba.', noteEN: 'Pure "a". Hook: looks like an "a" with a cross on top.' },
+        { jp: 'い', romaji: 'i', role: 'object', noteES: 'Suena "i" limpia. Gancho: dos palitos juntos, como "i"guales.', noteEN: 'Pure "i". Hook: two side-by-side sticks.' },
+        { jp: 'う', romaji: 'u', role: 'verb', noteES: 'Suena "u" con labios relajados. Gancho: una "u" acostada de lado.', noteEN: 'Unrounded "u". Hook: a sideways "u".' },
+        { jp: 'え', romaji: 'e', role: 'topic', noteES: 'Suena "e" limpia. Gancho: parece una persona corriendo con "e"nergía.', noteEN: 'Pure "e". Hook: looks like an energetic runner.' },
+        { jp: 'お', romaji: 'o', role: 'object', noteES: 'Suena "o" limpia. Gancho: un círculo abajo como una "o" con un punto.', noteEN: 'Pure "o". Hook: round loop like an "o" with a dot.' }
+      ],
+      puzzlePromptES: 'Usa las 5 vocales de abajo para escribir tu primera palabra real: "ai" (amor)',
+      puzzlePromptEN: 'Use the 5 vowel tiles below to spell your first real word: "ai" (love)',
+      puzzleAnswer: ['あ', 'い'],
+      puzzleDistractors: ['う', 'え', 'お']
+    },
+    u2: {
+      stage1Label: 'Etapa 1 • El Sonido (60s)',
+      stage2Label: 'Etapa 2 • La Fila R (らりるれろ)',
+      stage3Label: 'Etapa 3 • Combina Vocales + Fila R',
+      ruleES: 'La R japonesa es tu "r" suave de "pero" o "caro" (nunca "perro" ni la R inglesa). Combínala con las 5 vocales que ya aprendiste en la Lección 1.',
+      ruleEN: 'Japanese R is a single soft tap like Spanish "pero". Combine it with the 5 vowels you just unlocked in Lesson 1.',
+      chunks: [
+        { jp: 'ら', romaji: 'ra', role: 'topic', noteES: 'r suave + a. Gancho: parece un número 5 con gorrito.', noteEN: 'soft r + a. Hook: looks like a 5 with a hat.' },
+        { jp: 'り', romaji: 'ri', role: 'object', noteES: 'r suave + i. Gancho: dos cañas de río (ri).', noteEN: 'soft r + i. Hook: two reeds by a river.' },
+        { jp: 'る', romaji: 'ru', role: 'verb', noteES: 'r suave + u. Gancho: un 3 con un rizo (ru) al final.', noteEN: 'soft r + u. Hook: a 3 with a loop at the bottom.' },
+        { jp: 'れ', romaji: 're', role: 'topic', noteES: 'r suave + e. Gancho: una línea recta que rebota hacia afuera.', noteEN: 'soft r + e. Hook: vertical line rebounding outward.' },
+        { jp: 'ろ', romaji: 'ro', role: 'object', noteES: 'r suave + o. Gancho: igual que る pero sin rizo (como un 3 abierto).', noteEN: 'soft r + o. Hook: like る without the loop (open 3).' }
+      ],
+      puzzlePromptES: 'Usa solo letras que ya conoces para escribir "iro" (color):',
+      puzzlePromptEN: 'Use only kana you already know to spell "iro" (color):',
+      puzzleAnswer: ['い', 'ろ'],
+      puzzleDistractors: ['ら', 'る', 'あ']
+    },
+    u3: {
+      stage1Label: 'Etapa 1 • Fórmula de 4 Reglas (60s)',
+      stage2Label: 'Etapa 2 • Decodifica Palabras Katakana',
+      stage3Label: 'Etapa 3 • Reconocimiento Katakana',
+      puzzlePromptES: 'Selecciona en orden las palabras que acabas de leer: "Tacos" + "Smartphone"',
+      puzzlePromptEN: 'Select in order the words you just read: "Tacos" + "Smartphone"',
+      puzzleAnswer: ['タコス', 'スマホ'],
+      puzzleDistractors: ['テレビ']
+    },
+    u4: {
+      puzzleDistractors: ['スマホ']
+    }
+  };
+
+  lessons.forEach((l) => {
+    if (auditedPatches[l.id]) {
+      Object.assign(l, auditedPatches[l.id]);
+    }
+  });
+
+  // Patch renderLessonWorkspace so custom stage labels display when defined
+  const origRenderWorkspace = window.renderLessonWorkspace;
+  window.renderLessonWorkspace = function () {
+    origRenderWorkspace();
+    const l = lessons.find((x) => x.id === activeLessonId);
+    if (!l) return;
+    const ws = document.getElementById('lessonWorkspace');
+    if (!ws) return;
+    const tags = ws.querySelectorAll(':scope > span.tag');
+    if (l.stage1Label && tags[0]) tags[0].textContent = l.stage1Label;
+    if (l.stage2Label && tags[1]) tags[1].textContent = l.stage2Label;
+    if (l.stage3Label && tags[2]) tags[2].textContent = l.stage3Label;
+  };
+
+  /* =========================================================
      LOAD MES 1 CONTENT
   ========================================================= */
   let mes1;
@@ -176,7 +250,7 @@
   );
 
   /* =========================================================
-     FIX 3: Single source of truth for Progress %
+     SINGLE SOURCE OF TRUTH FOR PROGRESS %
   ========================================================= */
   window.getCourseProgress = function () {
     const totalLessons = lessons.length || 1;
@@ -198,7 +272,6 @@
     const lbl = document.getElementById('loggedHoursLabel');
     if (lbl) lbl.textContent = `${hours.toFixed(1)} h (${state.totalMinutes} min) • Meta N5: 250–350 h`;
 
-    // Keep ALL progress displays synchronized to the exact same number
     const badge = document.getElementById('overallProgressBadge');
     if (badge) {
       badge.textContent = `Progreso general: ${p.pct}% (${p.doneLessons}/${p.totalLessons} lecciones • ${p.masteredSrs}/${p.totalSrs} SRS)`;
@@ -214,7 +287,7 @@
   };
 
   /* =========================================================
-     FIX 2: Persistent Tab 4 Lower Half (Shadowing, Voice Test, SRS Stats)
+     PERSISTENT TAB 4 LOWER HALF
   ========================================================= */
   const shadowingLines = [
     { jp: 'おはようございます。', romaji: 'Ohayō gozaimasu.', es: 'Buenos días.' },
@@ -318,7 +391,6 @@
     }
   };
 
-  // Ensure Tab 4 lower half always renders on tab switch and SRS updates
   const origSwitchTab = window.switchTab;
   window.switchTab = function (tabId) {
     origSwitchTab(tabId);
