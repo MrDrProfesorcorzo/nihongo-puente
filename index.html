@@ -39,23 +39,27 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.65;
       min-height: 100vh;
-      padding-bottom: 84px;
+      padding-bottom: 88px;
     }
 
     h1, h2, h3, h4 {
       font-family: 'Plus Jakarta Sans', sans-serif;
       line-height: 1.25;
+      overflow-wrap: break-word;
     }
 
-    .jp {
-      font-family: 'Noto Sans JP', sans-serif;
-    }
+    .jp { font-family: 'Noto Sans JP', sans-serif; }
 
     button {
       font-family: inherit;
@@ -65,12 +69,54 @@
       color: inherit;
     }
 
+    /* Audio Playing Toast Indicator */
+    .audio-toast {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      z-index: 120;
+      background: var(--teal);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(27, 107, 114, 0.35);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      opacity: 0;
+      pointer-events: none;
+      max-width: calc(100vw - 24px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .audio-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .audio-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #A7F3D0;
+      flex-shrink: 0;
+      animation: pulseDot 0.9s infinite ease-in-out;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(0.8); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
     /* Header */
     .topbar {
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(250, 248, 243, 0.94);
+      background: rgba(250, 248, 243, 0.95);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       padding: 10px 16px;
@@ -90,6 +136,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
     }
 
     .brand-badge {
@@ -102,6 +149,7 @@
       place-items: center;
       font-weight: 700;
       font-size: 18px;
+      flex-shrink: 0;
     }
 
     .brand h1 { font-size: 1.05rem; }
@@ -125,12 +173,14 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      max-width: 100%;
     }
 
     .pill-btn:hover { border-color: var(--teal); }
     .pill-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
     .pill-btn.amber { background: var(--amber-soft); color: #8A520E; border-color: #EBC896; }
     .pill-btn.green { background: var(--green-soft); color: var(--green); border-color: #B7D9C8; }
+    .pill-btn.saved { background: var(--green); color: #fff; border-color: var(--green); cursor: default; }
     .pill-btn.coral { background: var(--coral-soft); color: var(--coral); border-color: #EBB8AC; }
 
     /* Study Timer Bar */
@@ -158,6 +208,8 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
+      flex: 1 1 240px;
     }
 
     .timer-clock {
@@ -165,7 +217,7 @@
       font-size: 1.5rem;
       font-weight: 800;
       color: var(--teal);
-      min-width: 96px;
+      min-width: 88px;
     }
 
     .timer-bar.overtime .timer-clock { color: var(--coral); }
@@ -185,6 +237,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
+      max-width: 100%;
     }
 
     .btn {
@@ -213,6 +266,7 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .nav-tab {
@@ -224,6 +278,7 @@
       background: var(--surface-alt);
       border: 1px solid transparent;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .nav-tab.active {
@@ -238,6 +293,7 @@
       max-width: 1120px;
       margin: 16px auto;
       padding: 0 16px;
+      width: 100%;
     }
 
     .panel { display: none; }
@@ -249,7 +305,7 @@
       gap: 16px;
     }
 
-    @media (min-width: 760px) {
+    @media (min-width: 860px) {
       .grid-2 { grid-template-columns: 1fr 1fr; }
     }
 
@@ -260,6 +316,7 @@
       padding: 18px;
       box-shadow: var(--shadow);
       margin-bottom: 16px;
+      min-width: 0;
     }
 
     .card-alt {
@@ -267,11 +324,13 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px;
+      min-width: 0;
+      overflow-wrap: break-word;
     }
 
     .tag {
       display: inline-block;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 6px;
@@ -300,6 +359,25 @@
       transition: width 0.3s ease;
     }
 
+    /* 6-Month Plan Grid */
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .month-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.84rem;
+    }
+    .month-card.current {
+      background: var(--teal-soft);
+      border-color: var(--teal);
+    }
+
     /* Strict Kana Blur */
     body.strict-kana .romaji {
       filter: blur(5px);
@@ -314,7 +392,7 @@
     /* Lesson Cards */
     .lesson-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -326,6 +404,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       transition: all 0.15s ease;
+      min-width: 0;
     }
 
     .lesson-item.active {
@@ -393,16 +472,22 @@
     }
 
     /* Canvas */
-    #drawCanvas {
+    .canvas-wrap {
+      position: relative;
       width: 100%;
       max-width: 320px;
-      height: 320px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+    }
+
+    #drawCanvas {
+      width: 100%;
+      height: 100%;
       background: #FFFDF9;
       border: 2px solid var(--border);
       border-radius: 14px;
       touch-action: none;
       display: block;
-      margin: 0 auto;
       cursor: crosshair;
     }
 
@@ -414,7 +499,7 @@
       left: 0;
       right: 0;
       z-index: 50;
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255, 255, 255, 0.97);
       backdrop-filter: blur(10px);
       border-top: 1px solid var(--border);
       padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
@@ -422,14 +507,17 @@
     }
 
     .mobile-nav button {
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 700;
       color: var(--muted);
-      padding: 4px 6px;
+      padding: 4px 2px;
       border-radius: 8px;
+      white-space: nowrap;
     }
 
     .mobile-nav button.active {
@@ -437,12 +525,36 @@
       background: var(--teal-soft);
     }
 
-    .mobile-nav span.ico { font-size: 1.15rem; margin-bottom: 2px; }
+    .mobile-nav span.ico { font-size: 1.1rem; margin-bottom: 2px; }
+
+    /* Tablet / iPad Portrait (820px) & Mobile */
+    @media (max-width: 860px) {
+      .topbar { padding: 10px 12px; }
+      .container { padding: 0 12px; }
+      .card { padding: 15px; }
+    }
 
     @media (max-width: 680px) {
       .desktop-nav { display: none; }
       .mobile-nav { display: flex; }
-      .timer-clock { font-size: 1.25rem; }
+      .timer-clock { font-size: 1.25rem; min-width: 72px; }
+    }
+
+    /* Galaxy Z Fold Folded (360px) */
+    @media (max-width: 420px) {
+      .topbar { padding: 8px 10px; }
+      .container { padding: 0 10px; }
+      .card { padding: 13px; }
+      .pill-btn { padding: 5px 9px; font-size: 0.76rem; }
+      .btn { padding: 7px 11px; font-size: 0.82rem; }
+      .lesson-list { grid-template-columns: 1fr; }
+      .month-grid { grid-template-columns: 1fr; }
+      .canvas-wrap { max-width: 260px; }
+      #ghostChar { font-size: 170px !important; }
+      .timer-bar { padding: 10px 12px; gap: 8px; }
+      .timer-actions { width: 100%; }
+      .timer-actions select { flex: 1; min-width: 0; }
+      #lookupInput { min-width: 0 !important; width: 100%; }
     }
 
     /* Modal */
@@ -469,19 +581,27 @@
       display: none;
       max-width: 1120px;
       margin: 10px auto 0;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
       background: var(--coral);
       color: #fff;
       font-weight: 700;
+      font-size: 0.86rem;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .alert-banner.show { display: flex; }
   </style>
 </head>
 <body>
+
+  <!-- Visible Audio Playback Indicator -->
+  <div class="audio-toast" id="audioToast" role="status" aria-live="polite">
+    <span class="audio-dot"></span>
+    <span id="audioToastText">Reproduciendo audio...</span>
+  </div>
 
   <!-- Top Header -->
   <header class="topbar">
@@ -508,8 +628,8 @@
           <span class="tag tag-teal" id="timerStateBadge">LISTO</span>
           <div class="timer-clock" id="timerDisplay">30:00</div>
         </div>
-        <div style="font-size:0.82rem; color:var(--muted);">
-          <div>Meta diaria: <strong id="loggedHoursLabel">0.0 / 600 h</strong></div>
+        <div style="font-size:0.82rem; color:var(--muted); min-width:0;">
+          <div>Meta diaria: <strong id="loggedHoursLabel">0.0 h (0 min) / 600 h</strong></div>
           <div id="overtimeNote">Tiempo real (preciso con pantalla bloqueada)</div>
         </div>
       </div>
@@ -537,7 +657,7 @@
     <button class="nav-tab active" data-tab="roadmap" onclick="switchTab('roadmap')">1. Ruta & Lecciones</button>
     <button class="nav-tab" data-tab="reading" onclick="switchTab('reading')">2. Lectura & Escucha</button>
     <button class="nav-tab" data-tab="writing" onclick="switchTab('writing')">3. Escritura & Clínica</button>
-    <button class="nav-tab" data-tab="srs" onclick="switchTab('srs')">4. Repaso SRS & Voz</button>
+    <button class="nav-tab" data-tab="srs" id="desktopSrsTab" onclick="switchTab('srs')">4. Repaso SRS & Voz (3)</button>
     <button class="nav-tab" data-tab="explorer" onclick="switchTab('explorer')">5. Explorador en Vivo</button>
   </nav>
 
@@ -552,8 +672,8 @@
             <span class="tag tag-teal">Planificador 600 Horas</span>
             <h2 style="margin-top:4px;">De Cero a Conversación Cotidiana</h2>
           </div>
-          <div>
-            <label style="font-size:0.82rem; font-weight:700; margin-right:6px;">Ritmo diario:</label>
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <span class="tag tag-green" id="overallProgressBadge">Progreso general: 0%</span>
             <select id="paceSelect" onchange="renderRoadmapStats()">
               <option value="0.5">30 min/día (Relajado)</option>
               <option value="1.5" selected>90 min/día (Constante)</option>
@@ -565,7 +685,13 @@
         <div class="progress-track" style="margin-top:12px;">
           <div class="progress-fill" id="hoursProgressBar" style="width:0%;"></div>
         </div>
-        <div id="milestonesRow" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin-top:12px; font-size:0.84rem;"></div>
+        <div id="milestonesRow" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin-top:12px; font-size:0.84rem;"></div>
+
+        <!-- 6-Month / 24-Week Structured Plan -->
+        <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+          <span class="tag tag-amber">Plan de 6 Meses (Semanas 1–24)</span>
+          <div class="month-grid" id="sixMonthPlan"></div>
+        </div>
       </div>
 
       <h3 style="margin-bottom:10px;">Unidades Progresivas (Bucle de 3 Etapas)</h3>
@@ -606,7 +732,7 @@
           <h3 style="margin:6px 0 10px;">Práctica de Trazos (Kana & Kanji N5)</h3>
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;" id="charButtons"></div>
 
-          <div style="position:relative; width:100%; max-width:320px; margin:0 auto;">
+          <div class="canvas-wrap">
             <div id="ghostChar" class="jp" style="position:absolute; inset:0; display:grid; place-items:center; font-size:210px; color:rgba(27,107,114,0.12); pointer-events:none; user-select:none;">あ</div>
             <canvas id="drawCanvas" width="320" height="320"></canvas>
           </div>
@@ -635,10 +761,10 @@
             <strong>Acento de Tono (Pitch) vs Estrés en Español</strong>
             <p style="font-size:0.88rem; margin-top:4px;">No subas el volumen como en <em>papá</em>; cambia la nota musical:</p>
             <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-              <button class="pill-btn" onclick="speakJP('はし')">🔊 箸 (HA↓shi = palillos)</button>
-              <button class="pill-btn" onclick="speakJP('はし')">🔊 橋 (ha↑SHI = puente)</button>
-              <button class="pill-btn" onclick="speakJP('あめ')">🔊 雨 (A↓me = lluvia)</button>
-              <button class="pill-btn" onclick="speakJP('あめ')">🔊 飴 (a↑ME = dulce)</button>
+              <button class="pill-btn" onclick="speakJP('はし', 0.85, '箸 (HA↓shi)')">🔊 箸 (HA↓shi = palillos)</button>
+              <button class="pill-btn" onclick="speakJP('はし', 0.85, '橋 (ha↑SHI)')">🔊 橋 (ha↑SHI = puente)</button>
+              <button class="pill-btn" onclick="speakJP('あめ', 0.85, '雨 (A↓me)')">🔊 雨 (A↓me = lluvia)</button>
+              <button class="pill-btn" onclick="speakJP('あめ', 0.85, '飴 (a↑ME)')">🔊 飴 (a↑ME = dulce)</button>
             </div>
           </div>
 
@@ -669,7 +795,7 @@
             <div id="speakPromptES" style="font-size:1.1rem; font-weight:700;">"Dos cafés, por favor."</div>
             <div id="speakCountdown" style="font-size:2rem; font-weight:800; color:var(--amber); margin:8px 0;">5</div>
             <div id="speakAnswer" class="jp" style="font-size:1.2rem; font-weight:700; color:var(--teal); min-height:32px;"></div>
-            <div style="display:flex; justify-content:center; gap:8px; margin-top:12px;">
+            <div style="display:flex; justify-content:center; gap:8px; margin-top:12px; flex-wrap:wrap;">
               <button class="btn btn-amber" onclick="startSpeakingDrill()">▶ Iniciar 5s</button>
               <button class="btn btn-outline" onclick="nextSpeakingPrompt()">Siguiente →</button>
             </div>
@@ -685,7 +811,7 @@
         <h2 style="margin:6px 0 10px;">Explorador en Vivo</h2>
 
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
-          <input type="text" id="lookupInput" placeholder="Busca en inglés, español o japonés (ej. coffee, taberu, taco)" style="flex:1; min-width:200px;" onkeydown="if(event.key==='Enter') runLookup('jisho')" />
+          <input type="text" id="lookupInput" placeholder="Busca en inglés, romaji o japonés (ej. coffee, taberu, 食べる)" style="flex:1; min-width:200px;" onkeydown="if(event.key==='Enter') runLookup('jisho')" />
           <button class="btn btn-primary" onclick="runLookup('jisho')">Buscar Diccionario</button>
           <button class="btn btn-amber" onclick="runLookup('tatoeba')">Buscar Oraciones</button>
         </div>
@@ -707,7 +833,7 @@
     <button class="active" data-tab="roadmap" onclick="switchTab('roadmap')"><span class="ico">🗺️</span>Ruta</button>
     <button data-tab="reading" onclick="switchTab('reading')"><span class="ico">📖</span>Lectura</button>
     <button data-tab="writing" onclick="switchTab('writing')"><span class="ico">✍️</span>Trazos</button>
-    <button data-tab="srs" onclick="switchTab('srs')"><span class="ico">🔁</span>SRS</button>
+    <button data-tab="srs" id="mobileSrsTab" onclick="switchTab('srs')"><span class="ico">🔁</span>SRS (3)</button>
     <button data-tab="explorer" onclick="switchTab('explorer')"><span class="ico">🔎</span>Vivo</button>
   </nav>
 
@@ -722,7 +848,7 @@
         Ingresa tu <strong>SYNC_PIN</strong> configurado en Netlify para sincronizar tu iPad y tu Samsung Fold automáticamente.
       </p>
       <div style="display:flex; gap:8px; margin-bottom:14px;">
-        <input type="password" id="pinInput" placeholder="Tu SYNC_PIN secreto" style="flex:1;" />
+        <input type="password" id="pinInput" placeholder="Tu SYNC_PIN secreto" style="flex:1; min-width:0;" />
         <button class="btn btn-primary" onclick="savePinAndSync()">Conectar</button>
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
@@ -919,6 +1045,14 @@ const lessons = [
   }
 ];
 
+const sixMonthOutline = [
+  { label: 'Mes 1 • Semanas 1–4', title: 'Kana y Sonidos ES-MX', detail: 'Unidades 1–3 • Vocales, R suave y fórmula Katakana (0–40 h)', minH: 0, maxH: 40 },
+  { label: 'Mes 2 • Semanas 5–8', title: 'Supervivencia y SOV', detail: 'Unidades 4–7 • Partículas は/を/に/で, adjetivos y contadores (40–100 h)', minH: 40, maxH: 100 },
+  { label: 'Mes 3 • Semanas 9–12', title: 'Registro y Lectura i+1', detail: 'Unidad 8 + Mini-Historias • Tú/Usted, omisión y escucha (100–180 h)', minH: 100, maxH: 180 },
+  { label: 'Meses 4–5 • Semanas 13–20', title: 'Consolidación JLPT N5', detail: '150 Kanji base, repaso SRS diario y velocidad nativa (180–350 h)', minH: 180, maxH: 350 },
+  { label: 'Mes 6+ • Semanas 21–24+', title: 'Puente Conversacional', detail: 'Producción oral 5s, shadowing y conversación diaria (350–600 h)', minH: 350, maxH: 9999 }
+];
+
 const stories = [
   {
     id: 'st1',
@@ -969,9 +1103,40 @@ const speakingPrompts = [
 ];
 
 /* ========================
-   3. AUDIO & TIMER (START / NOTIFY / OVERTIME)
+   3. AUDIO (iPad / Android Safe + Indicator) & TIMER
 ======================== */
 let audioCtx = null;
+let cachedJpVoice = null;
+let audioToastTimeout = null;
+
+function loadJpVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return;
+  cachedJpVoice =
+    voices.find(v => v.lang === 'ja-JP' && v.localService) ||
+    voices.find(v => v.lang.toLowerCase().startsWith('ja')) ||
+    null;
+}
+
+if ('speechSynthesis' in window) {
+  loadJpVoice();
+  window.speechSynthesis.onvoiceschanged = loadJpVoice;
+}
+
+function showAudioToast(label, autoHideMs = 3500) {
+  const toast = document.getElementById('audioToast');
+  document.getElementById('audioToastText').textContent = label;
+  toast.classList.add('show');
+  clearTimeout(audioToastTimeout);
+  audioToastTimeout = setTimeout(() => toast.classList.remove('show'), autoHideMs);
+}
+
+function hideAudioToast() {
+  clearTimeout(audioToastTimeout);
+  document.getElementById('audioToast').classList.remove('show');
+}
+
 function initAudio() {
   if (!audioCtx) {
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -997,12 +1162,28 @@ function playChime() {
   });
 }
 
-function speakJP(text, rate = null) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
+function speakJP(text, rate = null, displayLabel = null) {
+  if (!('speechSynthesis' in window)) {
+    showAudioToast('⚠️ Tu navegador no soporta síntesis de voz', 3000);
+    return;
+  }
+  loadJpVoice();
+  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+    window.speechSynthesis.cancel();
+  }
+
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
+  if (cachedJpVoice) u.voice = cachedJpVoice;
   u.rate = rate || parseFloat(document.getElementById('speedSelect')?.value || '0.88');
+
+  const label = `🔊 Reproduciendo: ${displayLabel || text}`;
+  showAudioToast(label, 6000);
+
+  u.onstart = () => showAudioToast(label, 8000);
+  u.onend = () => hideAudioToast();
+  u.onerror = () => showAudioToast('⚠️ Activa el sonido o voz japonesa en tu dispositivo', 3000);
+
   window.speechSynthesis.speak(u);
 }
 
@@ -1031,8 +1212,8 @@ function startOrPauseTimer() {
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission().catch(() => {});
   }
-  // Unlock mobile speechSynthesis silently
   if ('speechSynthesis' in window) {
+    loadJpVoice();
     const silent = new SpeechSynthesisUtterance('');
     silent.volume = 0;
     window.speechSynthesis.speak(silent);
@@ -1105,6 +1286,7 @@ function finishAndLogTimer() {
   document.getElementById('btnTimerFinish').style.display = 'none';
   document.getElementById('timerStateBadge').textContent = 'GUARDADO';
   document.getElementById('timerStateBadge').className = 'tag tag-green';
+  document.getElementById('overtimeNote').textContent = `✓ +${mins} min guardados (Total: ${state.totalMinutes} min)`;
   updateTimerPreset();
   renderRoadmapStats();
 }
@@ -1149,10 +1331,24 @@ function updateHeaderToggles() {
   document.body.classList.toggle('strict-kana', state.strictKana);
 }
 
+function updateSrsBadges() {
+  const count = state.srs.length;
+  const dTab = document.getElementById('desktopSrsTab');
+  const mTab = document.getElementById('mobileSrsTab');
+  if (dTab) dTab.textContent = `4. Repaso SRS & Voz (${count})`;
+  if (mTab) mTab.innerHTML = `<span class="ico">🔁</span>SRS (${count})`;
+}
+
 function renderRoadmapStats() {
   const hours = state.totalMinutes / 60;
-  document.getElementById('loggedHoursLabel').textContent = `${hours.toFixed(1)} / 600 h`;
-  document.getElementById('hoursProgressBar').style.width = `${Math.min(100, (hours / 600) * 100)}%`;
+  document.getElementById('loggedHoursLabel').textContent = `${hours.toFixed(1)} h (${state.totalMinutes} min) / 600 h`;
+
+  const lessonPct = (state.completedLessons.length / lessons.length) * 100;
+  const hoursPct = Math.min(100, (hours / 600) * 100);
+  const overallPct = Math.round(lessonPct * 0.5 + hoursPct * 0.5);
+
+  document.getElementById('overallProgressBadge').textContent = `Progreso general: ${overallPct}%`;
+  document.getElementById('hoursProgressBar').style.width = `${Math.max(hoursPct, overallPct)}%`;
 
   const pace = parseFloat(document.getElementById('paceSelect').value);
   const milestones = [
@@ -1169,6 +1365,16 @@ function renderRoadmapStats() {
     return `<div class="card-alt">
       <strong>${done ? '✅' : '🎯'} ${m.name} (${m.target}h)</strong>
       <div style="color:var(--muted); margin-top:2px;">${done ? 'Completado' : `~${days} días a tu ritmo`}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sixMonthPlan').innerHTML = sixMonthOutline.map(p => {
+    const isCurrent = hours >= p.minH && hours < p.maxH;
+    const isDone = hours >= p.maxH;
+    return `<div class="month-card ${isCurrent ? 'current' : ''}">
+      <div style="font-size:0.74rem; font-weight:700; color:var(--teal);">${isDone ? '✅ ' : isCurrent ? '📍 ' : ''}${p.label}</div>
+      <div style="font-weight:700; margin:2px 0;">${p.title}</div>
+      <div style="color:var(--muted); font-size:0.8rem;">${p.detail}</div>
     </div>`;
   }).join('');
 }
@@ -1260,6 +1466,7 @@ function checkPuzzle(lessonId) {
       state.completedLessons.push(lessonId);
       saveLocal(true);
       renderLessonList();
+      renderRoadmapStats();
     }
   } else {
     fb.style.color = 'var(--coral)';
@@ -1288,21 +1495,25 @@ function renderStory() {
   ).join('');
 
   const st = stories.find(s => s.id === activeStoryId);
-  document.getElementById('storyContainer').innerHTML = st.lines.map((line, i) => `
+  document.getElementById('storyContainer').innerHTML = st.lines.map((line) => {
+    const inSrs = state.srs.some(c => c.jp === line.jp);
+    return `
     <div class="card-alt" style="margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-        <div class="blind-text ${blindMode ? 'hidden-text' : ''}" onclick="this.classList.remove('hidden-text')">
-          <div class="jp" style="font-size:1.15rem; font-weight:700;">${line.jp}</div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+        <div class="blind-text ${blindMode ? 'hidden-text' : ''}" style="min-width:0; flex:1;" onclick="this.classList.remove('hidden-text')">
+          <div class="jp" style="font-size:1.1rem; font-weight:700;">${line.jp}</div>
           <div class="romaji" style="font-size:0.84rem; color:var(--muted);">${line.romaji}</div>
           <div style="font-size:0.88rem; margin-top:4px;">${state.lang === 'es' ? line.es : line.en}</div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
           <button class="pill-btn" onclick="speakJP('${line.jp}')">🔊</button>
-          <button class="pill-btn green" onclick="addToSRS('${line.jp}','${line.romaji}','${line.es}')">+SRS</button>
+          <button class="pill-btn ${inSrs ? 'saved' : 'green'}" ${inSrs ? 'disabled' : ''} onclick="addToSRS('${line.jp}','${line.romaji}','${line.es}', this)">
+            ${inSrs ? '✓ En SRS' : '+SRS'}
+          </button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 /* ========================
@@ -1337,9 +1548,7 @@ function initCanvas() {
   canvas.addEventListener('pointercancel', () => { drawing = false; });
 }
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
 function renderCharButtons() {
   document.getElementById('charButtons').innerHTML = drawChars.map((c, i) => `
@@ -1379,11 +1588,19 @@ function renderLeeches() {
 ======================== */
 let srsRevealed = false;
 
-function addToSRS(jp, romaji, es) {
-  if (state.srs.some(c => c.jp === jp)) return alert('Ya está en tu mazo SRS.');
-  state.srs.push({ id: 'c' + Date.now(), jp, romaji, es, interval: 1, nextDue: 0 });
-  saveLocal(true);
-  renderSRS();
+function addToSRS(jp, romaji, es, btnEl = null) {
+  if (!state.srs.some(c => c.jp === jp)) {
+    state.srs.push({ id: 'c' + Date.now(), jp, romaji, es, interval: 1, nextDue: 0 });
+    saveLocal(true);
+    renderSRS();
+    updateSrsBadges();
+  }
+  if (btnEl) {
+    btnEl.textContent = '✓ En SRS';
+    btnEl.classList.remove('green');
+    btnEl.classList.add('saved');
+    btnEl.disabled = true;
+  }
 }
 
 function renderSRS() {
@@ -1399,7 +1616,7 @@ function renderSRS() {
   const card = due[0];
   el.innerHTML = `
     <div class="card-alt" style="text-align:center;">
-      <small style="color:var(--muted);">Pendientes hoy: ${due.length} • Intervalo actual: ${card.interval}d</small>
+      <small style="color:var(--muted);">Pendientes hoy: ${due.length} • Total en mazo: ${state.srs.length} • Intervalo: ${card.interval}d</small>
       <div style="font-size:1.15rem; font-weight:700; margin:12px 0;">"${card.es}"</div>
       ${srsRevealed ? `
         <div class="jp" style="font-size:1.35rem; font-weight:700; color:var(--teal);">${card.jp}</div>
@@ -1459,7 +1676,7 @@ function nextSpeakingPrompt() {
 }
 
 /* ========================
-   8. LIVE LOOKUP (NETLIFY FUNCTION)
+   8. LIVE LOOKUP (JISHO + TATOEBA)
 ======================== */
 async function runLookup(type) {
   const q = document.getElementById('lookupInput').value.trim();
@@ -1468,45 +1685,78 @@ async function runLookup(type) {
   out.innerHTML = 'Consultando API open-source...';
 
   try {
-    const res = await fetch(`/.netlify/functions/lookup?type=${type}&q=${encodeURIComponent(q)}`);
-    if (!res.ok) throw new Error('Offline / local preview');
+    let res;
+    if (type === 'jisho') {
+      res = await fetch(`/.netlify/functions/jisho?keyword=${encodeURIComponent(q)}`);
+      if (!res.ok) {
+        res = await fetch(`/.netlify/functions/lookup?type=jisho&q=${encodeURIComponent(q)}`);
+      }
+    } else {
+      res = await fetch(`/.netlify/functions/lookup?type=tatoeba&q=${encodeURIComponent(q)}`);
+    }
+
+    if (!res.ok) throw new Error('Offline / función no disponible');
     const data = await res.json();
 
     if (type === 'jisho') {
       const items = (data.data || []).slice(0, 5);
-      if (!items.length) { out.textContent = 'Sin resultados.'; return; }
+      if (!items.length) {
+        out.innerHTML = `<div class="card-alt">Sin resultados en el diccionario para "<strong>${q}</strong>".</div>`;
+        return;
+      }
       out.innerHTML = items.map(item => {
         const word = item.japanese?.[0]?.word || item.japanese?.[0]?.reading || '';
         const reading = item.japanese?.[0]?.reading || '';
         const defs = (item.senses?.[0]?.english_definitions || []).slice(0, 3).join(', ');
+        const inSrs = state.srs.some(c => c.jp === word);
         return `<div class="card-alt" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <div>
+          <div style="min-width:0; flex:1;">
             <strong class="jp" style="font-size:1.15rem;">${word}</strong> <span style="color:var(--muted);">(${reading})</span>
             <div>${defs}</div>
           </div>
-          <div style="display:flex; gap:6px;">
+          <div style="display:flex; gap:6px; flex-shrink:0;">
             <button class="pill-btn" onclick="speakJP('${reading || word}')">🔊</button>
-            <button class="pill-btn green" onclick="addToSRS('${word}','${reading}','${defs.replace(/'/g,'')}')">+SRS</button>
+            <button class="pill-btn ${inSrs ? 'saved' : 'green'}" ${inSrs ? 'disabled' : ''} onclick="addToSRS('${word}','${reading}','${defs.replace(/'/g,'')}', this)">
+              ${inSrs ? '✓ En SRS' : '+SRS'}
+            </button>
           </div>
         </div>`;
       }).join('');
     } else {
-      const items = (data.results || []).slice(0, 5);
-      if (!items.length) { out.textContent = 'Sin oraciones encontradas.'; return; }
-      out.innerHTML = items.map(item => {
+      const items = (data.results || []).slice(0, 6);
+      const resolvedNote = data.resolvedQuery && data.resolvedQuery !== q
+        ? `<div style="margin-bottom:8px; font-size:0.84rem; color:var(--teal); font-weight:700;">Buscando oraciones para: <span class="jp">${data.resolvedQuery}</span> (${q})</div>`
+        : '';
+
+      if (!items.length) {
+        out.innerHTML = `${resolvedNote}<div class="card-alt">No se encontraron oraciones para "<strong>${q}</strong>". Prueba con un verbo o sustantivo común en japonés (ej. <span class="jp">食べる</span>, <span class="jp">コーヒー</span>), romaji (<code>taberu</code>, <code>neko</code>) o inglés simple (<code>coffee</code>, <code>water</code>).</div>`;
+        return;
+      }
+
+      out.innerHTML = resolvedNote + items.map(item => {
         const jp = item.text || '';
-        const tr = item.translations?.[0]?.[0]?.text || '';
-        return `<div class="card-alt" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <div>
+        const flatTrans = (item.translations || []).flat();
+        const trObj = flatTrans.find(t => t.lang === 'spa') || flatTrans[0];
+        const tr = trObj?.text || '';
+        const safeJp = jp.replace(/'/g, '');
+        const safeTr = tr.replace(/'/g, '');
+        const inSrs = state.srs.some(c => c.jp === jp);
+        return `<div class="card-alt" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div style="min-width:0; flex:1;">
             <div class="jp" style="font-weight:700;">${jp}</div>
-            <div style="font-size:0.86rem; color:var(--muted);">${tr}</div>
+            <div style="font-size:0.86rem; color:var(--muted); margin-top:2px;">${tr}</div>
           </div>
-          <button class="pill-btn" onclick="speakJP('${jp.replace(/'/g,'')}')">🔊</button>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button class="pill-btn" onclick="speakJP('${safeJp}')">🔊</button>
+            <button class="pill-btn ${inSrs ? 'saved' : 'green'}" ${inSrs ? 'disabled' : ''} onclick="addToSRS('${safeJp}','','${safeTr}', this)">
+              ${inSrs ? '✓ En SRS' : '+SRS'}
+            </button>
+          </div>
         </div>`;
       }).join('');
     }
   } catch (err) {
-    out.innerHTML = `<div class="card-alt">⚠️ Modo local detectado (la función <code>/.netlify/functions/lookup</code> se activará en cuanto subas el sitio a Netlify).</div>`;
+    out.innerHTML = `<div class="card-alt">⚠️ No se pudo conectar con la función de Netlify. Verifica que <code>netlify/functions/lookup.js</code> esté publicado.</div>`;
   }
 }
 
@@ -1600,6 +1850,7 @@ function importJSON(e) {
 ======================== */
 function refreshAll() {
   updateHeaderToggles();
+  updateSrsBadges();
   renderRoadmapStats();
   renderLessonList();
   renderLessonWorkspace();
