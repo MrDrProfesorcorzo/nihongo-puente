@@ -577,7 +577,7 @@
   };
 
   /* =========================================================
-     WORKSPACE RENDERER (FURIGANA & ROMAJI FADING)
+     ETAPA 3 MULTI-EXERCISE MINI-QUEUE + WORKSPACE RENDERER
   ========================================================= */
   const romajiMap = {};
   const furiganaMap = {};
@@ -593,20 +593,217 @@
     return jp;
   }
 
+  const month1Drills = {
+    u1: [
+      { promptES: 'Escribe "ai" (amor):', answer: ['あ','い'], distractors: ['う','え','お'] },
+      { promptES: 'Escribe "ie" (casa):', answer: ['い','え'], distractors: ['あ','う','お'] },
+      { promptES: 'Escribe "ue" (arriba):', answer: ['う','え'], distractors: ['あ','い','お'] },
+      { promptES: 'Escribe "ao" (azul):', answer: ['あ','お'], distractors: ['い','う','え'] },
+      { promptES: 'Escribe "au" (encontrarse):', answer: ['あ','う'], distractors: ['い','え','お'] },
+      { promptES: 'Escribe "oi" (oye / sobrino):', answer: ['お','い'], distractors: ['あ','う','え'] }
+    ],
+    u2: [
+      { promptES: 'Escribe "iro" (color):', answer: ['い','ろ'], distractors: ['ら','る','あ'] },
+      { promptES: 'Escribe "aru" (haber / existir):', answer: ['あ','る'], distractors: ['ら','れ','ろ'] },
+      { promptES: 'Escribe "ura" (parte trasera):', answer: ['う','ら'], distractors: ['り','る','ろ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['る'], distractors: ['ら','り','れ','ろ'] }
+    ],
+    h3: [
+      { promptES: 'Escribe "kore" (esto):', answer: ['こ','れ'], distractors: ['か','き','ろ'] },
+      { promptES: 'Escribe "kao" (cara):', answer: ['か','お'], distractors: ['き','く','け'] },
+      { promptES: 'Escribe "ike" (estanque):', answer: ['い','け'], distractors: ['か','く','こ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぎ'], distractors: ['が','ぐ','げ','ご'] }
+    ],
+    h4: [
+      { promptES: 'Escribe "sushi" (すし):', answer: ['す','し'], distractors: ['さ','せ','そ'] },
+      { promptES: 'Escribe "kasa" (paraguas):', answer: ['か','さ'], distractors: ['し','す','せ'] },
+      { promptES: 'Escribe "kaze" (viento):', answer: ['か','ぜ'], distractors: ['ざ','じ','ず'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぞ'], distractors: ['ざ','じ','ず','ぜ'] }
+    ],
+    h5: [
+      { promptES: 'Escribe "desu" (es / soy):', answer: ['で','す'], distractors: ['て','た','と'] },
+      { promptES: 'Escribe "chizu" (mapa):', answer: ['ち','ず'], distractors: ['た','つ','て'] },
+      { promptES: 'Escribe "soto" (afuera):', answer: ['そ','と'], distractors: ['た','て','ど'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['つ'], distractors: ['た','ち','て','と'] }
+    ],
+    h6: [
+      { promptES: 'Escribe "taberu" (comer):', answer: ['た','べ','る'], distractors: ['は','に','の'] },
+      { promptES: 'Escribe "hana" (flor):', answer: ['は','な'], distractors: ['ひ','ぬ','ね'] },
+      { promptES: 'Escribe "neko" (gato):', answer: ['ね','こ'], distractors: ['な','ぬ','の'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぴ'], distractors: ['ぱ','ぷ','ぺ','ぽ'] }
+    ],
+    h7: [
+      { promptES: 'Escribe "watashi" (yo):', answer: ['わ','た','し'], distractors: ['ま','も','ん'] },
+      { promptES: 'Escribe "yama" (montaña):', answer: ['や','ま'], distractors: ['ゆ','よ','み'] },
+      { promptES: 'Escribe "hon" (libro):', answer: ['ほ','ん'], distractors: ['わ','を','も'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ん'], distractors: ['わ','を','ま','も'] }
+    ],
+    k1: [
+      { promptES: 'Escribe "aisu" (helado / frío):', answer: ['ア','イ','ス'], distractors: ['カ','コ','シ'] },
+      { promptES: 'Escribe "kokoa" (cocoa):', answer: ['コ','コ','ア'], distractors: ['カ','ク','ケ'] },
+      { promptES: 'Escribe "kisu" (beso):', answer: ['キ','ス'], distractors: ['シ','セ','ソ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['シ'], distractors: ['サ','ス','セ','ソ'] }
+    ],
+    k2: [
+      { promptES: 'Escribe "takosu" (tacos):', answer: ['タ','コ','ス'], distractors: ['テ','ト','ホ'] },
+      { promptES: 'Escribe "kafe" (cafetería):', answer: ['カ','フェ'], distractors: ['ハ','ヒ','フ'] },
+      { promptES: 'Escribe "kōhī" (café):', answer: ['コ','ー','ヒ','ー'], distractors: ['ハ','ヘ','ホ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ツ'], distractors: ['タ','チ','テ','ト'] }
+    ],
+    k3: [
+      { promptES: 'Escribe "rāmen" (ramen):', answer: ['ラ','ー','メ','ン'], distractors: ['マ','レ','ロ'] },
+      { promptES: 'Escribe "kamera" (cámara):', answer: ['カ','メ','ラ'], distractors: ['マ','ミ','ム'] },
+      { promptES: 'Escribe "memo" (nota):', answer: ['メ','モ'], distractors: ['マ','ミ','ム'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ン'], distractors: ['ワ','ヲ','ラ','ロ'] }
+    ],
+    k4: [
+      { promptES: 'Escribe "terebi" (televisión):', answer: ['テ','レ','ビ'], distractors: ['ピ','ペ','デ'] },
+      { promptES: 'Escribe "pan" (pan):', answer: ['パ','ン'], distractors: ['バ','ビ','ブ'] },
+      { promptES: 'Escribe "basu" (autobús):', answer: ['バ','ス'], distractors: ['パ','ダ','ザ'] },
+      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ポ'], distractors: ['パ','ピ','プ','ペ'] }
+    ],
+    u3: [
+      { promptES: 'Selecciona en orden: "Tacos" + "Smartphone"', answer: ['タコス','スマホ'], distractors: ['テレビ'] },
+      { promptES: 'Selecciona en orden: "Televisión" + "Tacos"', answer: ['テレビ','タコス'], distractors: ['スマホ'] },
+      { promptES: 'Selecciona en orden: "Smartphone" + "Televisión"', answer: ['スマホ','テレビ'], distractors: ['タコス'] }
+    ],
+    m1_g1: [
+      { promptES: 'Arma: "Yo soy estudiante"', answer: ['わたし','は','がくせい','です'], distractors: ['せんせい'] },
+      { promptES: 'Arma: "Esto es café"', answer: ['これ','は','コーヒー','です'], distractors: ['がくせい'] },
+      { promptES: 'Arma: "Esto es ramen"', answer: ['これ','は','ラーメン','です'], distractors: ['わたし'] }
+    ],
+    m1_g2: [
+      { promptES: 'Arma: "Yo no soy profesor" (deletreando じゃありません):', answer: ['わたし','は','せんせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo no soy estudiante":', answer: ['わたし','は','がくせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
+      { promptES: 'Arma: "Esto no es café":', answer: ['これ','は','コーヒー','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] }
+    ],
+    u4: [
+      { promptES: 'Arma (verbo al final): "Yo como tacos"', answer: ['わたし','は','タコス','を','たべます'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo como ramen"', answer: ['わたし','は','ラーメン','を','たべます'], distractors: ['です'] },
+      { promptES: 'Arma: "Yo como sushi"', answer: ['わたし','は','すし','を','たべます'], distractors: ['です'] }
+    ],
+    u5: [
+      { promptES: 'Acción en un lugar (に vs で): "Yo tomo café en la cafetería"', answer: ['わたし','は','カフェ','で','コーヒー','を','のみます'], distractors: ['に'] },
+      { promptES: 'Cambia la acción: "Yo como tacos en la cafetería"', answer: ['わたし','は','カフェ','で','タコス','を','たべます'], distractors: ['に'] },
+      { promptES: 'Cambia el lugar: "Yo como ramen en casa"', answer: ['わたし','は','いえ','で','ラーメン','を','たべます'], distractors: ['に'] }
+    ],
+    u6: [
+      { promptES: 'Arma: "Este ramen no es caro"', answer: ['この','ラーメン','は','たかくない'], distractors: ['たかい','これ'] },
+      { promptES: 'Arma: "Este café es caro"', answer: ['この','コーヒー','は','たかい'], distractors: ['たかくない','これ'] },
+      { promptES: 'Contraste これ vs この: "Esto no es caro"', answer: ['これ','は','たかくない'], distractors: ['この','たかい'] }
+    ],
+    u7: [
+      { promptES: 'Pide: "Yo quiero dos cafés, por favor"', answer: ['わたし','は','コーヒー','を','ふたつ','ください'], distractors: ['ひとつ'] },
+      { promptES: 'Cambia cantidad: "Yo quiero un ramen, por favor"', answer: ['わたし','は','ラーメン','を','ひとつ','ください'], distractors: ['ふたつ'] },
+      { promptES: 'Cambia comida: "Yo quiero dos tacos, por favor"', answer: ['わたし','は','タコス','を','ふたつ','ください'], distractors: ['ひとつ'] }
+    ],
+    u8: [
+      { promptES: 'Omite "yo": "Mañana voy a Tokio"', answer: ['あした','とうきょう','に','いきます'], distractors: ['で','を'] },
+      { promptES: 'Cambia destino: "Mañana voy a la cafetería"', answer: ['あした','カフェ','に','いきます'], distractors: ['で','を'] },
+      { promptES: 'Contraste に vs で: "En Tokio como ramen"', answer: ['とうきょう','で','ラーメン','を','たべます'], distractors: ['に'] }
+    ],
+    m1_g3: [
+      { promptES: 'Pregunta: "¿Esto cuesta 100 yenes?"', answer: ['これ','は','ひゃくえん','です','か'], distractors: ['この'] },
+      { promptES: 'Pregunta: "¿Esto es café?"', answer: ['これ','は','コーヒー','です','か'], distractors: ['この'] },
+      { promptES: 'Pregunta: "¿Mañana vas a Tokio?"', answer: ['あした','とうきょう','に','いきます','か'], distractors: ['で'] }
+    ],
+    m1_g4: [
+      { promptES: 'Arma: "Esto es mi libro"', answer: ['これ','は','わたし','の','ほん','です'], distractors: ['を','か'] },
+      { promptES: 'Cambia objeto: "Esto es mi smartphone"', answer: ['これ','は','わたし','の','スマホ','です'], distractors: ['を'] },
+      { promptES: 'Cambia dueño: "Esto es el libro del profesor"', answer: ['これ','は','せんせい','の','ほん','です'], distractors: ['を'] }
+    ],
+    m1_g5: [
+      { promptES: 'Arma: "Aquello es la estación"', answer: ['あれ','は','えき','です'], distractors: ['これ','それ'] },
+      { promptES: 'Cambia distancia: "Eso es mi libro"', answer: ['それ','は','わたし','の','ほん','です'], distractors: ['これ','あれ'] },
+      { promptES: 'Cambia distancia: "Esto es mi café"', answer: ['これ','は','わたし','の','コーヒー','です'], distractors: ['それ','あれ'] }
+    ],
+    m1_g6: [
+      { promptES: 'Arma: "Yo también soy mexicano"', answer: ['わたし','も','メキシコじん','です'], distractors: ['は','を'] },
+      { promptES: 'Cambia profesión: "Yo también soy estudiante"', answer: ['わたし','も','がくせい','です'], distractors: ['は'] },
+      { promptES: 'も reemplaza を: "También como ramen"', answer: ['ラーメン','も','たべます'], distractors: ['を','は'] }
+    ],
+    m1_g7: [
+      { promptES: 'Arma: "Me gusta el sushi"', answer: ['わたし','は','すし','が','すき です'], distractors: ['を','も'] },
+      { promptES: 'Cambia comida: "Me gusta el café"', answer: ['わたし','は','コーヒー','が','すき です'], distractors: ['を'] },
+      { promptES: 'Combina con も: "También me gusta el ramen"', answer: ['わたし','は','ラーメン','も','すき です'], distractors: ['を'] }
+    ],
+    m1_g8: [
+      { promptES: 'Seres vivos (います): "Hay niños en el parque"', answer: ['こうえん','に','こども','が','います'], distractors: ['あります','で'] },
+      { promptES: 'Objetos/lugares (あります): "Hay una cafetería en la estación"', answer: ['えき','に','カフェ','が','あります'], distractors: ['います','で'] },
+      { promptES: 'Seres vivos (います): "Hay un profesor en la cafetería"', answer: ['カフェ','に','せんせい','が','います'], distractors: ['あります','で'] }
+    ],
+    kj1: [
+      { promptES: '1/3 Reconoce el kanji de "uno":', answer: ['一'], distractors: ['二','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 一:', answer: ['いち'], distractors: ['に','さん'] },
+      { promptES: '3/3 Forma "una cosa" (ひとつ):', answer: ['一','つ'], distractors: ['二','えん'] }
+    ],
+    kj2: [
+      { promptES: '1/3 Reconoce el kanji de "dos":', answer: ['二'], distractors: ['一','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 二:', answer: ['に'], distractors: ['いち','さん'] },
+      { promptES: '3/3 Forma "dos cosas" (ふたつ):', answer: ['二','つ'], distractors: ['一','三'] }
+    ],
+    kj3: [
+      { promptES: '1/3 Reconoce el kanji de "tres":', answer: ['三'], distractors: ['一','二'] },
+      { promptES: '2/3 Elige la lectura correcta de 三:', answer: ['さん'], distractors: ['いち','に'] },
+      { promptES: '3/3 Forma "tres cosas" (みっつ):', answer: ['三','つ'], distractors: ['一','二'] }
+    ],
+    kj4: [
+      { promptES: '1/3 Reconoce el kanji de "cien":', answer: ['百'], distractors: ['一','三'] },
+      { promptES: '2/3 Elige la lectura correcta de 百:', answer: ['ひゃく'], distractors: ['いち','えん'] },
+      { promptES: '3/3 Forma "100 yenes" (ひゃくえん):', answer: ['百','えん'], distractors: ['一','つ'] }
+    ],
+    kj5: [
+      { promptES: '1/3 Reconoce el kanji de "yen":', answer: ['円'], distractors: ['百','二'] },
+      { promptES: '2/3 Elige la lectura correcta de 円:', answer: ['えん'], distractors: ['ひゃく','ほん'] },
+      { promptES: '3/3 Forma "100 yenes" en kanji (百円):', answer: ['百','円'], distractors: ['一','二'] }
+    ],
+    kj6: [
+      { promptES: '1/3 Reconoce el kanji de "libro":', answer: ['本'], distractors: ['円','一'] },
+      { promptES: '2/3 Elige la lectura correcta de 本:', answer: ['ほん'], distractors: ['えん','に'] },
+      { promptES: '3/3 Forma "mi libro" (わたし の 本):', answer: ['わたし','の','本'], distractors: ['円','を'] }
+    ],
+    kj7: [
+      { promptES: '1/3 Reconoce el kanji de "sol / día":', answer: ['日'], distractors: ['本','円'] },
+      { promptES: '2/3 Elige la lectura de 日 en 日本:', answer: ['に'], distractors: ['ほん','ひと'] },
+      { promptES: '3/3 Forma "Japón" (日本):', answer: ['日','本'], distractors: ['円','一'] }
+    ],
+    kj8: [
+      { promptES: '1/3 Reconoce el kanji de "persona":', answer: ['人'], distractors: ['日','本'] },
+      { promptES: '2/3 Elige la lectura correcta de 人:', answer: ['ひと'], distractors: ['ほん','に'] },
+      { promptES: '3/3 Forma "mexicano/a" (メキシコ人):', answer: ['メキシコ','人'], distractors: ['日','本'] }
+    ]
+  };
+
+  window._drillLessonId = null;
+  window._drillIdx = 0;
+
+  function getLessonQueue(l) {
+    if (month1Drills[l.id]) return month1Drills[l.id];
+    return [{ promptES: l.puzzlePromptES, promptEN: l.puzzlePromptEN, answer: l.puzzleAnswer, distractors: l.puzzleDistractors }];
+  }
+
   window.renderLessonWorkspace = function () {
     const l = lessons.find((x) => x.id === activeLessonId) || lessons[0];
+    if (window._drillLessonId !== l.id) {
+      window._drillLessonId = l.id;
+      window._drillIdx = 0;
+      puzzleSelected = [];
+    }
+    const queue = getLessonQueue(l);
+    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
     const isES = state.lang === 'es';
-    const allTiles = [...l.puzzleAnswer, ...l.puzzleDistractors].sort();
+    const allTiles = [...new Set([...step.answer, ...step.distractors])].sort();
     const s1 = l.stage1Label || 'Etapa 1 • Concepto (60s)';
     const s2 = l.stage2Label || 'Etapa 2 • Escucha y Repite';
-    const s3 = l.stage3Label || 'Etapa 3 • Arma la Oración';
+    const s3 = `${l.stage3Label || 'Etapa 3 • Práctica'} • Ejercicio ${window._drillIdx + 1}/${queue.length}`;
     const tapHint = 'Toca cada bloque arriba para escuchar y repetir.';
-    const zoneHint = l.isScript ? 'Toca las letras de abajo...' : 'Toca los bloques de abajo para armar la oración...';
+    const zoneHint = step.audioOnly ? 'Escucha el audio y toca la sílaba correcta...' : (l.isScript ? 'Toca las letras de abajo...' : 'Toca los bloques de abajo para armar la oración...');
 
     const renderTileLabel = (t) => {
       const rom = romajiMap[t] || '';
       const mastered = (state.blockMastery[t] || 0) >= 3;
-      return `<span class="jp" style="display:block;">${renderRuby(t)}</span>${rom && !mastered ? `<span class="romaji" style="display:block;font-size:0.72rem;color:var(--muted);">${rom}</span>` : ''}`;
+      const showRom = !step.audioOnly && rom && !mastered;
+      return `<span class="jp" style="display:block;">${renderRuby(t)}</span>${showRom ? `<span class="romaji" style="display:block;font-size:0.72rem;color:var(--muted);">${rom}</span>` : ''}`;
     };
 
     document.getElementById('lessonWorkspace').innerHTML = `
@@ -626,7 +823,7 @@
       <div id="chunkDetail" class="card-alt" style="font-size:0.88rem; margin-bottom:16px; color:var(--muted);">${tapHint}</div>
 
       <span class="tag tag-green">${s3}</span>
-      <p style="font-weight:700; margin-top:6px;">${isES ? l.puzzlePromptES : l.puzzlePromptEN}</p>
+      <p style="font-weight:700; margin-top:6px;">${step.promptES}</p>
 
       <div class="drop-zone" id="puzzleZone">
         ${puzzleSelected.length === 0 ? `<span style="color:var(--muted); font-size:0.86rem;">${zoneHint}</span>` :
@@ -640,7 +837,7 @@
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button class="btn btn-green" onclick="checkPuzzle('${l.id}')">Comprobar Orden</button>
         <button class="btn btn-outline" onclick="puzzleSelected=[]; renderLessonWorkspace();">Limpiar</button>
-        <button class="btn btn-primary" onclick="speakJP('${l.puzzleAnswer.join('')}')">🔊 Escuchar Frase</button>
+        <button class="btn btn-primary" onclick="speakJP('${step.answer.join('')}')">🔊 ${step.audioOnly ? 'Escuchar Sílaba' : 'Escuchar Frase'}</button>
       </div>
       <div id="puzzleFeedback" style="margin-top:10px; font-weight:700;"></div>
     `;
@@ -648,19 +845,33 @@
 
   window.checkPuzzle = function (lessonId) {
     const l = lessons.find((x) => x.id === lessonId);
-    const ok = JSON.stringify(puzzleSelected) === JSON.stringify(l.puzzleAnswer);
+    const queue = getLessonQueue(l);
+    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
+    const ok = JSON.stringify(puzzleSelected) === JSON.stringify(step.answer);
     const fb = document.getElementById('puzzleFeedback');
     if (ok) {
-      fb.style.color = 'var(--green)';
-      fb.textContent = '✅ ¡Correcto! Dominaste esta lección.';
-      speakJP(l.puzzleAnswer.join(''));
-      l.puzzleAnswer.forEach((t) => { state.blockMastery[t] = (state.blockMastery[t] || 0) + 1; });
-      if (!state.completedLessons.includes(lessonId)) state.completedLessons.push(lessonId);
-      saveLocal(true);
-      refreshAll();
+      speakJP(step.answer.join(''));
+      step.answer.forEach((t) => { state.blockMastery[t] = (state.blockMastery[t] || 0) + 1; });
+      if (window._drillIdx < queue.length - 1) {
+        fb.style.color = 'var(--green)';
+        fb.textContent = `✅ ¡Correcto! (${window._drillIdx + 1}/${queue.length}) Siguiente ejercicio...`;
+        setTimeout(() => {
+          window._drillIdx++;
+          puzzleSelected = [];
+          renderLessonWorkspace();
+          const nextStep = queue[window._drillIdx];
+          if (nextStep && nextStep.audioOnly) speakJP(nextStep.answer.join(''));
+        }, 850);
+      } else {
+        fb.style.color = 'var(--green)';
+        fb.textContent = `🎉 ¡Set completo (${queue.length}/${queue.length})! Dominaste esta lección.`;
+        if (!state.completedLessons.includes(lessonId)) state.completedLessons.push(lessonId);
+        saveLocal(true);
+        refreshAll();
+      }
     } else {
       fb.style.color = 'var(--coral)';
-      fb.textContent = `❌ Casi. Respuesta esperada: ${l.puzzleAnswer.join(' ')}`;
+      fb.textContent = `❌ Casi. Respuesta esperada: ${step.answer.join(' ')}`;
     }
   };
 
@@ -976,13 +1187,11 @@
         });
       };
 
-      // Step 1: Append Month 2 grammar AND any lesson-unit kanji records into lessons
       (mes2.grammar || []).forEach(registerUnit);
       (mes2.kanji || []).forEach((k) => {
         if (k && k.id && Array.isArray(k.chunks)) registerUnit(k);
       });
 
-      // Step 2: Build Tab 3 draw-pool entries defensively from EITHER kanji shape
       (mes2.kanji || []).forEach((k) => {
         const ch = k.char || k.chunks?.[0]?.jp;
         if (!ch || gatedDrawPool.some((d) => d.char === ch)) return;
@@ -995,7 +1204,6 @@
         gatedDrawPool.push({ char: ch, reqLesson, romaji, hint });
       });
 
-      // Step 3: Append Month 2 gated stories & update Tab 2 count to 4
       (mes2.stories || []).forEach((st) => {
         if (!stories.some((s) => s.id === st.id)) stories.push(st);
       });
@@ -1008,7 +1216,6 @@
         });
       }
 
-      // Step 4: Gate Month 2 Weeks 5–8 vocab into SRS & merge into Tab 1 Vocab Browser
       const m2WeekReqs = ['m2_g3', 'm2_g6', 'm2_g9', 'm2_g10'];
       Object.entries(mes2.vocab || {}).forEach(([weekLabel, words], idx) => {
         allVocab[weekLabel] = words;
@@ -1021,7 +1228,6 @@
       });
       mountVocabBrowser();
 
-      // Step 5: Mark Month 2 as ACTIVE in 6-Month Plan
       if (sixMonthOutline[1]) {
         sixMonthOutline[1].label = 'Mes 2 • Semanas 5–8 (ACTIVO)';
         sixMonthOutline[1].detail = 'Preguntas • 10 verbos • Pasado y Negación • Hora/Días • 10 Kanji • 2 historias i+1';
@@ -1031,290 +1237,4 @@
       if (typeof refreshAll === 'function') refreshAll();
     })
     .catch((err) => console.error('[mes-loader] Error loading mes2.json:', err));
-/* =========================================================
-     ETAPA 3 MULTI-EXERCISE MINI-QUEUE (MONTH 1 DRILLS)
-  ========================================================= */
-  const month1Drills = {
-    u1: [
-      { promptES: 'Escribe "ai" (amor):', answer: ['あ','い'], distractors: ['う','え','お'] },
-      { promptES: 'Escribe "ie" (casa):', answer: ['い','え'], distractors: ['あ','う','お'] },
-      { promptES: 'Escribe "ue" (arriba):', answer: ['う','え'], distractors: ['あ','い','お'] },
-      { promptES: 'Escribe "ao" (azul):', answer: ['あ','お'], distractors: ['い','う','え'] },
-      { promptES: 'Escribe "au" (encontrarse):', answer: ['あ','う'], distractors: ['い','え','お'] },
-      { promptES: 'Escribe "oi" (oye / sobrino):', answer: ['お','い'], distractors: ['あ','う','え'] }
-    ],
-    u2: [
-      { promptES: 'Escribe "iro" (color):', answer: ['い','ろ'], distractors: ['ら','る','あ'] },
-      { promptES: 'Escribe "aru" (haber / existir):', answer: ['あ','る'], distractors: ['ら','れ','ろ'] },
-      { promptES: 'Escribe "ura" (parte trasera):', answer: ['う','ら'], distractors: ['り','る','ろ'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['る'], distractors: ['ら','り','れ','ろ'] }
-    ],
-    h3: [
-      { promptES: 'Escribe "kore" (esto):', answer: ['こ','れ'], distractors: ['か','き','ろ'] },
-      { promptES: 'Escribe "kao" (cara):', answer: ['か','お'], distractors: ['き','く','け'] },
-      { promptES: 'Escribe "ike" (estanque):', answer: ['い','け'], distractors: ['か','く','こ'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぎ'], distractors: ['が','ぐ','げ','ご'] }
-    ],
-    h4: [
-      { promptES: 'Escribe "sushi" (すし):', answer: ['す','し'], distractors: ['さ','せ','そ'] },
-      { promptES: 'Escribe "kasa" (paraguas):', answer: ['か','さ'], distractors: ['し','す','せ'] },
-      { promptES: 'Escribe "kaze" (viento):', answer: ['か','ぜ'], distractors: ['ざ','じ','ず'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぞ'], distractors: ['ざ','じ','ず','ぜ'] }
-    ],
-    h5: [
-      { promptES: 'Escribe "desu" (es / soy):', answer: ['で','す'], distractors: ['て','た','と'] },
-      { promptES: 'Escribe "chizu" (mapa):', answer: ['ち','ず'], distractors: ['た','つ','て'] },
-      { promptES: 'Escribe "soto" (afuera):', answer: ['そ','と'], distractors: ['た','て','ど'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['つ'], distractors: ['た','ち','て','と'] }
-    ],
-    h6: [
-      { promptES: 'Escribe "taberu" (comer):', answer: ['た','べ','る'], distractors: ['は','に','の'] },
-      { promptES: 'Escribe "hana" (flor):', answer: ['は','な'], distractors: ['ひ','ぬ','ね'] },
-      { promptES: 'Escribe "neko" (gato):', answer: ['ね','こ'], distractors: ['な','ぬ','の'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ぴ'], distractors: ['ぱ','ぷ','ぺ','ぽ'] }
-    ],
-    h7: [
-      { promptES: 'Escribe "watashi" (yo):', answer: ['わ','た','し'], distractors: ['ま','も','ん'] },
-      { promptES: 'Escribe "yama" (montaña):', answer: ['や','ま'], distractors: ['ゆ','よ','み'] },
-      { promptES: 'Escribe "hon" (libro):', answer: ['ほ','ん'], distractors: ['わ','を','も'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ん'], distractors: ['わ','を','ま','も'] }
-    ],
-    k1: [
-      { promptES: 'Escribe "aisu" (helado / frío):', answer: ['ア','イ','ス'], distractors: ['カ','コ','シ'] },
-      { promptES: 'Escribe "kokoa" (cocoa):', answer: ['コ','コ','ア'], distractors: ['カ','ク','ケ'] },
-      { promptES: 'Escribe "kisu" (beso):', answer: ['キ','ス'], distractors: ['シ','セ','ソ'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['シ'], distractors: ['サ','ス','セ','ソ'] }
-    ],
-    k2: [
-      { promptES: 'Escribe "takosu" (tacos):', answer: ['タ','コ','ス'], distractors: ['テ','ト','ホ'] },
-      { promptES: 'Escribe "kafe" (cafetería):', answer: ['カ','フェ'], distractors: ['ハ','ヒ','フ'] },
-      { promptES: 'Escribe "kōhī" (café):', answer: ['コ','ー','ヒ','ー'], distractors: ['ハ','ヘ','ホ'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ツ'], distractors: ['タ','チ','テ','ト'] }
-    ],
-    k3: [
-      { promptES: 'Escribe "rāmen" (ramen):', answer: ['ラ','ー','メ','ン'], distractors: ['マ','レ','ロ'] },
-      { promptES: 'Escribe "kamera" (cámara):', answer: ['カ','メ','ラ'], distractors: ['マ','ミ','ム'] },
-      { promptES: 'Escribe "memo" (nota):', answer: ['メ','モ'], distractors: ['マ','ミ','ム'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ン'], distractors: ['ワ','ヲ','ラ','ロ'] }
-    ],
-    k4: [
-      { promptES: 'Escribe "terebi" (televisión):', answer: ['テ','レ','ビ'], distractors: ['ピ','ペ','デ'] },
-      { promptES: 'Escribe "pan" (pan):', answer: ['パ','ン'], distractors: ['バ','ビ','ブ'] },
-      { promptES: 'Escribe "basu" (autobús):', answer: ['バ','ス'], distractors: ['パ','ダ','ザ'] },
-      { audioOnly: true, promptES: 'Escucha y toca la sílaba correcta (sin romaji):', answer: ['ポ'], distractors: ['パ','ピ','プ','ペ'] }
-    ],
-    u3: [
-      { promptES: 'Selecciona en orden: "Tacos" + "Smartphone"', answer: ['タコス','スマホ'], distractors: ['テレビ'] },
-      { promptES: 'Selecciona en orden: "Televisión" + "Tacos"', answer: ['テレビ','タコス'], distractors: ['スマホ'] },
-      { promptES: 'Selecciona en orden: "Smartphone" + "Televisión"', answer: ['スマホ','テレビ'], distractors: ['タコス'] }
-    ],
-    m1_g1: [
-      { promptES: 'Arma: "Yo soy estudiante"', answer: ['わたし','は','がくせい','です'], distractors: ['せんせい'] },
-      { promptES: 'Arma: "Esto es café"', answer: ['これ','は','コーヒー','です'], distractors: ['がくせい'] },
-      { promptES: 'Arma: "Esto es ramen"', answer: ['これ','は','ラーメン','です'], distractors: ['わたし'] }
-    ],
-    m1_g2: [
-      { promptES: 'Arma: "Yo no soy profesor" (deletreando じゃありません):', answer: ['わたし','は','せんせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
-      { promptES: 'Arma: "Yo no soy estudiante":', answer: ['わたし','は','がくせい','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] },
-      { promptES: 'Arma: "Esto no es café":', answer: ['これ','は','コーヒー','じゃ','あ','り','ま','せ','ん'], distractors: ['です'] }
-    ],
-    u4: [
-      { promptES: 'Arma (verbo al final): "Yo como tacos"', answer: ['わたし','は','タコス','を','たべます'], distractors: ['です'] },
-      { promptES: 'Arma: "Yo como ramen"', answer: ['わたし','は','ラーメン','を','たべます'], distractors: ['です'] },
-      { promptES: 'Arma: "Yo como sushi"', answer: ['わたし','は','すし','を','たべます'], distractors: ['です'] }
-    ],
-    u5: [
-      { promptES: 'Acción en un lugar (に vs で): "Yo tomo café en la cafetería"', answer: ['わたし','は','カフェ','で','コーヒー','を','のみます'], distractors: ['に'] },
-      { promptES: 'Cambia la acción: "Yo como tacos en la cafetería"', answer: ['わたし','は','カフェ','で','タコス','を','たべます'], distractors: ['に'] },
-      { promptES: 'Cambia el lugar: "Yo como ramen en casa"', answer: ['わたし','は','いえ','で','ラーメン','を','たべます'], distractors: ['に'] }
-    ],
-    u6: [
-      { promptES: 'Arma: "Este ramen no es caro"', answer: ['この','ラーメン','は','たかくない'], distractors: ['たかい','これ'] },
-      { promptES: 'Arma: "Este café es caro"', answer: ['この','コーヒー','は','たかい'], distractors: ['たかくない','これ'] },
-      { promptES: 'Contraste これ vs この: "Esto no es caro"', answer: ['これ','は','たかくない'], distractors: ['この','たかい'] }
-    ],
-    u7: [
-      { promptES: 'Pide: "Yo quiero dos cafés, por favor"', answer: ['わたし','は','コーヒー','を','ふたつ','ください'], distractors: ['ひとつ'] },
-      { promptES: 'Cambia cantidad: "Yo quiero un ramen, por favor"', answer: ['わたし','は','ラーメン','を','ひとつ','ください'], distractors: ['ふたつ'] },
-      { promptES: 'Cambia comida: "Yo quiero dos tacos, por favor"', answer: ['わたし','は','タコス','を','ふたつ','ください'], distractors: ['ひとつ'] }
-    ],
-    u8: [
-      { promptES: 'Omite "yo": "Mañana voy a Tokio"', answer: ['あした','とうきょう','に','いきます'], distractors: ['で','を'] },
-      { promptES: 'Cambia destino: "Mañana voy a la cafetería"', answer: ['あした','カフェ','に','いきます'], distractors: ['で','を'] },
-      { promptES: 'Contraste に vs で: "En Tokio como ramen"', answer: ['とうきょう','で','ラーメン','を','たべます'], distractors: ['に'] }
-    ],
-    m1_g3: [
-      { promptES: 'Pregunta: "¿Esto cuesta 100 yenes?"', answer: ['これ','は','ひゃくえん','です','か'], distractors: ['この'] },
-      { promptES: 'Pregunta: "¿Esto es café?"', answer: ['これ','は','コーヒー','です','か'], distractors: ['この'] },
-      { promptES: 'Pregunta: "¿Mañana vas a Tokio?"', answer: ['あした','とうきょう','に','いきます','か'], distractors: ['で'] }
-    ],
-    m1_g4: [
-      { promptES: 'Arma: "Esto es mi libro"', answer: ['これ','は','わたし','の','ほん','です'], distractors: ['を','か'] },
-      { promptES: 'Cambia objeto: "Esto es mi smartphone"', answer: ['これ','は','わたし','の','スマホ','です'], distractors: ['を'] },
-      { promptES: 'Cambia dueño: "Esto es el libro del profesor"', answer: ['これ','は','せんせい','の','ほん','です'], distractors: ['を'] }
-    ],
-    m1_g5: [
-      { promptES: 'Arma: "Aquello es la estación"', answer: ['あれ','は','えき','です'], distractors: ['これ','それ'] },
-      { promptES: 'Cambia distancia: "Eso es mi libro"', answer: ['それ','は','わたし','の','ほん','です'], distractors: ['これ','あれ'] },
-      { promptES: 'Cambia distancia: "Esto es mi café"', answer: ['これ','は','わたし','の','コーヒー','です'], distractors: ['それ','あれ'] }
-    ],
-    m1_g6: [
-      { promptES: 'Arma: "Yo también soy mexicano"', answer: ['わたし','も','メキシコじん','です'], distractors: ['は','を'] },
-      { promptES: 'Cambia profesión: "Yo también soy estudiante"', answer: ['わたし','も','がくせい','です'], distractors: ['は'] },
-      { promptES: 'も reemplaza を: "También como ramen"', answer: ['ラーメン','も','たべます'], distractors: ['を','は'] }
-    ],
-    m1_g7: [
-      { promptES: 'Arma: "Me gusta el sushi"', answer: ['わたし','は','すし','が','すき です'], distractors: ['を','も'] },
-      { promptES: 'Cambia comida: "Me gusta el café"', answer: ['わたし','は','コーヒー','が','すき です'], distractors: ['を'] },
-      { promptES: 'Combina con も: "También me gusta el ramen"', answer: ['わたし','は','ラーメン','も','すき です'], distractors: ['を'] }
-    ],
-    m1_g8: [
-      { promptES: 'Seres vivos (います): "Hay niños en el parque"', answer: ['こうえん','に','こども','が','います'], distractors: ['あります','で'] },
-      { promptES: 'Objetos/lugares (あります): "Hay una cafetería en la estación"', answer: ['えき','に','カフェ','が','あります'], distractors: ['います','で'] },
-      { promptES: 'Seres vivos (います): "Hay un profesor en la cafetería"', answer: ['カフェ','に','せんせい','が','います'], distractors: ['あります','で'] }
-    ],
-    kj1: [
-      { promptES: '1/3 Reconoce el kanji de "uno":', answer: ['一'], distractors: ['二','三'] },
-      { promptES: '2/3 Elige la lectura correcta de 一:', answer: ['いち'], distractors: ['に','さん'] },
-      { promptES: '3/3 Forma "una cosa" (ひとつ):', answer: ['一','つ'], distractors: ['二','えん'] }
-    ],
-    kj2: [
-      { promptES: '1/3 Reconoce el kanji de "dos":', answer: ['二'], distractors: ['一','三'] },
-      { promptES: '2/3 Elige la lectura correcta de 二:', answer: ['に'], distractors: ['いち','さん'] },
-      { promptES: '3/3 Forma "dos cosas" (ふたつ):', answer: ['二','つ'], distractors: ['一','三'] }
-    ],
-    kj3: [
-      { promptES: '1/3 Reconoce el kanji de "tres":', answer: ['三'], distractors: ['一','二'] },
-      { promptES: '2/3 Elige la lectura correcta de 三:', answer: ['さん'], distractors: ['いち','に'] },
-      { promptES: '3/3 Forma "tres cosas" (みっつ):', answer: ['三','つ'], distractors: ['一','二'] }
-    ],
-    kj4: [
-      { promptES: '1/3 Reconoce el kanji de "cien":', answer: ['百'], distractors: ['一','三'] },
-      { promptES: '2/3 Elige la lectura correcta de 百:', answer: ['ひゃく'], distractors: ['いち','えん'] },
-      { promptES: '3/3 Forma "100 yenes" (ひゃくえん):', answer: ['百','えん'], distractors: ['一','つ'] }
-    ],
-    kj5: [
-      { promptES: '1/3 Reconoce el kanji de "yen":', answer: ['円'], distractors: ['百','二'] },
-      { promptES: '2/3 Elige la lectura correcta de 円:', answer: ['えん'], distractors: ['ひゃく','ほん'] },
-      { promptES: '3/3 Forma "100 yenes" en kanji (百円):', answer: ['百','円'], distractors: ['一','二'] }
-    ],
-    kj6: [
-      { promptES: '1/3 Reconoce el kanji de "libro":', answer: ['本'], distractors: ['円','一'] },
-      { promptES: '2/3 Elige la lectura correcta de 本:', answer: ['ほん'], distractors: ['えん','に'] },
-      { promptES: '3/3 Forma "mi libro" (わたし の 本):', answer: ['わたし','の','本'], distractors: ['円','を'] }
-    ],
-    kj7: [
-      { promptES: '1/3 Reconoce el kanji de "sol / día":', answer: ['日'], distractors: ['本','円'] },
-      { promptES: '2/3 Elige la lectura de 日 en 日本:', answer: ['に'], distractors: ['ほん','ひと'] },
-      { promptES: '3/3 Forma "Japón" (日本):', answer: ['日','本'], distractors: ['円','一'] }
-    ],
-    kj8: [
-      { promptES: '1/3 Reconoce el kanji de "persona":', answer: ['人'], distractors: ['日','本'] },
-      { promptES: '2/3 Elige la lectura correcta de 人:', answer: ['ひと'], distractors: ['ほん','に'] },
-      { promptES: '3/3 Forma "mexicano/a" (メキシコ人):', answer: ['メキシコ','人'], distractors: ['日','本'] }
-    ]
-  };
-
-  window._drillLessonId = null;
-  window._drillIdx = 0;
-
-  function getLessonQueue(l) {
-    if (month1Drills[l.id]) return month1Drills[l.id];
-    return [{ promptES: l.puzzlePromptES, promptEN: l.puzzlePromptEN, answer: l.puzzleAnswer, distractors: l.puzzleDistractors }];
-  }
-
-  window.renderLessonWorkspace = function () {
-    const l = lessons.find((x) => x.id === activeLessonId) || lessons[0];
-    if (window._drillLessonId !== l.id) {
-      window._drillLessonId = l.id;
-      window._drillIdx = 0;
-      puzzleSelected = [];
-    }
-    const queue = getLessonQueue(l);
-    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
-    const isES = state.lang === 'es';
-    const allTiles = [...new Set([...step.answer, ...step.distractors])].sort();
-    const s1 = l.stage1Label || 'Etapa 1 • Concepto (60s)';
-    const s2 = l.stage2Label || 'Etapa 2 • Escucha y Repite';
-    const s3 = `${l.stage3Label || 'Etapa 3 • Práctica'} • Ejercicio ${window._drillIdx + 1}/${queue.length}`;
-    const tapHint = 'Toca cada bloque arriba para escuchar y repetir.';
-    const zoneHint = step.audioOnly ? 'Escucha el audio y toca la sílaba correcta...' : (l.isScript ? 'Toca las letras de abajo...' : 'Toca los bloques de abajo para armar la oración...');
-
-    const renderTileLabel = (t) => {
-      const rom = romajiMap[t] || '';
-      const mastered = (state.blockMastery[t] || 0) >= 3;
-      const showRom = !step.audioOnly && rom && !mastered;
-      return `<span class="jp" style="display:block;">${renderRuby(t)}</span>${showRom ? `<span class="romaji" style="display:block;font-size:0.72rem;color:var(--muted);">${rom}</span>` : ''}`;
-    };
-
-    document.getElementById('lessonWorkspace').innerHTML = `
-      <span class="tag tag-teal">${s1}</span>
-      <h2 style="margin:6px 0;">${l.title}</h2>
-      <p style="margin-bottom:14px;">${isES ? l.ruleES : l.ruleEN}</p>
-
-      <span class="tag tag-amber">${s2}</span>
-      <div class="anatomy-row">
-        ${l.chunks.map((c, idx) => `
-          <div class="chunk ${c.role}" onclick="inspectChunk('${l.id}', ${idx})">
-            <span class="jp jp-main">${renderRuby(c.jp)}</span>
-            <span class="romaji">${c.romaji}</span>
-          </div>
-        `).join('')}
-      </div>
-      <div id="chunkDetail" class="card-alt" style="font-size:0.88rem; margin-bottom:16px; color:var(--muted);">${tapHint}</div>
-
-      <span class="tag tag-green">${s3}</span>
-      <p style="font-weight:700; margin-top:6px;">${step.promptES}</p>
-
-      <div class="drop-zone" id="puzzleZone">
-        ${puzzleSelected.length === 0 ? `<span style="color:var(--muted); font-size:0.86rem;">${zoneHint}</span>` :
-          puzzleSelected.map((t, i) => `<button class="tile" onclick="removeTile(${i})">${renderTileLabel(t)}</button>`).join('')}
-      </div>
-
-      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-        ${allTiles.map((t) => `<button class="tile" onclick="addTile('${t}')">${renderTileLabel(t)}</button>`).join('')}
-      </div>
-
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="checkPuzzle('${l.id}')">Comprobar Orden</button>
-        <button class="btn btn-outline" onclick="puzzleSelected=[]; renderLessonWorkspace();">Limpiar</button>
-        <button class="btn btn-primary" onclick="speakJP('${step.answer.join('')}')">🔊 ${step.audioOnly ? 'Escuchar Sílaba' : 'Escuchar Frase'}</button>
-      </div>
-      <div id="puzzleFeedback" style="margin-top:10px; font-weight:700;"></div>
-    `;
-  };
-
-  window.checkPuzzle = function (lessonId) {
-    const l = lessons.find((x) => x.id === lessonId);
-    const queue = getLessonQueue(l);
-    const step = queue[Math.min(window._drillIdx, queue.length - 1)];
-    const ok = JSON.stringify(puzzleSelected) === JSON.stringify(step.answer);
-    const fb = document.getElementById('puzzleFeedback');
-    if (ok) {
-      speakJP(step.answer.join(''));
-      step.answer.forEach((t) => { state.blockMastery[t] = (state.blockMastery[t] || 0) + 1; });
-      if (window._drillIdx < queue.length - 1) {
-        fb.style.color = 'var(--green)';
-        fb.textContent = `✅ ¡Correcto! (${window._drillIdx + 1}/${queue.length}) Siguiente ejercicio...`;
-        setTimeout(() => {
-          window._drillIdx++;
-          puzzleSelected = [];
-          renderLessonWorkspace();
-          const nextStep = queue[window._drillIdx];
-          if (nextStep && nextStep.audioOnly) speakJP(nextStep.answer.join(''));
-        }, 850);
-      } else {
-        fb.style.color = 'var(--green)';
-        fb.textContent = `🎉 ¡Set completo (${queue.length}/${queue.length})! Dominaste esta lección.`;
-        if (!state.completedLessons.includes(lessonId)) state.completedLessons.push(lessonId);
-        saveLocal(true);
-        refreshAll();
-      }
-    } else {
-      fb.style.color = 'var(--coral)';
-      fb.textContent = `❌ Casi. Respuesta esperada: ${step.answer.join(' ')}`;
-    }
-  };
-
-  if (typeof renderLessonWorkspace === 'function') renderLessonWorkspace();
 })();
